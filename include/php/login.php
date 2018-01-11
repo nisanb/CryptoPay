@@ -8,7 +8,7 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
     try{
         LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
     }
-    catch(Exception $e)
+    catch(LindaException $e)
     {
         $error = $e->getMessage();
         $displayLogin = true;
@@ -35,7 +35,7 @@ else if(@isset($_POST['authKey']))
         throw new Exception("Google authentication key is incorrect, please try again.");
     }
     }
-    catch(Exception $e)
+    catch(LindaException $e)
     {
         $error = $e->getMessage();
     }

@@ -202,7 +202,7 @@ class LindaSQL{
         
         //In case SQL Connection did not work
         if ($mysqli->connect_errno) {
-            die('#00001 - Could not connect to server database');
+            throw new Exception("#00001 - Could not connect to server database");
         }
         
         return $mysqli;

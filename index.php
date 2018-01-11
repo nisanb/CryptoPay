@@ -1,7 +1,9 @@
 <?php
 
 session_start();
+
 require_once './include/php/sqlink.php';
+require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
 {
     //Need to log - in
@@ -57,4 +59,5 @@ if($includeTemplate){
   
   include "./include/php/template.php";
 }
+
 
