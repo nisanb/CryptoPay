@@ -48,6 +48,16 @@ class Linda{
         return $toReturn;
     }
     
+    public static function getLindaIncomeByAccount($account)
+    {
+        return self::RPC()->getreceivedbyaccount($account);
+        
+    }
+    public static function getBalanceByAccount($account)
+    {
+        return self::RPC()->getbalance($account);
+        
+    }
     
 }
 

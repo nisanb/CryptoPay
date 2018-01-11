@@ -32,7 +32,7 @@ else if(@isset($_POST['authKey']))
     }
     else{
         $displayAuth = true;
-        throw new Exception("Google authentication key is incorrect, please try again.");
+        throw new LindaException("Google authentication key is incorrect, please try again.");
     }
     }
     catch(LindaException $e)
