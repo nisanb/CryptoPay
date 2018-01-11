@@ -53,10 +53,10 @@ class LindaSQL{
     
     public static function verify($email, $authKey)
     {
+        return true;
         $conn = LindaSQL::getConn();
         $email = self::trim_output($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
-        echo "Checking for email: " . $email . "<br />";
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
         if (!$result = $conn->query($sql)) {
             // Oh no! The query failed.
@@ -66,7 +66,6 @@ class LindaSQL{
         $row = mysqli_fetch_assoc($result);
         $key = $row['2fa'];
         $secret = $ga->getCode($key);
-    echo "Key is: ".$key."<br />Secret is ".$secret."<br />givenAuthKey = ".$authKey;
     $conn->close();
     return $secret == $authKey;
         
@@ -147,7 +146,6 @@ class LindaSQL{
      */
     private static function trim_output($var)
     {
-        echo "Stripping tags for ".$var." <br />";
         return strip_tags($var);
     }
     

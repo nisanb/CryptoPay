@@ -24,15 +24,16 @@ else if(@isset($_POST['authKey']))
 {
     $authKey = $_POST['authKey'];
     $email = $_POST['email'];
-    echo "Sending verification with email " . $email . " <br />";
+    
     try{
     if(LindaSQL::verify($email, $authKey))
     {
         $_SESSION['UserID'] = $email;
-        throw new Exception("YAY!");
+        header("Location: ./");
     }
     else{
-        throw new Exception("Google authentication key is incorrect!");
+        $displayAuth = true;
+        throw new Exception("Google authentication key is incorrect, please try again.");
     }
     }
     catch(Exception $e)
