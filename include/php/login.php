@@ -1,7 +1,6 @@
 <?php
 //Check if the form is submitted
 //include "gauth.php";
-include "./include/php/sqlink.php";
 
 if(@isset($_POST['email']) && !@isset($_POST['authKey']))
 {
@@ -69,13 +68,13 @@ else{
 
 
 
-<body class="gray-bg">
+<body class="gray-bg" >
 
-    <div class="middle-box text-center loginscreen animated fadeInDown" style="width: 50%">
+    <div class="middle-box text-center loginscreen animated fadeInDown" >
         <div>
             <div>
                 <h1 class="logo-name">
-                <img src="./include/img/linda_logo.png" />
+                <img src="./include/img/linda_logo.png" style="width: 120px; height: 120px;" />
                 </h1>
 
             </div>
@@ -107,10 +106,11 @@ else{
                     $arr = LindaSQL::getAuth($email);
                     echo '
 <strong>Stronger security for your Linda Wallet!</strong><br />
-We provide Google 2 Factor Authentication protocol in order to secure your account.<br />
+<small>We provide Google 2 Factor Authentication protocol in order to secure your account.<br />
 Please download Google Authenticator 
 (<a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en">Android</a> / 
 <a target="_blank" href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>) and scan the barcode below:
+</small>
 <br />
 <img src="'.$arr["img"].'" />
 <br >
@@ -119,9 +119,9 @@ Please download Google Authenticator
 
                         <form class="m-t" role="form" action="./?act=login" method="POST">
                             <div class="form-group">
-Will Send email through
+
 <input type="hidden" name="email" value="'.$_POST['email'].'" />
-<input type="checkbox" name="continue" required> '.$_POST['email'].' I installed the app and scanned the barcode.
+<input type="checkbox" name="continue" required> I installed the app and scanned the barcode.
 </div>
   <div class="form-group">
 <input type="checkbox" name="2" required> I saved the Auth Key.

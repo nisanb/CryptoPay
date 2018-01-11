@@ -31,11 +31,13 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" style="width: 50px;" src="./include/img/avatar/<?=$_SESSION['UserID'];?>.jpg" />
+                            <img alt="image" class="img-circle" style="width: 50px;" src="./include/img/linda_icon.png" />
                              </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="./include/css/font-bold" id="profile_name"></strong>
-                            </span> <span class="text-muted text-xs block" id="profile_role"></span><b class="caret"></b> </span> </a>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="./include/css/font-bold" id="profile_name">
+                            <?=Linda::getEmailPrefix($_SESSION['UserID']);?><b class="caret"></b> 
+                            </strong>
+                            </span> <span class="text-muted text-xs block" id="profile_role"></span></span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="./?act=profile">Profile</a></li>
                                 <li><a href="#">Followers</a></li>
@@ -50,7 +52,7 @@
                     </li>
 
                     <li <?=active("default");?>>
-                    <a href="./"><i class="fa fa-home"></i> <span class="nav-label">iScience Home</span></a>
+                    <a href="./"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>
                     </li>
                     <!-- TODO Future
                     <li <?=active("mailbox");?>>
@@ -95,7 +97,7 @@
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
             <form role="search" class="navbar-form-custom" action="search_results.html" style="width: 500px;">
                 <div class="form-group" >
-                    <input type="text" placeholder="Search iScience Users.." class="form-control" name="-search" id="search">
+                    <input type="text" placeholder="Search Wallet.." class="form-control" name="-search" id="search">
                 </div>
                 <ul class="list-group" id="result">
 
@@ -104,68 +106,28 @@
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <span class="m-r-sm text-muted welcome-message">Welcome to iScience</span>
+                    <span class="m-r-sm text-muted welcome-message">LindaCoin Web Wallet</span>
                 </li>
+              
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-envelope"></i>  <span class="label label-warning" id="messages_size"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages" >
-                    <li>
-                      <div id="messages">
-                      </div>
-                      </li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a href="#">
-                                    <i class="fa fa-envelope"></i> <strong>Read All Messages</strong>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user"></i>  <span class="label label-warning" id="followers_size"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages" id="followers">
-
-                      <!-- Mickey - Add content from followers.json
-                      User Connted: <?=$_SESSION['UserID'];?>-->
-                      <!-- I will insert jquery json from followers.json data
-                      Data Type:
-
-                        <li>
-
-
-                            <div class="dropdown-messages-box">
-                                <a href="#" class="pull-left">
-                                    <img alt="image" class="img-circle" src="./include/img/a7.jpg">
-                                </a>
-                                <div class="media-body">
-                                    <small class="pull-right">46h ago</small>
-                                    <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                                    <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="divider"></li>
-
-                      -->
-
-
-
-
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                        <i class="fa fa-bell"></i>  <span class="label label-primary" id="notifications_size"></span>
+                        <i class="fa fa-bell"></i>  <span class="label label-primary" id="notifications_size">2</span>
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
-                    <li>
-                      <div id="notifications"></div>
-                      </li>
+           
+                      <li>
+                              <div class="dropdown-messages-box">
+                                  <a href="#" class="pull-left">
+                                      <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
+                                  </a>
+                                  <div class="media-body">
+                                      <small class="pull-right" style="color: blue;">New</small>
+                                      Lidna Wallet - Beta Released!<br /><br />
+                                      <small class="text-muted">From Linda Project</small>
+                                  </div>
+                              </div>
+                          </li>
+                          <li class="divider"></li>
                         <li>
                             <div class="text-center link-block">
                                 <a href="#">
@@ -183,11 +145,7 @@
                         <i class="fa fa-sign-out"></i> Log out
                     </a>
                 </li>
-                <li>
-                    <a class="right-sidebar-toggle">
-                        <i class="fa fa-tasks"></i>
-                    </a>
-                </li>
+               
             </ul>
 
         </nav>
@@ -198,7 +156,7 @@
               <div class="wrapper wrapper-content">
                 <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>iScience - <?=$title;?></h2>
+                    <h2>Linda Wallet - <?=$title;?></h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="./">Home</a>
@@ -221,10 +179,10 @@
 
                 <div class="footer">
                     <div class="pull-right">
-                        Web Course <strong>2018</strong>.
+                        Copyright &copy; Lindacoin 2017
                     </div>
                     <div>
-                        <strong>Copyright</strong> iScience &copy; 2018 &bull; Mickey Shalev - 200681872 &bull; Nisan Bahar - 302875646
+                        <strong>Copyright</strong> Linda Wallet &copy; 2018 &bull; 
                     </div>
                 </div>
             </div>
@@ -320,109 +278,9 @@
             });
           });
 
-            //Parse data from users.json for profile viewing
-            $.getJSON("./include/json/users.json", function(data){
-              for(var i = 0, len = data.length; i<len; i++){
-                if(data[i].id != "<?=$_SESSION['UserID'];?>"){
-                  continue;
-                }
-                $("#profile_role").append(data[i].role);
-                $("#profile_name").append(data[i].name);
-              }
-            });
+            
 
-            //Parse data from followers.JSON
-
-            $.getJSON("./include/json/followers.json", function(data){
-                      for (var i = 0, len = data.length; i < len; i++) {
-
-                        if(data[i].follower != "<?=$_SESSION['UserID'];?>"){
-                          continue;
-                        }
-                        $("#followers_size").append(data[i].following.length);
-                        for(var j = 0, followSize = data[i].following.length; j<followSize; j++){
-                          var line = `
-                                    <li>
-                                          <div class="dropdown-messages-box">
-                                              <a href="./?act=profile&user=`+data[i].following[j]+`" class="pull-left">
-                                                  <img alt="image" class="img-circle" src="./include/img/avatar/`+data[i].following[j]+`.jpg">
-                                              </a>
-
-                                              <div class="media-body">
-                                                  <small class="pull-right">46h ago</small>
-                                                  You are following <strong><a href="./?act=profile&user=`+data[i].following[j]+`">`+data[i].following[j]+`</a></strong> <br />
-                                                  <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                                              </div>
-                                          </div>
-                                      </li>
-                                      <li class="divider"></li>
-                          `;
-                        $("#followers").append(line);
-
-
-                        }
-
-                      }});
-
-                    //Parsing of messages.json
-                    $.getJSON("./include/json/messages.json", function(data){
-                        var counter = 0;
-                        for (var i = 0, len = data.length; i < len; i++) {
-                          if(data[i].to != "<?=$_SESSION['UserID'];?>"){
-                            continue;
-                          }
-                          counter++;
-                          //A relevant message is found
-                          var line = `
-                          <li>
-                              <div class="dropdown-messages-box">
-                                  <a href="./?act=profile&user=`+data[i].from+`" class="pull-left">
-                                      <img alt="image" class="img-circle" src="./include/img/avatar/`+data[i].from+`.jpg">
-                                  </a>
-                                  <div class="media-body">
-                                      <small class="pull-right" style="color: blue;">New</small>
-                                      `+data[i].message+`<br /><br />
-                                      <small class="text-muted">From <a class="text-muted" href="./?act=profile&user=`+data[i].from+`">`+data[i].from+`</a></small>
-                                  </div>
-                              </div>
-                          </li>
-                          <li class="divider"></li>
-                          `;
-                          $("#messages").append(line);
-
-                        }
-                        $("#messages_size").append(counter);
-                              });
-
-
-                          //Parsing of notifications.json
-                          $.getJSON("./include/json/notifications.json", function(data){
-                              var counter = 0;
-                              for (var i = 0, len = data.length; i < len; i++) {
-                                if(data[i].user != "<?=$_SESSION['UserID'];?>"){
-                                  continue;
-                                }
-                                counter++;
-                                //A relevant message is found
-                                var line = `
-                                <li>
-                                    <a href="#">
-                                        <div>
-                                            <i class="fa fa-`+data[i].type+` fa-fw"></i>
-                                            </a><br />
-                                            `+data[i].statement+`
-                                            <span class="pull-right text-muted small">`+jQuery.timeago(data[i].timestamp)+`</span>
-
-                                        </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                `;
-                                $("#notifications").append(line);
-
-                              }
-                              $("#notifications_size").append(counter);
-                                    });
+               
 
                   /*
                   Notifications Example

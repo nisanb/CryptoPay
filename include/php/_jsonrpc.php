@@ -71,7 +71,6 @@ class jsonRPCClient {
     public function __construct($url,$debug = false, $proxy="") {
         // server URL
         $this->url = $url;
-        echo "Attempting to connect $url";
         // proxy
         empty($proxy) ? $this->proxy = '' : $this->proxy = $proxy;
         // debug state
@@ -133,8 +132,7 @@ class jsonRPCClient {
         $fp = fopen($this->url, 'r', false, $context);
         if ($fp) {
             $response = '';
-            $row = fgets($fp);
-            while($row) {
+            while($row = fgets($fp)) {
                 $response.= trim($row)."\n";
             }
             $this->debug && $this->debug.='***** Server response *****'."\n".$response.'***** End of server response *****'."\n";

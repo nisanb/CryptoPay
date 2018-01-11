@@ -1,5 +1,13 @@
 <?php
+
 session_start();
+require_once './include/php/sqlink.php';
+if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
+{
+    //Need to log - in
+    header("Location: ./?act=login");
+}
+
 
 /* Index Page - Website Manager */
 
@@ -37,6 +45,7 @@ function active($menuItem){
 }
 
 include "./include/php/".$includePage.".php";
+
 if($includeTemplate){
   //Meaning user it attempting to get into the Website
   //Verify user is logged in
@@ -45,6 +54,7 @@ if($includeTemplate){
     header("Location: ./?act=login");
     return;
   }
+  
   include "./include/php/template.php";
 }
 
