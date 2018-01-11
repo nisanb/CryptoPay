@@ -1,0 +1,4 @@
+https://steemit.com/lindacoin/@crypto86/how-to-install-lindacoin-qt-for-windows
+
+
+View %APPDATA\Linda\conf file for rpc details
