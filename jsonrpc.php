@@ -68,7 +68,7 @@ class jsonRPCClient {
      * @param string $url
      * @param boolean $debug
      */
-    public function __construct($url,$debug = false) {
+    public function __construct($url,$debug = false, $proxy="") {
         // server URL
         $this->url = $url;
         echo "Attempting to connect $url";
@@ -130,9 +130,11 @@ class jsonRPCClient {
             'content' => $request
         ));
         $context  = stream_context_create($opts);
-        if ($fp = fopen($this->url, 'r', false, $context)) {
+        $fp = fopen($this->url, 'r', false, $context);
+        if ($fp) {
             $response = '';
-            while($row = fgets($fp)) {
+            $row = fgets($fp);
+            while($row) {
                 $response.= trim($row)."\n";
             }
             $this->debug && $this->debug.='***** Server response *****'."\n".$response.'***** End of server response *****'."\n";
@@ -142,7 +144,7 @@ class jsonRPCClient {
         }
         // debug output
         if ($this->debug) {
-            echo nl2br($debug);
+            echo nl2br($response);
         }
         // final checks and return
         if (!$this->notification) {

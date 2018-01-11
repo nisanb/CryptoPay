@@ -1,0 +1,24 @@
+[{
+		"JobID": "1",
+		"Role": "IT Assistant",
+		"Description": "Professional IT Assistant required with 2 years of experience.",
+		"date": "12/12/2017",
+		"Company": "University of Haifa"
+	},
+	{
+			"JobID": "2",
+			"Role": "HQ Manager",
+			"Description": "We require an experienced manager to administrate our HQ.",
+			"date": "13/12/2017",
+			"Company": "Bar Ilan University"
+		},
+		{
+				"JobID": "3",
+				"Role": "Website Developer",
+				"Description": "For our field of expertise, we require a website developer to maintain and add features to our website.",
+				"date": "10/12/2016",
+				"Company": "University of Haifa"
+			}
+
+
+]

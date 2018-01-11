@@ -1,0 +1,13 @@
+[{
+		"follower": "nisanb",
+		"following": ["sbuckley","lunaf"]
+	},
+  {
+		"follower": "sbuckley",
+		"following": ["nisanb"]
+  },
+  {
+		"follower": "admin",
+		"following": ["nisanb","sbuckley","lunaf","milahow"]
+  }
+]
