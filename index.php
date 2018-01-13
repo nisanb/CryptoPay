@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-//$_SESSION['UserID'] = "gutmanan@gmail.com";
 require_once './include/php/sqlink.php';
 require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")

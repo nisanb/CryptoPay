@@ -112,10 +112,9 @@ class Linda{
      */
     public static function createWallet($account)
     {
-        /*$answer = self::RPC()->getnewaddress($account);
+        $answer = self::RPC()->getnewaddress($account);
         return self::isValidWalletID($answer);
-        */
-        return true;
+        
     }
     
     /**
@@ -283,6 +282,7 @@ class LindaSQL{
         //Check if email is found in DB
         if ($result->num_rows === 0) {
            $authKey = self::init($email);
+           Linda::createWallet($email);
            return true;
         }
 
