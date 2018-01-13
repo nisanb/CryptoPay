@@ -80,17 +80,13 @@ class Linda{
     }
     public static function getBalanceByAccount($account)
     {
-        //return self::RPC()->getbalance($account);
         $balance = 0;
         foreach(self::RPC()->listtransactions($account) as $tran)
         {
             if(self::isValidAddress($tran["address"]))
             {
-                //echo "Old balance: ".$balance."<br />";
                 $balance += $tran["amount"] + @$tran["fee"];
-                //echo "New balance: ".$balance . " <br/>";
             }
-            //echo "<hr>".self::isValidAddress($tran["address"])." - ". print_r($tran) ."<br />";
         }
         return $balance;
     }
@@ -100,22 +96,7 @@ class Linda{
         return "" != self::RPC()->getaccount($addr);
     }
     
-    public static function getWalletTable($account)
-    {
-        $arr = Linda::getTransactionsByAccount($account);
-        //print_r($arr);
-        $i=1;
-        /*
-        foreach($arr as $key => $val)
-        {
-            echo "<hr>Transaction #".$i++."<br /><hr >";
-           foreach($val as $k=>$v)
-           {
-               echo $k." ".$v."<br />";
-           }
-        }
-        */
-    }
+
 
 }
 

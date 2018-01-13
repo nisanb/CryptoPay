@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-$_SESSION['UserID'] = "1";
+$_SESSION['UserID'] = "2";
 require_once './include/php/sqlink.php';
 require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
