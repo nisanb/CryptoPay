@@ -216,6 +216,7 @@
     </div>
 
     <!-- Mainly scripts -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
     <script src="./include/js/jquery-2.1.1.js"></script>
     <script src="./include/js/jquery.timeago.js" type="text/javascript"></script>
 
@@ -358,5 +359,6 @@
 
         });
     </script>
+    
 </body>
 </html>

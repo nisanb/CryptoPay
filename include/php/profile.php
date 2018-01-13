@@ -148,140 +148,139 @@ For following pics
 
 //This is the page content
 $content = '
+<div class="row m-b-lg m-t-lg">
+    <div class="col-md-6">
 
-            <div class="row m-b-lg m-t-lg">
-                <div class="col-md-6">
+        <div class="profile-image">
+            <img src="./include/img/avatar/'.$user.'.jpg" class="img-circle circle-border m-b-md" alt="profile">
+        </div>
+        <div class="profile-info">
+            <div class="">
+                <div>
+                    <h2 class="no-margins" id="p_name">
 
-                    <div class="profile-image">
-                        <img src="./include/img/avatar/'.$user.'.jpg" class="img-circle circle-border m-b-md" alt="profile">
-                    </div>
-                    <div class="profile-info">
-                        <div class="">
-                            <div>
-                                <h2 class="no-margins" id="p_name">
+                    </h2>
+                    <h4 id="p_role"></h4>
+                    <small id="p_role_desc">
 
-                                </h2>
-                                <h4 id="p_role"></h4>
-                                <small id="p_role_desc">
-
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+                    </small>
                 </div>
-                <div class="col-md-3">
-                    <table class="table small m-b-xs">
-                        <tbody>
-                        <tr>
-                            <td colspan=2 align=center>
-                                <strong id="p_projects_size"></strong> Projects
-                            </td>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <table class="table small m-b-xs">
+            <tbody>
+            <tr>
+                <td colspan=2 align=center>
+                    <strong id="p_projects_size"></strong> Projects
+                </td>
 
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong id="p_followers_size"></strong> Followers
-                            </td>
-                            <td>
-                               <strong id="p_following_size"></strong> Following
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong id="p_skills_size"></strong> Skills
-                            </td>
-                            <td>
-                                <strong id="p_research_size"></strong> Researches
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            </tr>
+            <tr>
+                <td>
+                    <strong id="p_followers_size"></strong> Followers
+                </td>
+                <td>
+                   <strong id="p_following_size"></strong> Following
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong id="p_skills_size"></strong> Skills
+                </td>
+                <td>
+                    <strong id="p_research_size"></strong> Researches
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
+
+</div>
+<div class="row">
+
+    <div class="col-lg-3">
+
+        <div class="ibox">
+            <div class="ibox-content">
+                    <h3>About <span id="p_name_about"></span></h3>
+
+                <p class="small" id="p_about_text">
+
+                </p>
+
+                <p class="small font-bold">
+                    <span><i class="fa fa-circle text-navy"></i> Online</span>
+                    </p>
 
             </div>
-            <div class="row">
+        </div>
 
-                <div class="col-lg-3">
+        <div class="ibox">
+            <div class="ibox-content">
+                <h3>Followers and Friends</h3>
+                <p class="small" id="p_follow_text">
 
-                    <div class="ibox">
-                        <div class="ibox-content">
-                                <h3>About <span id="p_name_about"></span></h3>
-
-                            <p class="small" id="p_about_text">
-
-                            </p>
-
-                            <p class="small font-bold">
-                                <span><i class="fa fa-circle text-navy"></i> Online</span>
-                                </p>
-
-                        </div>
-                    </div>
-
-                    <div class="ibox">
-                        <div class="ibox-content">
-                            <h3>Followers and Friends</h3>
-                            <p class="small" id="p_follow_text">
-
-                            </p>
-                            <div class="user-friends" id="p_follow_users_images">
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
+                </p>
+                <div class="user-friends" id="p_follow_users_images">
 
                 </div>
-
-                <div class="col-lg-5">
-
-                    <div class="social-feed-box" id="p_projects_feed">
-
-                    </div>
-
-
-
-
-                </div>
-                <div class="col-lg-4 m-b-lg">
-                    <div id="vertical-timeline" class="vertical-container light-timeline no-margins">
-                        <div class="vertical-timeline-block">
-                            <div class="vertical-timeline-icon navy-bg">
-                                <i class="fa fa-angellist"></i>
-                            </div>
-
-                            <div class="vertical-timeline-content">
-                                <h2>Skills</h2>
-                                <p id="p_skills_list">
-                                </p>
-                                <a href="#" class="btn btn-sm btn-primary"> Edit Skills</a>
-
-                            </div>
-                        </div>
-
-                        <div class="vertical-timeline-block">
-                            <div class="vertical-timeline-icon blue-bg">
-                                <i class="fa fa-file-text"></i>
-                            </div>
-
-                            <div class="vertical-timeline-content">
-                                <h2>Research Interests</h2>
-                                <p id="p_research_list"></p>
-                                <a href="#" class="btn btn-sm btn-success"> Edit Interests </a>
-
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-
             </div>
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="col-lg-5">
+
+        <div class="social-feed-box" id="p_projects_feed">
+
+        </div>
+
+
+
+
+    </div>
+    <div class="col-lg-4 m-b-lg">
+        <div id="vertical-timeline" class="vertical-container light-timeline no-margins">
+            <div class="vertical-timeline-block">
+                <div class="vertical-timeline-icon navy-bg">
+                    <i class="fa fa-angellist"></i>
+                </div>
+
+                <div class="vertical-timeline-content">
+                    <h2>Skills</h2>
+                    <p id="p_skills_list">
+                    </p>
+                    <a href="#" class="btn btn-sm btn-primary"> Edit Skills</a>
+
+                </div>
+            </div>
+
+            <div class="vertical-timeline-block">
+                <div class="vertical-timeline-icon blue-bg">
+                    <i class="fa fa-file-text"></i>
+                </div>
+
+                <div class="vertical-timeline-content">
+                    <h2>Research Interests</h2>
+                    <p id="p_research_list"></p>
+                    <a href="#" class="btn btn-sm btn-success"> Edit Interests </a>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
 ';
 ?>
