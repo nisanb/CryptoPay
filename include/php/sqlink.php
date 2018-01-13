@@ -92,7 +92,7 @@ class Linda{
      */
     public static function isValidWalletID($id)
     {
-        return preg_match("^[a-zA-Z0-9]{34}$");
+        return preg_match("/^[a-zA-Z0-9]{34}$/", $id);
     }
     
     /**
@@ -102,7 +102,7 @@ class Linda{
      */
     public static function validateStringNumber($str)
     {
-        return preg_match("^[a-zA-Z0-9]{34}", $str);
+        return preg_match("^[a-zA-Z0-9]$", $str);
     }
     
     /**
@@ -112,8 +112,10 @@ class Linda{
      */
     public static function createWallet($account)
     {
-        $answer = self::RPC()->getnewaddress($account);
+        /*$answer = self::RPC()->getnewaddress($account);
         return self::isValidWalletID($answer);
+        */
+        return true;
     }
     
     /**

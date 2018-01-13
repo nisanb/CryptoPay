@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-$_SESSION['UserID'] = "2";
+//$_SESSION['UserID'] = "gutmanan@gmail.com";
 require_once './include/php/sqlink.php';
 require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
@@ -21,7 +21,13 @@ switch(@$_GET['act']){
     $includeTemplate = false;
   break;
 
-
+  case "wallet":
+      $includePage = $_GET['act'];
+      $includeTemplate = true;
+  break; 
+      
+      
+      
   case "logout":
     session_destroy();
     header("Location: ./");
