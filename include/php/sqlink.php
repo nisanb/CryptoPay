@@ -50,10 +50,71 @@ class Linda{
      */
     public static function getTransactionsByAccount($account)
     {
-        return self::RPC()->listtransactions($account);
+        $toReturn = array();
+        
+        foreach(self::RPC()->listtransactions($account, 99999999999) as $trans)
+        {
+            if(self::isValidAddress($trans["address"]))
+            {
+                array_push($toReturn, $trans);
+            }
+        }
+        
+        return $toReturn;
     }
     
+    /**
+     * Returns transactions made by an account and wallet
+     * @param unknown $account
+     * @param unknown $wallet
+     * @return array
+     */
+    public static function getTransactionsByWallet($account, $wallet)
+    {
+        $toReturn = array();
+        
+        foreach(self::RPC()->listtransactions($account, 99999999999) as $trans)
+        {
+            if(self::isValidAddress($trans["address"]) && $wallet == $trans["address"])
+            {
+                array_push($toReturn, $trans);
+            }
+        }
+        
+        return $toReturn;
+        
+    }
     
+    /**
+     * Returns TRUE if a wallet is valid
+     * @param unknown $id
+     * @return number
+     */
+    public static function isValidWalletID($id)
+    {
+        return preg_match("^[a-zA-Z0-9]{34}$");
+    }
+    
+    /**
+     * Returns if a given string consists only from chars and numbers
+     * @param unknown $str
+     * @return number
+     */
+    public static function validateStringNumber($str)
+    {
+        return preg_match("^[a-zA-Z0-9]{34}", $str);
+    }
+    
+    /**
+     * Creates a wallet by a given account ID
+     * @param unknown $account
+     * @return number
+     */
+    public static function createWallet($account)
+    {
+        $answer = self::RPC()->getnewaddress($account);
+        return self::isValidWalletID($answer);
+    }
     
     /**
      * Returns an array with wallet IDs associated with an account
@@ -62,28 +123,26 @@ class Linda{
      */
     public static function getWalletsByAccount($account)
     {
-        $i = 0;
+        $toReturn = array();
         $arr = self::RPC()->getaddressesbyaccount($account);
         foreach($arr as $tmp)
         {
-
-            $toReturn[$i++] = $tmp;
-
+            array_push($toReturn, $tmp);
         }
         return $toReturn;
     }
 
-    public static function getLindaIncomeByAccount($account)
-    {
-        return self::RPC()->getreceivedbyaccount($account);
-
-    }
+    /**
+     * Returns balance by a given account
+     * @param unknown $account
+     * @return number
+     */
     public static function getBalanceByAccount($account)
     {
         $balance = 0;
         foreach(self::RPC()->listtransactions($account) as $tran)
         {
-            if(self::isValidAddress($tran["address"]))
+            if(isset($tran["address"]) && self::isValidAddress(@$tran["address"]))
             {
                 $balance += $tran["amount"] + @$tran["fee"];
             }
@@ -91,8 +150,16 @@ class Linda{
         return $balance;
     }
     
-    public static function isValidAddress($addr)
+    /**
+     * TRUE only if transaction is real
+     * @param unknown $addr
+     * @return boolean
+     */
+    public static function isValidAddress($addr = NULL)
     {
+        if(is_null($addr))
+            return false;
+        
         return "" != self::RPC()->getaccount($addr);
     }
     

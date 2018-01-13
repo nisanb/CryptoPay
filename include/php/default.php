@@ -7,9 +7,12 @@ $include_footer = '  <!-- FooTable -->
 
 //Create a new address
 //echo $bitcoin->getnewaddress($account);
+//print_r(Linda::getTransactionsByWallet($_SESSION['UserID'], "LYkgg5J2EJT6eK7xYGLBvhXajqB8kjEaSN"));
+
 $arr = Linda::getWalletsByAccount($_SESSION['UserID']);
 //$money = Linda::getLindaByAccount($_SESSION['UserID']);
 $balance = Linda::getBalanceByAccount($_SESSION['UserID']);
+
 $lastDepDate = date("m/d/Y");
 $lastDepValue = 0;
 $lastWitDate = date("m/d/Y");
