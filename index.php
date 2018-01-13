@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-
+$_SESSION['UserID'] = "1";
 require_once './include/php/sqlink.php';
 require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
@@ -16,18 +16,11 @@ if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
 $includePage = "";
 $includeTemplate = true;
 switch(@$_GET['act']){
-  case "register":
   case "login":
     $includePage = $_GET['act'];
     $includeTemplate = false;
   break;
 
-
-  case "mailbox":
-  case "following":
-  case "profile":
-    $includePage = $_GET['act'];
-    break;
 
   case "logout":
     session_destroy();

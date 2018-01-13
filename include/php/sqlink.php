@@ -1,14 +1,15 @@
 <?php
-// Let's pass in a $_GET variable to our example, in this case
-// it's aid for actor_id in our Sakila database. Let's make it
-// default to 1, and cast it to an integer as to avoid SQL injection
-// and/or related security problems. Handling all of this goes beyond
-// the scope of this simple example. Example:
-//   http://example.org/script.php?aid=42
-
+/**
+ * Linda Web Wallet API
+ * @sk8r
+ * (c) LindaProject 2017
+ */
 require_once './auth/GoogleAuthenticator.php';
 require_once './include/php/_jsonrpc.php';
+
 class Linda{
+    
+    
     private static $rpcuser     =   "k0bsP";
     private static $rpcpass     =   "tTaA4XCUmcZZ867";
     private static $rpcip       =   "127.0.0.1";
@@ -16,15 +17,23 @@ class Linda{
 
 
     private static $rpcconn;
-
-
-
+    
+    /**
+     * Will return the username by an email
+     * @param unknown $email
+     * @return string
+     */
     public static function getEmailPrefix($email)
     {
         return substr($email, 0, strpos($email, "@"));
     }
 
 
+    
+    /**
+     * Grants access to the current RPC Connection
+     * @return jsonRPCClient
+     */
     public static function RPC()
     {
         if(!isset(self::$rpcconn) || self::$rpcconn == null)
@@ -33,8 +42,24 @@ class Linda{
         }
         return self::$rpcconn;
     }
-
-
+    
+    /**
+     * Returns transactions associated by an account
+     * @param unknown $account
+     * @return unknown
+     */
+    public static function getTransactionsByAccount($account)
+    {
+        return self::RPC()->listtransactions($account);
+    }
+    
+    
+    
+    /**
+     * Returns an array with wallet IDs associated with an account
+     * @param unknown $account
+     * @return unknown
+     */
     public static function getWalletsByAccount($account)
     {
         $i = 0;
@@ -55,8 +80,41 @@ class Linda{
     }
     public static function getBalanceByAccount($account)
     {
-        return self::RPC()->getbalance($account);
-
+        //return self::RPC()->getbalance($account);
+        $balance = 0;
+        foreach(self::RPC()->listtransactions($account) as $tran)
+        {
+            if(self::isValidAddress($tran["address"]))
+            {
+                //echo "Old balance: ".$balance."<br />";
+                $balance += $tran["amount"] + @$tran["fee"];
+                //echo "New balance: ".$balance . " <br/>";
+            }
+            //echo "<hr>".self::isValidAddress($tran["address"])." - ". print_r($tran) ."<br />";
+        }
+        return $balance;
+    }
+    
+    public static function isValidAddress($addr)
+    {
+        return "" != self::RPC()->getaccount($addr);
+    }
+    
+    public static function getWalletTable($account)
+    {
+        $arr = Linda::getTransactionsByAccount($account);
+        //print_r($arr);
+        $i=1;
+        /*
+        foreach($arr as $key => $val)
+        {
+            echo "<hr>Transaction #".$i++."<br /><hr >";
+           foreach($val as $k=>$v)
+           {
+               echo $k." ".$v."<br />";
+           }
+        }
+        */
     }
 
 }
@@ -111,19 +169,18 @@ class LindaSQL{
         $email = self::trim_output($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
+        
         if (!$result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");
             exit;
         }
+        
         $row = mysqli_fetch_assoc($result);
         $key = $row['2fa'];
         $secret = $ga->getCode($key);
-    $conn->close();
-    return $secret == $authKey;
-
-
-
+        $conn->close();
+        return $secret == $authKey;
 
     }
 
@@ -144,10 +201,11 @@ class LindaSQL{
 
 
         $ga = new PHPGangsta_GoogleAuthenticator();
-        $arr["img"] = $ga->getQRCodeGoogleUrl("LindaWallet", $arr["key"]);
 
 
-
+        $arr["img"] = $ga->getQRCodeGoogleUrl("LindaWallet-".Linda::getEmailPrefix($email), $arr["key"]);
+        
+        
         $conn->close();
 
         return $arr;
