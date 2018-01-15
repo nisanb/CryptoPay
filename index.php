@@ -26,7 +26,6 @@ switch(@$_GET['act']){
   break; 
       
       
-      
   case "logout":
     session_destroy();
     header("Location: ./");

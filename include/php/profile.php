@@ -5,9 +5,7 @@
 $user = isset($_GET['user']) ? $_GET['user'] : $_SESSION['UserID'];
 $title = $user."s' Profile";
 //Include CSS to Header
-$include_header = '
-
-    ';
+$include_header = '';
 
 //Include JS to Footer
 $include_footer = '

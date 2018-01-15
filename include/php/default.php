@@ -33,8 +33,8 @@ foreach($arr as $tmp)
     <td><a href="./?act=wallet&wid='.$tmp.'">'.$tmp.'</a></td>
     <td>0.00000000</td>
     <td>
-    <a href="#"><i class="fa fa-clipboard text-navy"></i> Copy Address</a>
-    <a href="#"><i class="fa fa-qrcode text-navy"></i> Get QR code</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#modal-form">deposit</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#modal-form">withdraw</a>
     </td>
     </tr>';
 }
@@ -89,8 +89,7 @@ $content .= '
                         <h5>Withdrawal</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><button type="button" class="btn btn-sm btn-primary"> 
-                            Withdraw Now</button></h1>
+                        <h1 class="no-margins"><a data-toggle="modal" class="btn btn-primary" href="#modal-form">Withdraw Now</a></h1>
                         <div class="stat-percent font-bold text-info">'.$lastWitValue.' Linda <i class="fa fa-level-up"></i></div>
                         <small>last withdrawal '.$lastWitDate.'</small>
                     </div>
@@ -534,6 +533,44 @@ $content .= '
                     </div>
                 </div>
 
+            </div>
+            <div id="modal-form" class="modal fade" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12"><h3 class="m-t-none m-b">Withdrawal</h3>
+    
+                                    <p>Send coins to specific wallet.</p>
+    
+                                    <form role="form">
+                                        <div class="input-group-btn">
+                                            <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">Inputs <span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Wallet 1</a></li>
+                                                <li><a href="#">Wallet 2</a></li>
+                                                <li><a href="#">Wallet 3</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#">Wallet 4</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control"></div>
+                                        <div class="form-group"><label>Label</label> <input type="text" placeholder="Your name" class="form-control"></div>
+                                        <div class="input-group m-b">
+                                            <span class="input-group-addon">Linda</span> 
+                                                <input type="text" class="form-control"> 
+                                            <span class="input-group-addon">.00000000</span>
+                                        </div>    
+                                        </br>                                    
+                                        <div>
+                                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 ';
 

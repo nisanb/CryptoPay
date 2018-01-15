@@ -161,6 +161,7 @@ class Linda{
         if(is_null($addr))
             return false;
         
+            return true;
         return "" != self::RPC()->getaccount($addr);
     }
     
