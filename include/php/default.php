@@ -1,8 +1,16 @@
 <?php
+include "./include/phpqrcode/qrlib.php";
 $title = "Homepage";
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">';
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
+
+<script>
+function buildREF(a)
+{
+    $("#depoinput").val(a);
+}
+</script>
 ';
 //Create a new address
 //echo $bitcoin->getnewaddress($account);
@@ -17,25 +25,27 @@ if(@$_GET['action'] == "add")
    $swal = true;
 }
 
-
-
+$selectedQR = null;
 $lastDepDate = date("m/d/Y");
 $lastDepValue = 0;
 $lastWitDate = date("m/d/Y");
 $lastWitValue = 0;
 $tableContent = null;
 $count = 1;
+$qrVar = null;
 foreach($arr as $tmp)
 {
-    $balance = Linda::getBalanceByWallet($tmp);
+    $balance = Linda::getBalanceByWallet($tmp);  
+    QRcode::png($tmp, "qr.png");
+    $selectedQR = "qr.png";
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
     <td><a href="./?act=wallet&wid='.$tmp.'">'.$tmp.'</a></td>
     <td>'.$balance.'</td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#modal-form">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#modal-form">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmp.'\')">deposit</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form">withdraw</a>
     </td>
     </tr>';
 }
@@ -535,26 +545,41 @@ $content .= '
                 </div>
 
             </div>
-            <div id="modal-form" class="modal fade" aria-hidden="true" style="display: none;">
+            <div id="deposit-form" class="modal fade" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12"><h3 class="m-t-none m-b">Deposit</h3>
+    
+                                    <p>Send coins to this wallet.</p>
+    
+                                    <form role="form">
+                                        <iframe style="border:0; width:50%; height:50%" src="'.$selectedQR.'"></iframe>
+                                        <div class="form-group"><label>Address</label>
+                                        <div class="input-group col-md-12">
+                                            <input type="text" id="depoinput" disabled="true" class="form-control">
+                                            <span class="input-group-btn"> 
+                                                <button type="button" class="btn btn-primary">Copy</button> 
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="withdraw-form" class="modal fade" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12"><h3 class="m-t-none m-b">Withdrawal</h3>
     
-                                    <p>Send coins to specific wallet.</p>
+                                    <p>Send coins from this wallet.</p>
     
                                     <form role="form">
-                                        <div class="input-group-btn">
-                                            <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button">Inputs <span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Wallet 1</a></li>
-                                                <li><a href="#">Wallet 2</a></li>
-                                                <li><a href="#">Wallet 3</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Wallet 4</a></li>
-                                            </ul>
-                                        </div>
                                         <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control"></div>
                                         <div class="form-group"><label>Label</label> <input type="text" placeholder="Your name" class="form-control"></div>
                                         <div class="input-group m-b">
