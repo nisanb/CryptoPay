@@ -129,8 +129,8 @@ class jsonRPCClient {
             'content' => $request
         ));
         $context  = stream_context_create($opts);
-        $fp = fopen($this->url, 'r', false, $context);
-        if ($fp) {
+        $this->debug = true;
+        if ($fp = fopen($this->url, 'r', false, $context)) {
             $response = '';
             while($row = fgets($fp)) {
                 $response.= trim($row)."\n";
@@ -138,7 +138,8 @@ class jsonRPCClient {
             $this->debug && $this->debug.='***** Server response *****'."\n".$response.'***** End of server response *****'."\n";
             $response = Json::decode($response,true);
         } else {
-            throw new Exception('Unable to connect to '.$this->url);
+            echo fgets($fp);
+            throw new Exception('Unable to connect to '.$this->url." -> ".$fp." - ".$context."\n\n\n<br />");
         }
         // debug output
         if ($this->debug) {

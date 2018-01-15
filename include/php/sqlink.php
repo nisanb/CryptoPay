@@ -5,7 +5,7 @@
  * (c) LindaProject 2017
  */
 require_once './auth/GoogleAuthenticator.php';
-require_once './include/php/_jsonrpc.php';
+require_once './include/php/_jsonrpc2.php';
 
 class Linda{
     
@@ -38,7 +38,8 @@ class Linda{
     {
         if(!isset(self::$rpcconn) || self::$rpcconn == null)
         {
-            self::$rpcconn = new jsonRPCClient('http://'.self::$rpcuser.':'.self::$rpcpass.'@'.self::$rpcip.':'.self::$rpcport.'/');
+            //self::$rpcconn = new jsonRPCClient('http://'.self::$rpcuser.':'.self::$rpcpass.'@'.self::$rpcip.':'.self::$rpcport.'/');
+            self::$rpcconn = new jsonRPCClient(self::$rpcuser, self::$rpcpass, self::$rpcip, self::$rpcport);
         }
         return self::$rpcconn;
     }
@@ -73,8 +74,11 @@ class Linda{
     {
         $toReturn = array();
         
-        foreach(self::RPC()->listtransactions($account, 99999999999) as $trans)
+        foreach(self::RPC()->listtransactions(  99999999999) as $trans)
         {
+            echo "Checking Transaction: ";
+            print_r($trans);
+            echo "<hr>";
             if(self::isValidAddress($trans["address"]) && $wallet == $trans["address"])
             {
                 array_push($toReturn, $trans);
@@ -93,6 +97,25 @@ class Linda{
     public static function isValidWalletID($id)
     {
         return preg_match("/^[a-zA-Z0-9]{34}$/", $id);
+    }
+    
+    public static function getBalanceByWallet($wallet)
+    {
+        /**
+         * Build the JSON Array for Listunspent
+         * @var array $arr
+         */
+        $arr=array();
+        array_push($arr, $wallet);
+        //Command listunspent 1 9999 [array]
+        $arr = self::RPC()->listunspent(1, 99999, $arr);
+        
+        $balance = 0;
+        foreach($arr as $tmptx)
+        {
+            $balance+=$tmptx["amount"];
+        }
+        return $balance;
     }
     
     /**
@@ -125,6 +148,7 @@ class Linda{
     public static function getWalletsByAccount($account)
     {
         $toReturn = array();
+        
         $arr = self::RPC()->getaddressesbyaccount($account);
         foreach($arr as $tmp)
         {
@@ -141,12 +165,9 @@ class Linda{
     public static function getBalanceByAccount($account)
     {
         $balance = 0;
-        foreach(self::RPC()->listtransactions($account) as $tran)
+        foreach(self::RPC()->getaddressesbyaccount($account) as $wallet)
         {
-            if(isset($tran["address"]) && self::isValidAddress(@$tran["address"]))
-            {
-                $balance += $tran["amount"] + @$tran["fee"];
-            }
+            $balance += self::getBalanceByWallet($wallet);
         }
         return $balance;
     }
@@ -160,8 +181,6 @@ class Linda{
     {
         if(is_null($addr))
             return false;
-        
-            return true;
         return "" != self::RPC()->getaccount($addr);
     }
     

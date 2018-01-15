@@ -4,6 +4,7 @@ $include_header = '<link href="./include/css/plugins/footable/footable.core.css"
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
 ';
+$content = "";
 
 //Create a new address
 //echo $bitcoin->getnewaddress($account);

@@ -27,11 +27,12 @@ $tableContent = null;
 $count = 1;
 foreach($arr as $tmp)
 {
+    $balance = Linda::getBalanceByWallet($tmp);
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
     <td><a href="./?act=wallet&wid='.$tmp.'">'.$tmp.'</a></td>
-    <td>0.00000000</td>
+    <td>'.$balance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#modal-form">deposit</a>
     <a data-toggle="modal" class="btn btn-primary" href="#modal-form">withdraw</a>
