@@ -1,20 +1,30 @@
 <?php
-$title = "Wallet";
+$title = "View Wallet - ".$_GET['wid'];
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">';
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
 ';
 $content = "";
 
-//Create a new address
-//echo $bitcoin->getnewaddress($account);
-//$money = Linda::getLindaByAccount($_SESSION['UserID']);
+
+
 $walletID = @$_GET['wid'];
-if(@!isset($walletID))
-    $arr = Linda::getTransactionsByAccount($_SESSION['UserID']);
-else
-    $arr = Linda::getTransactionsByWallet($_SESSION['UserID'], $walletID);
-$balance = Linda::getBalanceByAccount($_SESSION['UserID']);
+
+$wallet = LindaSQL::getWalletData($walletID);
+
+if($wallet["account"] != $_SESSION['UserID'])
+    throw new Exception ("You tried to view a wallet that doesn't belong to you.");
+
+
+    
+    
+$transactions = Linda::getTransactionsByWallet($wallet, @$_GET['from']); //<---- This is what is used to get transactions for a wallet
+
+    
+
+$balance = Linda::getBalanceByWallet($walletID);
+
+
 $lastDepDate = date("m/d/Y");
 $lastDepValue = 0;
 $lastWitDate = date("m/d/Y");
@@ -27,43 +37,30 @@ $tranDate = null;
 $tranType = "";
 $tranOwner = "";
 $tranAmount = 0;
-$arr = array_reverse($arr);
-foreach($arr as $tmp)
+$transactions = array_reverse($transactions);
+foreach($transactions as $trans)
 {
-    //$content .= "<hr style='border-color: red; background: red;color: red;' />";
-    foreach($tmp as $key=>$value)
-    {
-        switch($key){
-            case "address":
-                $tranOwner = $value;
-                break;
-            case "amount":
-                $tranAmount = $value;
-                break;
-            case "confirmations":
-                $tranStatus = $value;
-                if ($value >= 10) 
-                    $tranStatus = 10;
-                break;
-            case "category":
-                $tranType = $value;
-                break;
-            case "time":
-                $tranDate = date('m/d/Y G:i:s', $value);
-                break;
-        }
-    }
+    $trans["category"] = ucfirst($trans["category"]);
+    
+    $color = $trans["category"] == "Send" ? "red" : "green";
+    $tranStatus = $trans["confirmations"];
+    if($tranStatus > 10)
+        $tranStatus = 10;
+
+        $tranDate = date('m/d/Y G:i:s', $trans["time"]);
+
+    $test = Linda::RPC()->gettransaction("e6661ec176d221a6e415dcb2617989a8addcc50bbced6f65871115f9db27449f");
     $tableContent .=
     '<tr>
     <td>'.$tranCount++.'</td>
-    <td>
+<td>'.$trans["txid"].'</td>
+    <td aling="center" title="Total Confirmations: '.$trans["confirmations"].'">
         <span class="pie" style="display: none;">'.$tranStatus.','.(10-$tranStatus).'</span>
     </td>
     <td>'.$tranDate.'</td>
-    <td>'.$walletID.'</td>
-    <td>'.$tranType.'</td>
-    <td>'.$tranOwner.'</td>
-    <td>'.$tranAmount.'</td>
+    
+    <td aling="center"><span style="color: '.$color.'">'.$trans["category"].'</span></td>
+    <td><span style="color: '.$color.'">'.$trans["amount"].'</span> Linda</td>
     </tr>';
      
 }
@@ -156,11 +153,10 @@ $content .= '
                     <tr>
                             
                         <th>#</th>
+                        <th>Transaction ID </th>
                         <th>Status </th>
                         <th>Date </th>
-                        <th>Wallet </th>
                         <th>Type </th>
-                        <th>Address </th>
                         <th>Amount </th>
                             
                     </tr>

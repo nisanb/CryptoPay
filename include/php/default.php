@@ -12,11 +12,14 @@ function buildREF(a)
 }
 </script>
 ';
-//Create a new address
-//echo $bitcoin->getnewaddress($account);
-//print_r(Linda::getTransactionsByWallet($_SESSION['UserID'], "LYkgg5J2EJT6eK7xYGLBvhXajqB8kjEaSN"));
+
+
+
 $content = '';
-$arr = Linda::getWalletsByAccount($_SESSION['UserID']);
+
+
+
+$_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
 //$money = Linda::getLindaByAccount($_SESSION['UserID']);
 $balance = Linda::getBalanceByAccount($_SESSION['UserID']);
 if(@$_GET['action'] == "add")
@@ -33,18 +36,18 @@ $lastWitValue = 0;
 $tableContent = null;
 $count = 1;
 $qrVar = null;
-foreach($arr as $tmp)
+foreach($_ACCOUNT['Wallets'] as $tmpWallet)
 {
-    $balance = Linda::getBalanceByWallet($tmp);  
-    QRcode::png($tmp, "qr.png");
+    $balance = Linda::getBalanceByWallet($tmpWallet[3]);  
+    QRcode::png($tmpWallet[3], "qr.png");
     $selectedQR = "qr.png";
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
-    <td><a href="./?act=wallet&wid='.$tmp.'">'.$tmp.'</a></td>
+    <td><a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].'</a></td>
     <td>'.$balance.'</td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmp.'\')">deposit</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form">withdraw</a>
     </td>
     </tr>';

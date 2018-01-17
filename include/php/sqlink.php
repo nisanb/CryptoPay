@@ -45,6 +45,16 @@ class Linda{
     }
     
     /**
+     * TODO
+     * @param unknown $account
+     * @param unknown $trans
+     */
+    public static function getTransactionDetails($account, $trans)
+    {
+        
+    }
+    
+    /**
      * Returns transactions associated by an account
      * @param unknown $account
      * @return unknown
@@ -65,27 +75,20 @@ class Linda{
     }
     
     /**
-     * Returns transactions made by an account and wallet
+     * Returns received transactions made by an account and wallet
      * @param unknown $account
      * @param unknown $wallet
      * @return array
      */
-    public static function getTransactionsByWallet($account, $wallet)
+    public static function getTransactionsByWallet($wallet, $from=0)
     {
         $toReturn = array();
+        if(!@isset($from))
+            $from = 0;
         
-        foreach(self::RPC()->listtransactions(  99999999999) as $trans)
-        {
-            echo "Checking Transaction: ";
-            print_r($trans);
-            echo "<hr>";
-            if(self::isValidAddress($trans["address"]) && $wallet == $trans["address"])
-            {
-                array_push($toReturn, $trans);
-            }
-        }
-        
-        return $toReturn;
+        $tranList = array();
+            
+        return self::RPC()->listtransactions($wallet["walletHash"], 10, $from);
         
     }
     
@@ -96,7 +99,10 @@ class Linda{
      */
     public static function isValidWalletID($id)
     {
-        return preg_match("/^[a-zA-Z0-9]{34}$/", $id);
+        if(!preg_match("/^[a-zA-Z0-9]{34}$/", $id))
+            throw new Exception("Invalid Wallet Address supplied - ".$id);
+        
+        return true;
     }
     
     public static function getBalanceByWallet($wallet)
@@ -108,6 +114,7 @@ class Linda{
         $arr=array();
         array_push($arr, $wallet);
         //Command listunspent 1 9999 [array]
+        
         $arr = self::RPC()->listunspent(1, 99999, $arr);
         
         $balance = 0;
@@ -128,6 +135,18 @@ class Linda{
         return preg_match("^[a-zA-Z0-9]$", $str);
     }
     
+    public static function RandomString()
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randstring = "";
+        for ($i = 0; $i < 30; $i++) {
+            if($i%10==0)
+                $randstring .= "-";
+            $randstring .= $characters[rand(0, strlen($characters)-1)];
+        }
+        return $randstring;
+    }
+    
     /**
      * Creates a wallet by a given account ID
      * @param unknown $account
@@ -135,28 +154,30 @@ class Linda{
      */
     public static function createWallet($account)
     {
-        $answer = self::RPC()->getnewaddress($account);
-        return self::isValidWalletID($answer);
+        //Generate wallet label
+        $walletHash = $account.Linda::RandomString();
+        
+        //Check if not maxed out
+       /* if(LindaSQL::getAmountOfWalletsByUser($account) > 0)
+            throw new Exception ("You have maxed out your wallets!");
+      */
+        //Generate address
+        $walletID = self::RPC()->getnewaddress($walletHash);
+        
+        //Add to SQL
+        LindaSQL::addWallet($account, $walletID, $walletHash, "Default Wallet");
+        
+        //Verify wallet was created
+        self::isValidWalletID($walletID);
+        
+        
+        
+        
+        return true;
         
     }
     
-    /**
-     * Returns an array with wallet IDs associated with an account
-     * @param unknown $account
-     * @return unknown
-     */
-    public static function getWalletsByAccount($account)
-    {
-        $toReturn = array();
-        
-        $arr = self::RPC()->getaddressesbyaccount($account);
-        foreach($arr as $tmp)
-        {
-            array_push($toReturn, $tmp);
-        }
-        return $toReturn;
-    }
-
+   
     /**
      * Returns balance by a given account
      * @param unknown $account
@@ -165,10 +186,12 @@ class Linda{
     public static function getBalanceByAccount($account)
     {
         $balance = 0;
-        foreach(self::RPC()->getaddressesbyaccount($account) as $wallet)
-        {
-            $balance += self::getBalanceByWallet($wallet);
-        }
+        
+        $wallets = LindaSQL::getWalletsByAccount($account);
+            foreach(self::RPC()->listunspent(1, 999999, array_values($wallets)) as $wallet)
+            {
+                $balance += self::getBalanceByWallet($wallet);
+            }
         return $balance;
     }
     
@@ -195,7 +218,97 @@ class LindaSQL{
     private static $pass        =   "";
     private static $db          =   "linda";
 
+    
+    public static function getWalletData($walletID)
+    {
+        //Validate
+        Linda::isValidWalletID($walletID);
+        
+        $tmpWallet = array();
+        
+        
+        $sql = "select * from wallets where walletAddress = \"$walletID\"";
+        if ($result = LindaSQL::getConn()->query($sql)) {
+            /* fetch associative array */
+            while ($row = mysqli_fetch_assoc($result)) {
+                return $row;
+            }
+            
+        }
+        
+    }
+    
+    /**
+     * Returns an array with wallet IDs associated with an account
+     * @param unknown $account
+     * @return unknown
+     */
+    public static function getWalletInfoTableByAccount($account)
+    {
+        $email = self::trim_output($account);
+        $sql = "select * from wallets where account=\"$email\"";
+        if (!$result = LindaSQL::getConn()->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account wallets.");
+        }
+        
+        $wallets = array();
+        if ($result = LindaSQL::getConn()->query($sql)) {
+            $tmpWallet = array();
+            /* fetch associative array */
+            while ($row = mysqli_fetch_assoc($result)) {
+                array_push($tmpWallet, $row["account"]);
+                array_push($tmpWallet, $row["walletHash"]);
+                array_push($tmpWallet, $row["walletLabel"]);
+                array_push($tmpWallet, $row["walletAddress"]);
+            }
+            
+            
+            array_push($wallets, $tmpWallet);
+            
+            /* free result set */
+            mysqli_free_result($result);
+        }
+        
+        
+        
+        return $wallets;
+        
+        
+    }
+    
+    
 
+    public static function getAmountOfWalletsByUser($email)
+    {
+        $email = self::trim_output($email);
+        $sql = "select count(*) from wallets where account=\"$email\"";
+        if (!$result = LindaSQL::getConn()->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account wallets.");
+        }
+        
+        $result = @mysqli_fetch_assoc($result);
+        
+        return $result;
+        
+    }
+    
+    public static function getWalletsByAccount($email)
+    {
+        $email = self::trim_output($email);
+        
+        $sql = "SELECT walletAddress FROM wallets where account=\"$email\"";
+        if (!$result = LindaSQL::getConn()->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account wallets.");
+        }
+        
+        $arr = mysqli_fetch_assoc($result);
+        
+        return $arr;
+    }
+    
     /**
      * Register user to database if he does not exists yet
      * @param unknown $email
@@ -220,9 +333,6 @@ class LindaSQL{
             throw new Exception("Could not generate a new account");
         }
 
-        //Submit to database
-        //$conn->query($sql);
-
         $conn->close();
 
         return $authKey;
@@ -231,6 +341,29 @@ class LindaSQL{
 
     }
 
+    /**
+     * This function will add a new wallet to the database
+     * @param unknown $email
+     * @param unknown $walletID
+     */
+    public static function addWallet($email, $walletID, $walletHash, $label)
+    {
+        $email = self::trim_input($email);
+        $label = self::trim_input($label);
+        
+        Linda::isValidWalletID($walletID);
+        
+        $conn = LindaSQL::getConn();
+        $sql = "INSERT INTO wallets VALUES (\"$email\",\"$walletHash\",\"$label\",\"$walletID\")";
+        if (!$result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not generate a new wallet");
+        }
+        
+        return true;
+        
+    }
+    
     public static function verify($email, $authKey)
     {
 
@@ -299,10 +432,14 @@ class LindaSQL{
         }
 
         $authKey = "";
+        
         //Check if email is found in DB
+        //If not - create a new wallet
         if ($result->num_rows === 0) {
+            
            $authKey = self::init($email);
            Linda::createWallet($email);
+           
            return true;
         }
 
