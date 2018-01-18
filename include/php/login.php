@@ -160,7 +160,7 @@ Please download Google Authenticator
               }
             
             ?>
-            <p class="m-t"> <small>Linda Web Walet &copy; 2018<br /></small> </p>
+            <p class="m-t"> <small>Linda Web Wallet &copy; 2018<br /></small> </p>
         </div>
     </div>
 
