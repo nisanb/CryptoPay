@@ -24,7 +24,7 @@ $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']
 $balance = Linda::getBalanceByAccount($_SESSION['UserID']);
 if(@$_GET['action'] == "add")
 {
-    Linda::createWallet($_SESSION['UserID']);
+    //Linda::createWallet($_SESSION['UserID']);
    $swal = true;
 }
 
@@ -38,13 +38,14 @@ $count = 1;
 $qrVar = null;
 foreach($_ACCOUNT['Wallets'] as $tmpWallet)
 {
-    $balance = Linda::getBalanceByWallet($tmpWallet[3]);  
+    $balance = Linda::getBalanceByWallet($tmpWallet[1]);  
     QRcode::png($tmpWallet[3], "qr.png");
     $selectedQR = "qr.png";
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
-    <td><a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].'</a></td>
+    <td>'.$tmpWallet[2].'
+    <td><a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].' </a>[<span onclick="copyClipboard(\''.$tmpWallet[3].'\');">Copy</span>]</td>
     <td>'.$balance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
@@ -154,6 +155,7 @@ $content .= '
                     <tr>
 
                         <th>#</th>
+                        <th>Label </th>
                         <th>Address </th>
                         <th>Balance</th>
                         <th>Action </th>

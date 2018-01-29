@@ -10,8 +10,8 @@ require_once './include/php/_jsonrpc2.php';
 class Linda{
     
     
-    private static $rpcuser     =   "k0bsP";
-    private static $rpcpass     =   "tTaA4XCUmcZZ867";
+    private static $rpcuser     =   "Rgtnm";
+    private static $rpcpass     =   "8XN5GYJtFLuiDb9";
     private static $rpcip       =   "127.0.0.1";
     private static $rpcport     =   "33821";
 
@@ -86,10 +86,34 @@ class Linda{
         if(!@isset($from))
             $from = 0;
         
-        $tranList = array();
             
-        return self::RPC()->listtransactions($wallet["walletHash"], 10, $from);
+        $returnedList =  self::RPC()->listtransactions($wallet["walletHash"], 10, $from);
         
+        $tranList = array();
+        
+        foreach($returnedList as $trans)
+        {
+            if($trans["category"] == "receive")
+                if(!isset($tranList[$trans["time"]])){
+                    $tranList[$trans["time"]] = $trans;
+            }
+                else {
+                    echo "Didn't add incoming";
+                    print_r($trans);
+                }
+        }
+        
+        $returnedList = self::RPC()->listtransactions($wallet["walletHash"]."-stealth", 10, $from);
+        foreach($returnedList as $trans)
+        {
+            if($trans["category"] == "send")
+                if(!isset($tranList[$trans["time"]])){
+                    $trans["amount"] += $trans["fee"];
+                    $tranList[$trans["time"]] = $trans;
+                }
+        }
+
+        return $tranList;
     }
     
     /**
@@ -110,19 +134,9 @@ class Linda{
         /**
          * Build the JSON Array for Listunspent
          * @var array $arr
+         * TODO Put security
          */
-        $arr=array();
-        array_push($arr, $wallet);
-        //Command listunspent 1 9999 [array]
-        
-        $arr = self::RPC()->listunspent(1, 99999, $arr);
-        
-        $balance = 0;
-        foreach($arr as $tmptx)
-        {
-            $balance+=$tmptx["amount"];
-        }
-        return $balance;
+        return self::RPC()->getbalance($wallet);
     }
     
     /**
@@ -188,7 +202,7 @@ class Linda{
         $balance = 0;
         
         $wallets = LindaSQL::getWalletsByAccount($account);
-            foreach(self::RPC()->listunspent(1, 999999, array_values($wallets)) as $wallet)
+            foreach($wallets as $wallet)
             {
                 $balance += self::getBalanceByWallet($wallet);
             }
@@ -298,7 +312,7 @@ class LindaSQL{
     {
         $email = self::trim_output($email);
         
-        $sql = "SELECT walletAddress FROM wallets where account=\"$email\"";
+        $sql = "SELECT walletHash FROM wallets where account=\"$email\"";
         if (!$result = LindaSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not query for account wallets.");

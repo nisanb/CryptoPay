@@ -65,8 +65,8 @@
                     <a href="./?act=notifications"><i class="fa fa-trello"></i> <span class="nav-label">Notifications</span></a>
                     </li>
                   -->
-                    <li <?=active("profile");?>>
-                    <a href="./?act=profile"><i class="fa fa-user"></i> <span class="nav-label">Profile</span></a>
+                    <li <?=active("wallet");?>>
+                    <a href="./?act=wallet"><i class="fa fa-user"></i> <span class="nav-label">My Wallets</span></a>
                     </li>
 
 <!-- Default Multi-level menu for future usage TODO
@@ -259,6 +259,15 @@
 
     <?=@$include_footer;?>
     <script>
+    function copyClipboard(text) {
+  	  /* Get the text field */
+  	  var copyText = text;
+
+
+  	  /* Copy the text inside the text field */
+  	  document.execCommand("Copy");
+
+  	}
         $(document).ready(function() {
 
           //Search Box Execution
@@ -353,6 +362,8 @@
                 toastr.success('Loading Complete', 'Welcome to iScience+');
 
             }, 1500);
+
+        
 
 
 

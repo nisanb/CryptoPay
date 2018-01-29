@@ -1,5 +1,4 @@
 <?php
-$title = "View Wallet - ".$_GET['wid'];
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">';
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
@@ -11,7 +10,7 @@ $content = "";
 $walletID = @$_GET['wid'];
 
 $wallet = LindaSQL::getWalletData($walletID);
-
+$title = "View Wallet - ".$wallet["walletLabel"];
 if($wallet["account"] != $_SESSION['UserID'])
     throw new Exception ("You tried to view a wallet that doesn't belong to you.");
 
@@ -22,7 +21,7 @@ $transactions = Linda::getTransactionsByWallet($wallet, @$_GET['from']); //<----
 
     
 
-$balance = Linda::getBalanceByWallet($walletID);
+$balance = Linda::getBalanceByWallet($wallet["walletHash"]);
 
 
 $lastDepDate = date("m/d/Y");
