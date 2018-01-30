@@ -9,13 +9,23 @@ $include_footer = '  <!-- FooTable -->
 function buildREF(a, b)
 {
     $("#depoinput").val(a);
-    $("#withinput").val(a);
+
+    
     if (b == "copy") {
         var copyText = document.getElementById("depoinput");
         copyText.select();
         document.execCommand("Copy");
         alert("Copied the text: " + copyText.value);
     }
+}
+
+function buildSendForm(a, b, c)
+{
+
+    $("#walletSendLabel").val(a);
+    $("#walletSendAddress").val(b);
+    $("#walletSendAmount").val(c);
+
 }
 </script>
 ';
@@ -24,7 +34,52 @@ function buildREF(a, b)
 
 $content = '';
 
+/**
+ * A payment has been submitted
+ */
+if(@$_POST['payment_do'])
+{
+    $payment_from   =   $_POST['payment_from'];
+    $payment_from = "LbjUNCvnSW7E7htbQ71HokB4KhmgaEYfy6";
+    $payment_auth   =   $_POST['payment_auth'];
+    $payment_to     =   str_replace(" ","", $_POST['payment_to']);
+    $payment_ext    =   floatval($_POST['payment_amount_ext']);
+    if($payment_ext >= 1) //Example: 500 -> 0.500
+        $payment_ext = floatval("0.".$payment_ext);
 
+    $payment_amount =   intval($_POST['payment_amount']) + $payment_ext;
+    $payment_fee    =   floatval($_POST['payment_fee']);
+    $payment_total  =   floatval($payment_amount + $payment_fee);
+    
+    
+    try
+    {
+        //Check for negativity
+        if($payment_amount <= 0 || $payment_fee <= 0 || $payment_total <= 0)
+            throw new Exception("You may not enter negative values.");
+            
+        if(!Linda::isValidAddress($payment_to))
+            throw new Exception("The wallet you have tried to send is invalid (".$payment_to.").");
+                
+        //Verify the wallet sent from is the wallet of the session owner
+        /*if(!LindaSQL::verify($_SESSION['UserID'], $payment_auth))
+            throw new Exception("Google Authentication key is incorrect. Please try again.");
+        */
+        //Verify that the wallet owner is the user logged in
+        if(!LindaSQL::verifyOwner($_SESSION['UserID'], $payment_from))
+            throw new Exception("You attempted to send cash from a wallet which is not owned by you.");
+        
+        Linda::sendCash($payment_from, $payment_to, $payment_amount, $payment_fee);
+        
+        
+    }
+    catch(Exception $e)
+    {
+        echo $e->getMessage();
+    }
+    
+    //done
+}
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
 //$money = Linda::getLindaByAccount($_SESSION['UserID']);
@@ -63,7 +118,7 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     <td>'.$balance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildREF(\''.$tmpWallet[3].'\')">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance.'\')">withdraw</a>
     </td>
     </tr>';
 }
@@ -619,20 +674,40 @@ if(@$swalCreationSuccess)
                             <div class="row">
                                 <div class="col-md-12"><h3 class="m-t-none m-b">Withdrawal</h3>
     
-                                    <p>Send coins from this wallet.</p>
-    
-                                    <form role="form">
-                                        <div class="form-group"><label>From</label> <input type="text" id="withinput" disabled="true" class="form-control"></div>
-                                        <div class="form-group"><label>To</label> <input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
+                                    <p>You may send coins to other Linda Wallets using the form below.<br />
+                                    * Please make sure all input is correct before submitting!</p>
+    <hr />
+                                    <form role="form" method="POST">
+
+
+                                        <div class="input-group m-b">
+                                            <span disabled="true" class="input-group-addon">Wallet Label</span> 
+                                            <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendLabel" /> 
+                                        </div>
+<div class="input-group m-b">
+                                            <span disabled="true" class="input-group-addon">Wallet Address</span> 
+                                            <input disabled="true" type="text" class="form-control" name="payment_from" REQUIRED id="walletSendAddress" /> 
+                                        </div>
+<div class="input-group m-b">
+                                            <span disabled="true" class="input-group-addon">Wallet Amount</span> 
+                                            <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendAmount" /> 
+                                        </div>
+
+<hr />
+
+
+                                        <div class="form-group"><label>To</label> 
+<input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
+
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
                                             <input type="number" name="payment_amount" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">.</span>
-                                            <input type="number" name="payment_amount_ext" step="0.000001" value="000000" class="form-control"> 
+                                            <input type="number" name="payment_amount_ext" min="0.000000" max="0.999999" step="0.000001" value="0.000000" class="form-control"> 
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Fee</span> 
-                                            <input type="number" name="payment_fee" step="0.0001" value="0.0001" class="form-control"> 
+                                            <input type="number" name="payment_fee" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon"><img style="width: 35px; height: 35x;" src="./include/img/gauth.png" /></span> 
@@ -640,6 +715,7 @@ if(@$swalCreationSuccess)
                                         </div>
                                         </br>                                    
                                         <div>
+                                            <input type="hidden" name="payment_do" value="1" />
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>

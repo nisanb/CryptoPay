@@ -2,7 +2,7 @@
 //Check if the form is submitted
 //include "gauth.php";
 
-$bypass = true;
+$bypass = false;
 
 if(@isset($_POST['email']) && !@isset($_POST['authKey']))
 {

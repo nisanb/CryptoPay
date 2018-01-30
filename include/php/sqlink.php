@@ -169,14 +169,64 @@ class Linda{
      */
     public static function sendCash($from, $to, $amount, $fee = 0.0001)
     {
-        if(!self::validateStringNumber($to))
+     
+        //Validate wallet addresses
+        if(!self::isValidAddress($to))
         {
-            throw new Exception("Could not send to address " . $to);
+            throw new Exception("Invalid address given -> ".$to);
         }
         
-        //Check from wallet is the user who is logged in
+        if(!self::isValidAddress($from))
+        {
+            throw new Exception("Invalid address given -> ".$from);
+        }
         
-        //move
+        if($amount <= 0 || $fee <= 0)
+        {
+            throw new Exception("Transaction amounts cannot be negative.");
+        }
+        
+        $walletData = LindaSQL::getWalletData($from);
+        $walletHash = $walletData["walletHash"];
+        
+        //Check balance with fees
+        $total = $amount + $fee;
+        
+        $diff = Linda::RPC()->getbalance($walletHash) - $total;
+        
+        if($diff < 0)
+            throw new Exception("Transaction could not be commited due to insufficient amount (missing ".$diff.")");
+        
+        //All input is verified
+        
+            //1. move funds to stealth account
+            //2. sendfrom stealthaccount to address - amount without fees with min conf 5
+            //3. done
+            
+        $stealth = $walletHash."-stealth";
+        
+        //Transfer funds to stealth wallet
+        if(!Linda::RPC()->move($walletHash, $stealth, $total, 3))
+            throw new Exception("Could not transfer funds to stealth wallet.");
+            echo "<br />sendfrom ".$stealth." ".$to." ".$amount." 10<br />";
+        
+        //Send the real transaction
+        $result = Linda::RPC()->sendfrom($stealth, $to, $amount, 3);
+        echo "<pre>";
+        print_r($result);
+        echo "</pre>";
+        
+        $newStealthBalance = abs(Linda::RPC()->getbalance($stealth));
+        
+        if(!Linda::RPC()->move("", $stealth, $newStealthBalance))
+            throw new Exception("Could not transfer funds back to stealth wallet.");
+            
+        
+        
+        
+        
+        
+        
         
         
     }
@@ -237,15 +287,16 @@ class Linda{
     }
     
     /**
-     * TRUE only if transaction is real
+     * TRUE only if an address is valid
      * @param unknown $addr
      * @return boolean
      */
     public static function isValidAddress($addr = NULL)
     {
-        if(is_null($addr))
+        if(is_null($addr) || !Linda::isValidWalletID($addr))
             return false;
-        return "" != self::RPC()->getaccount($addr);
+        
+        return self::RPC()->validateaddress($addr)["isvalid"];
     }
     
 
@@ -263,7 +314,7 @@ class LindaSQL{
     public static function getWalletData($walletID)
     {
         //Validate
-        Linda::isValidWalletID($walletID);
+        Linda::isValidAddress($walletID);
         
         $tmpWallet = array();
         
@@ -276,6 +327,8 @@ class LindaSQL{
             }
             
         }
+        
+        throw new Exception("Could not retreive wallet information for address ".$walletID);
         
     }
     
@@ -379,6 +432,34 @@ class LindaSQL{
 
 
 
+    }
+    
+    /**
+     * Returns TRUE if the account sent is the owner of the wallet received
+     * @param unknown $account
+     * @param unknown $wallet
+     * @throws Exception
+     * @return boolean
+     */
+    public static function verifyOwner($account, $wallet)
+    {
+        $account    = self::trim_input($account);
+        $wallet     = self::trim_input($wallet);
+        
+        $conn = LindaSQL::getConn();
+        
+        $sql = "SELECT account FROM wallets WHERE walletAddress in (\"{$wallet}\")";
+        echo $sql;
+        if (!$result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive account information (".$account ." - ".$wallet.").");
+            exit;
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        
+        return $account == $row["account"];
+        
     }
 
     /**
