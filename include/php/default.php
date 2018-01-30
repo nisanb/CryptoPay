@@ -41,6 +41,7 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     $balance = Linda::getBalanceByWallet($tmpWallet[1]);  
     QRcode::png($tmpWallet[3], "qr.png");
     $selectedQR = "qr.png";
+
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
@@ -68,7 +69,6 @@ $content .= '
     }
     $content .= '
 </script>
-
   <div class="row">
             <div class="col-lg-4">
                 <div class="ibox float-e-margins">
@@ -142,11 +142,7 @@ $content .= '
         <div class="ibox-content">
             <div class="row">
                 <div class="col-sm-3">
-                    <a href="./?action=add">
-                        <button type="button" class="btn btn-sm btn-primary">
-                             Add New Wallet
-                        </button>
-                    </a>
+                    <a data-toggle="modal" class="btn btn-primary" href="#wallet-form">Add New Wallet</a>
                 </div>
             </div>
             <div class="table-responsive">
@@ -550,6 +546,31 @@ $content .= '
                 </div>
 
             </div>
+            <div id="wallet-form" class="modal fade" aria-hidden="true" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12"><h3 class="m-t-none m-b">Create Wallet</h3>
+    
+                                    <p>create a new wallet.</p>
+    
+                                    <form name="form" action="" method="post">
+                                        <div class="form-group"><label>Label</label></div>
+                                        <input type="hidden" value="1" name="do_create" />
+                                        <div class="input-group col-md-12">
+                                            <input type="text" name="walletLabel" id="walletLabel" class="form-control" REQUIRED>
+                                            <span class="input-group-btn"> 
+                                                <button href="./?action=add" class="btn btn-primary">Create</button>
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="deposit-form" class="modal fade" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -560,8 +581,8 @@ $content .= '
                                     <p>Send coins to this wallet.</p>
     
                                     <form role="form">
-                                        <iframe style="border:0; width:50%; height:50%" src="'.$selectedQR.'"></iframe>
-                                        <div class="form-group"><label>Address</label>
+                                        <iframe style="border:0; width:50%; height:50%" src="'.$selectedQR."png".'"></iframe>
+                                        <div class="form-group"><label>Address</label></div>
                                         <div class="input-group col-md-12">
                                             <input type="text" id="depoinput" disabled="true" class="form-control">
                                             <span class="input-group-btn"> 
@@ -588,10 +609,15 @@ $content .= '
                                         <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control"></div>
                                         <div class="form-group"><label>Label</label> <input type="text" placeholder="Your name" class="form-control"></div>
                                         <div class="input-group m-b">
-                                            <span class="input-group-addon">Linda</span> 
-                                                <input type="text" class="form-control"> 
-                                            <span class="input-group-addon">.00000000</span>
+                                            <span disabled="true" class="input-group-addon">Linda</span> 
+                                            <input type="number" class="form-control"> 
+                                            <span disabled="true" class="input-group-addon">.</span>
+                                            <input type="number" step="0.000001" value="000000" class="form-control"> 
                                         </div>    
+                                        <div class="input-group m-b">
+                                            <span disabled="true" class="input-group-addon">Tax</span> 
+                                            <input type="number" step="0.000001" value="000000" class="form-control"> 
+                                        </div>   
                                         </br>                                    
                                         <div>
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
@@ -604,5 +630,5 @@ $content .= '
                 </div>
             </div>
 ';
-
+echo $selectedQR;
 

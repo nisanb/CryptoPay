@@ -10,8 +10,8 @@ require_once './include/php/_jsonrpc2.php';
 class Linda{
     
     
-    private static $rpcuser     =   "Rgtnm";
-    private static $rpcpass     =   "8XN5GYJtFLuiDb9";
+    private static $rpcuser     =   "k0bsP";
+    private static $rpcpass     =   "tTaA4XCUmcZZ867";
     private static $rpcip       =   "127.0.0.1";
     private static $rpcport     =   "33821";
 
@@ -170,6 +170,7 @@ class Linda{
     {
         //Generate wallet label
         $walletHash = $account.Linda::RandomString();
+
         
         //Check if not maxed out
        /* if(LindaSQL::getAmountOfWalletsByUser($account) > 0)
