@@ -9,6 +9,7 @@ $include_footer = '  <!-- FooTable -->
 function buildREF(a, b)
 {
     $("#depoinput").val(a);
+    $("#withinput").val(a);
     if (b == "copy") {
         var copyText = document.getElementById("depoinput");
         copyText.select();
@@ -50,7 +51,7 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     $balance = Linda::getBalanceByWallet($tmpWallet[1]);  
     QRcode::png($tmpWallet[3], "./include/img/".$tmpWallet[2].".png");
     $selectedQR = $tmpWallet[2];
-
+    
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
@@ -62,13 +63,13 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     <td>'.$balance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildREF(\''.$tmpWallet[3].'\')">withdraw</a>
     </td>
     </tr>';
 }
 $content .= '
 
-<input type="text" hidden="true" value="Hello World" id="address">
+<input type="text" hidden="true" value="Hello World" name="address" id="address">
 
 
 <script>
@@ -621,7 +622,8 @@ if(@$swalCreationSuccess)
                                     <p>Send coins from this wallet.</p>
     
                                     <form role="form">
-                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
+                                        <div class="form-group"><label>From</label> <input type="text" id="withinput" disabled="true" class="form-control"></div>
+                                        <div class="form-group"><label>To</label> <input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
                                             <input type="number" name="payment_amount" class="form-control" REQUIRED> 
