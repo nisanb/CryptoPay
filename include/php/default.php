@@ -621,20 +621,20 @@ if(@$swalCreationSuccess)
                                     <p>Send coins from this wallet.</p>
     
                                     <form role="form">
-                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control" REQUIRED></div>
+                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
-                                            <input type="number" class="form-control" REQUIRED> 
+                                            <input type="number" name="payment_amount" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">.</span>
-                                            <input type="number" step="0.000001" value="000000" class="form-control"> 
+                                            <input type="number" name="payment_amount_ext" step="0.000001" value="000000" class="form-control"> 
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Fee</span> 
-                                            <input type="number" step="0.0001" value="0.0001" class="form-control"> 
+                                            <input type="number" name="payment_fee" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
                                         <div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Fee</span> 
-                                            <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>
+                                            <span disabled="true" class="input-group-addon"><img style="width: 35px; height: 35x;" src="./include/img/gauth.png" /></span> 
+                                            <input type="number" class="form-control" placeholder="Google Auth key" style="height: 50px;" name="payment_auth" required>
                                         </div>
                                         </br>                                    
                                         <div>

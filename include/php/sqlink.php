@@ -161,6 +161,27 @@ class Linda{
     }
     
     /**
+     * Sends cash to a wallet
+     * @param unknown $from
+     * @param unknown $to
+     * @param unknown $amount
+     * @param real $fee
+     */
+    public static function sendCash($from, $to, $amount, $fee = 0.0001)
+    {
+        if(!self::validateStringNumber($to))
+        {
+            throw new Exception("Could not send to address " . $to);
+        }
+        
+        //Check from wallet is the user who is logged in
+        
+        //move
+        
+        
+    }
+    
+    /**
      * Creates a wallet by a given account ID
      * @param unknown $account
      * @return number
@@ -192,9 +213,6 @@ class Linda{
         
         //Verify wallet was created
         self::isValidWalletID($walletID);
-        
-        
-        
         
         return true;
         
