@@ -6,9 +6,15 @@ $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
 
 <script>
-function buildREF(a)
+function buildREF(a, b)
 {
     $("#depoinput").val(a);
+    if (b == "copy") {
+        var copyText = document.getElementById("depoinput");
+        copyText.select();
+        document.execCommand("Copy");
+        alert("Copied the text: " + copyText.value);
+    }
 }
 </script>
 ';
@@ -42,14 +48,17 @@ $qrVar = null;
 foreach($_ACCOUNT['Wallets'] as $tmpWallet)
 {
     $balance = Linda::getBalanceByWallet($tmpWallet[1]);  
-    QRcode::png($tmpWallet[3], "qr.png");
-    $selectedQR = "qr.png";
+    QRcode::png($tmpWallet[3], "./include/img/".$tmpWallet[2].".png");
+    $selectedQR = $tmpWallet[2];
 
     $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
     <td>'.$tmpWallet[2].'
-    <td><a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].' </a>[<span onclick="copyClipboard(\''.$tmpWallet[3].'\');">Copy</span>]</td>
+    <td>
+    <a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].'</a>
+    <a data-toggle="modal" class="btn btn-primary pull-right" onclick="buildREF(\''.$tmpWallet[3].'\',\'copy\')">Copy</a>
+    </td>
     <td>'.$balance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
@@ -587,7 +596,7 @@ if(@$swalCreationSuccess)
                                     <p>Send coins to this wallet.</p>
     
                                     <form role="form">
-                                        <iframe style="border:0; width:50%; height:50%" src="'.$selectedQR."png".'"></iframe>
+                                        <iframe style="border:0; width:50%; height:50%" src="./include/img/'.$selectedQR.'.png"></iframe>
                                         <div class="form-group"><label>Address</label></div>
                                         <div class="input-group col-md-12">
                                             <input type="text" id="depoinput" disabled="true" class="form-control">
@@ -612,18 +621,21 @@ if(@$swalCreationSuccess)
                                     <p>Send coins from this wallet.</p>
     
                                     <form role="form">
-                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control"></div>
-                                        <div class="form-group"><label>Label</label> <input type="text" placeholder="Your name" class="form-control"></div>
+                                        <div class="form-group"><label>Pay to</label> <input type="text" placeholder="Enter address" class="form-control" REQUIRED></div>
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
-                                            <input type="number" class="form-control"> 
+                                            <input type="number" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">.</span>
                                             <input type="number" step="0.000001" value="000000" class="form-control"> 
                                         </div>    
                                         <div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Tax</span> 
-                                            <input type="number" step="0.000001" value="000000" class="form-control"> 
+                                            <span disabled="true" class="input-group-addon">Fee</span> 
+                                            <input type="number" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
+                                        <div class="input-group m-b">
+                                            <span disabled="true" class="input-group-addon">Fee</span> 
+                                            <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>
+                                        </div>
                                         </br>                                    
                                         <div>
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
@@ -636,4 +648,3 @@ if(@$swalCreationSuccess)
                 </div>
             </div>
 ';
-
