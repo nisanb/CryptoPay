@@ -128,14 +128,14 @@ class Linda{
         return true;
     }
     
-    public static function getBalanceByWallet($wallet)
+    public static function getBalanceByWallet($wallet, $minconf = 1)
     {
         /**
          * Build the JSON Array for Listunspent
          * @var array $arr
          * TODO Put security
          */
-        return self::RPC()->getbalance($wallet);
+        return self::RPC()->getbalance($wallet, $minconf);
     }
     
     /**
@@ -274,14 +274,14 @@ class Linda{
      * @param unknown $account
      * @return number
      */
-    public static function getBalanceByAccount($account)
+    public static function getBalanceByAccount($account, $minconf = 1)
     {
         $balance = 0;
         
         $wallets = LindaSQL::getWalletsByAccount($account);
             foreach($wallets as $wallet)
             {
-                $balance += self::getBalanceByWallet($wallet);
+                $balance += self::getBalanceByWallet($wallet, $minconf);
             }
         return $balance;
     }

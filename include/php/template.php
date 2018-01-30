@@ -156,7 +156,7 @@
               <div class="wrapper wrapper-content">
                 <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2>Linda Wallet - <?=$title;?></h2>
+                    <h2><img src="./include/img/linda_icon.png" style="height: 25px; width: 25px;" />&nbsp;&nbsp;Linda Wallet - <?=$title;?></h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="./">Home</a>

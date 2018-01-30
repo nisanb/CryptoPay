@@ -1,10 +1,15 @@
 <?php
 include "./include/phpqrcode/qrlib.php";
 $title = "Homepage";
-$include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">';
+$include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
+   <link href="./include/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+';
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
-
+<!-- Morris -->
+    <script src="./include/js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="./include/js/plugins/morris/morris.js"></script>
+    <!-- <script src="./include/js/demo/morris-demo.js"></script> -->
 <script>
 function buildREF(a, b)
 {
@@ -27,6 +32,8 @@ function buildSendForm(a, b, c)
     $("#walletSendAmount").val(c);
 
 }
+
+
 </script>
 ';
 
@@ -82,9 +89,29 @@ if(@$_POST['payment_do'])
 }
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-//$money = Linda::getLindaByAccount($_SESSION['UserID']);
-$balance = Linda::getBalanceByAccount($_SESSION['UserID']);
+$balance = Linda::getBalanceByAccount($_SESSION['UserID']) + 2;
+$balance_available = Linda::getBalanceByAccount($_SESSION['UserID'], 10);
+$balance_pending = $balance - $balance_available;
 
+$include_footer.= '
+<script>
+$(function() {
+
+
+    Morris.Donut({
+        element: \'morris-donut-chart\',
+        data: [{ label: "Available Coins", value: '.$balance_available.' },
+            { label: "Pending Coins", value: '.$balance_pending.' },
+            ],
+        resize: true,
+        colors: [\'green\', \'orange\'],
+    });
+
+});
+</script>
+';
+
+$color = $balance_pending > 0 ? 'orange' : 'green';
 /**
  * Creation of a new wallet
  */
@@ -103,7 +130,7 @@ $count = 1;
 $qrVar = null;
 foreach($_ACCOUNT['Wallets'] as $tmpWallet)
 {
-    $balance = Linda::getBalanceByWallet($tmpWallet[1]);  
+    $walletBalance = Linda::getBalanceByWallet($tmpWallet[1]);  
     QRcode::png($tmpWallet[3], "./include/img/".$tmpWallet[2].".png");
     $selectedQR = $tmpWallet[2];
     
@@ -112,10 +139,11 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     <td>'.$count++.'</td>
     <td>'.$tmpWallet[2].'
     <td>
+
     <a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].'</a>
     <a data-toggle="modal" class="btn btn-primary pull-right" onclick="buildREF(\''.$tmpWallet[3].'\',\'copy\')">Copy</a>
     </td>
-    <td>'.$balance.'</td>
+    <td>'.$walletBalance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance.'\')">withdraw</a>
@@ -141,41 +169,70 @@ if(@$swalCreationSuccess)
     $content .= '
 </script>
   <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-4 ">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-success pull-right">Updated</span>
-                        <h5>Total Income</h5>
+                        ';
+                        $per = 100;
+                        if($balance_pending > 0)
+                        {
+                            $per = number_format(($balance_available / $balance * 100), 5, '.', ',');
+                            $content .= '<span class="label label-warning pull-right" style="background-color: '.$color.'"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i> Syncing...</span>';
+                            
+                        }
+                        else
+                        {
+                            $content .= '<span class="label label-success pull-right" style="background-color: '.$color.';">Fully Synced</span>';
+                        }
+                        $content .= '
+                        <h5>Wallet Status</h5>
                     </div>
+
                     <div class="ibox-content">
                         <h1 class="no-margins">'.$balance.' Linda</h1>
-                        <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-                        <small>Total views</small>
+<hr />
+<span class="label label-info pull-left" style="background-color: green;">Available: '.$balance_available.'</span>
+
+<span class="label label-info pull-left" style="background-color: white; color: black;">+</span> 
+<span class="label label-info pull-left" style="background-color: orange;">Pending: '.$balance_pending.'</span> 
+
+                        <div class="stat-percent font-bold text-success" style="color: '.$color.'">'.$per.'%';
+                        if($balance_pending > 0)
+                        {
+                            $content .= '/100% Available';
+                        }
+              
+$content .= '
+
+ <i class="fa fa-bolt" style="color: '.$color.'"></i></div>
+<br />
+
+                        
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-info pull-right">Annual</span>
-                        <h5>Deposit</h5>
+                        <span class="label label-info pull-right">Some Data</span>
+                        <h5>Wallet Balances</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><button type="button" class="btn btn-sm btn-primary"> 
-                            Deposit Now</button></h1>
+<p id="morris-donut-chart" style="height: 150px"></p>
+
                         <div class="stat-percent font-bold text-info">'.$lastDepValue.' Linda <i class="fa fa-level-down"></i></div>
-                        <small>last deposit '.$lastDepDate.'</small>
+                        
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-info pull-right">Annual</span>
-                        <h5>Withdrawal</h5>
+                        <span class="label label-info pull-right">'.Linda::getEmailPrefix($_SESSION['UserID']).'</span>
+                        <h5>Wallet Information</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a data-toggle="modal" class="btn btn-primary" href="#modal-form">Withdraw Now</a></h1>
+                        <h1 class="no-margins"><a data-toggle="modal" class="btn btn-primary" href="#modal-form">Do something</a></h1>
                         <div class="stat-percent font-bold text-info">'.$lastWitValue.' Linda <i class="fa fa-level-up"></i></div>
                         <small>last withdrawal '.$lastWitDate.'</small>
                     </div>
@@ -195,9 +252,6 @@ if(@$swalCreationSuccess)
             <div class="ibox-tools">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
-                </a>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-wrench"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
                     <li><a href="#">Config option 1</a>
@@ -678,7 +732,7 @@ if(@$swalCreationSuccess)
                                     * Please make sure all input is correct before submitting!</p>
     <hr />
                                     <form role="form" method="POST">
-
+<center><label>Send From</label></center> 
 
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Wallet Label</span> 
@@ -689,14 +743,14 @@ if(@$swalCreationSuccess)
                                             <input disabled="true" type="text" class="form-control" name="payment_from" REQUIRED id="walletSendAddress" /> 
                                         </div>
 <div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Wallet Amount</span> 
+                                            <span disabled="true" class="input-group-addon">Available Balance</span> 
                                             <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendAmount" /> 
                                         </div>
 
 <hr />
 
 
-                                        <div class="form-group"><label>To</label> 
+                                        <div class="form-group"><center><label>Send To</label></center> 
 <input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
 
                                         <div class="input-group m-b">
