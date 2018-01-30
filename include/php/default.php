@@ -22,10 +22,13 @@ $content = '';
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
 //$money = Linda::getLindaByAccount($_SESSION['UserID']);
 $balance = Linda::getBalanceByAccount($_SESSION['UserID']);
-if(@$_GET['action'] == "add")
+
+/**
+ * Creation of a new wallet
+ */
+if(@$_POST['do_create'] == 1)
 {
-    //Linda::createWallet($_SESSION['UserID']);
-   $swal = true;
+   $swalCreationSuccess = Linda::createWallet($_SESSION['UserID'], $_POST['walletLabel']) ? "true" : "false";
 }
 
 $selectedQR = null;
@@ -60,12 +63,15 @@ $content .= '
 
 
 <script>
-    function createWallet() {
+    function createWallet(istrue) {
+    if(istrue)
         swal("Success!", "A new wallet was created.", "success");
+    else
+        swal("Error!", "Could not create wallet using the label provided ('.@$_POST['walletLabel'].').", "error");
     }';
-    if(@$swal)
+if(@$swalCreationSuccess)
     {
-        $include_footer .= '<script>createWallet()</script>';   
+        $include_footer .= '<script>createWallet('.$swalCreationSuccess.')</script>';   
     }
     $content .= '
 </script>
@@ -630,5 +636,4 @@ $content .= '
                 </div>
             </div>
 ';
-echo $selectedQR;
 

@@ -98,7 +98,6 @@ class Linda{
                     $tranList[$trans["time"]] = $trans;
             }
                 else {
-                    echo "Didn't add incoming";
                     print_r($trans);
                 }
         }
@@ -146,7 +145,7 @@ class Linda{
      */
     public static function validateStringNumber($str)
     {
-        return preg_match("^[a-zA-Z0-9]$", $str);
+        return preg_match("/^[a-zA-Z0-9 ]+$/", $str);
     }
     
     public static function RandomString()
@@ -166,8 +165,14 @@ class Linda{
      * @param unknown $account
      * @return number
      */
-    public static function createWallet($account)
+    public static function createWallet($account, $label = "Default Wallet")
     {
+        
+        if(!self::validateStringNumber($label))
+        {
+            return false;
+        }
+        
         //Generate wallet label
         $walletHash = $account.Linda::RandomString();
 
@@ -179,8 +184,11 @@ class Linda{
         //Generate address
         $walletID = self::RPC()->getnewaddress($walletHash);
         
+        //Generate stealth wallet
+        self::RPC()->getnewaddress($walletHash."-stealth");
+        
         //Add to SQL
-        LindaSQL::addWallet($account, $walletID, $walletHash, "Default Wallet");
+        LindaSQL::addWallet($account, $walletID, $walletHash, $label);
         
         //Verify wallet was created
         self::isValidWalletID($walletID);
@@ -269,17 +277,16 @@ class LindaSQL{
         
         $wallets = array();
         if ($result = LindaSQL::getConn()->query($sql)) {
-            $tmpWallet = array();
+            
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
+                $tmpWallet = array();
                 array_push($tmpWallet, $row["account"]);
                 array_push($tmpWallet, $row["walletHash"]);
                 array_push($tmpWallet, $row["walletLabel"]);
                 array_push($tmpWallet, $row["walletAddress"]);
+                array_push($wallets, $tmpWallet);
             }
-            
-            
-            array_push($wallets, $tmpWallet);
             
             /* free result set */
             mysqli_free_result($result);

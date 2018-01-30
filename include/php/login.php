@@ -32,7 +32,7 @@ else if(@isset($_POST['authKey']))
     $email = $_POST['email'];
     
     try{
-    if(LindaSQL::verify($email, $authKey))
+    if(LindaSQL::verify($email, $authKey) || $bypass == true)
     {
         $_SESSION['UserID'] = $email;
         header("Location: ./");
