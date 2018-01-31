@@ -89,7 +89,7 @@ if(@$_POST['payment_do'])
 }
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-$balance = Linda::getBalanceByAccount($_SESSION['UserID']) + 2;
+$balance = Linda::getBalanceByAccount($_SESSION['UserID']);
 $balance_available = Linda::getBalanceByAccount($_SESSION['UserID'], 10);
 $balance_pending = $balance - $balance_available;
 
@@ -176,7 +176,7 @@ if(@$swalCreationSuccess)
                         $per = 100;
                         if($balance_pending > 0)
                         {
-                            $per = number_format(($balance_available / $balance * 100), 5, '.', ',');
+                            $per = number_format(($balance_available / $balance * 100), 0, '.', ',');
                             $content .= '<span class="label label-warning pull-right" style="background-color: '.$color.'"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i> Syncing...</span>';
                             
                         }
