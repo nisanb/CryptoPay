@@ -15,7 +15,7 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
     }
     try{
         
-        if(!@isset($_POST['betapass']))
+        if(isset($_POST['betapass']))
         {
             $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
             $responseData = json_decode($verifyResponse);
