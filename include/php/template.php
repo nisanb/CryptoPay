@@ -66,7 +66,7 @@
                     </li>
                   -->
                     <li <?=active("wallet");?>>
-                    <a href="./?act=wallet"><i class="fa fa-user"></i> <span class="nav-label">My Wallets</span></a>
+                    <a href="#"><i class="fa fa-user"></i> <span class="nav-label">My Wallets</span></a>
                     </li>
 
 <!-- Default Multi-level menu for future usage TODO
@@ -114,7 +114,19 @@
                         <i class="fa fa-bell"></i>  <span class="label label-primary" id="notifications_size">2</span>
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
-           
+           <li>
+                              <div class="dropdown-messages-box">
+                                  <a href="#" class="pull-left">
+                                      <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
+                                  </a>
+                                  <div class="media-body">
+                                      <small class="pull-right" style="color: blue;">New</small>
+                                      Your wallet has been created!<br /><br />
+                                      <small class="text-muted">From Linda Project</small>
+                                  </div>
+                              </div>
+                          </li>
+                          <li class="divider"></li>
                       <li>
                               <div class="dropdown-messages-box">
                                   <a href="#" class="pull-left">
@@ -122,7 +134,7 @@
                                   </a>
                                   <div class="media-body">
                                       <small class="pull-right" style="color: blue;">New</small>
-                                      Lidna Wallet - Beta Released!<br /><br />
+                                      Linda Wallet - Beta Released!<br /><br />
                                       <small class="text-muted">From Linda Project</small>
                                   </div>
                               </div>
