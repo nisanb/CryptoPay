@@ -417,7 +417,7 @@ class LindaSQL{
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !checkdnsrr($domain_name, 'MX')) {
             // invalid emailaddress
-            throw new Exception("Please use a valid email address.");
+            throw new LindaException("Please use a valid email address.");
         }
 
         $sql = "INSERT INTO users VALUES (\"$email\", \"$authKey\")";
