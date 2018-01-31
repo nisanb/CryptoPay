@@ -315,7 +315,7 @@ class LindaSQL{
     {
         //Validate
         Linda::isValidAddress($walletID);
-        
+        $walletID = self::trim_where($walletID);
         $tmpWallet = array();
         
         
@@ -339,7 +339,7 @@ class LindaSQL{
      */
     public static function getWalletInfoTableByAccount($account)
     {
-        $email = self::trim_output($account);
+        $email = self::trim_where($account);
         $sql = "select * from wallets where account=\"$email\"";
         if (!$result = LindaSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
@@ -374,7 +374,7 @@ class LindaSQL{
 
     public static function getAmountOfWalletsByUser($email)
     {
-        $email = self::trim_output($email);
+        $email = self::trim_where($email);
         $sql = "select count(*) from wallets where account=\"$email\"";
         if (!$result = LindaSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
@@ -389,7 +389,7 @@ class LindaSQL{
     
     public static function getWalletsByAccount($email)
     {
-        $email = self::trim_output($email);
+        $email = self::trim_where($email);
         
         $sql = "SELECT walletHash FROM wallets where account=\"$email\"";
         if (!$result = LindaSQL::getConn()->query($sql)) {
@@ -410,7 +410,7 @@ class LindaSQL{
     private static function init($email)
     {
         $ga = new PHPGangsta_GoogleAuthenticator();
-        $email = self::trim_input($email);
+        $email = self::trim_insert($email);
         $conn = self::getConn();
         $authKey = $ga->createSecret();
         $domain_name = substr(strrchr($email, "@"), 1);
@@ -443,8 +443,8 @@ class LindaSQL{
      */
     public static function verifyOwner($account, $wallet)
     {
-        $account    = self::trim_input($account);
-        $wallet     = self::trim_input($wallet);
+        $account    = self::trim_where($account);
+        $wallet     = self::trim_where($wallet);
         
         $conn = LindaSQL::getConn();
         
@@ -469,8 +469,10 @@ class LindaSQL{
      */
     public static function addWallet($email, $walletID, $walletHash, $label)
     {
-        $email = self::trim_input($email);
-        $label = self::trim_input($label);
+        $email = self::trim_insert($email);
+        $label = self::trim_insert($label);
+        $walletHash = self::trim_insert($walletHash);
+        $walletID = self::trim_insert($walletID);
         
         Linda::isValidWalletID($walletID);
         
@@ -489,7 +491,7 @@ class LindaSQL{
     {
 
         $conn = LindaSQL::getConn();
-        $email = self::trim_output($email);
+        $email = self::trim_where($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
         
@@ -510,7 +512,7 @@ class LindaSQL{
     public static function getAuth($email)
     {
         $conn = LindaSQL::getConn();
-        $email = self::trim_output($email);
+        $email = self::trim_where($email);
 
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
         if (!$result = $conn->query($sql)) {
@@ -543,7 +545,7 @@ class LindaSQL{
     public static function login($email)
     {
         $conn = LindaSQL::getConn();
-        $email = self::trim_output($email);
+        $email = self::trim_where($email);
 
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
         if (!$result = $conn->query($sql)) {
@@ -572,7 +574,7 @@ class LindaSQL{
     /*
      * Use trim_input when a variable is in INSERT clause
      */
-    private static function trim_input($var)
+    private static function trim_insert($var)
     {
         $conn = LindaSQL::getConn();
         $var = $conn->real_escape_string($var);
@@ -583,7 +585,7 @@ class LindaSQL{
     /*
      * Use trim_output when a variable is in WHERE clause
      */
-    private static function trim_output($var)
+    private static function trim_where($var)
     {
         return strip_tags($var);
     }
