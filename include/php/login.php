@@ -1,7 +1,8 @@
 <?php
-//Check if the form is submitted
-//include "gauth.php";
+$publickey = "6Lc6mUMUAAAAAENV6xs4VO460pZMpOpFNX1oaf-m";
+$privatekey = "6Lc6mUMUAAAAAFKxJzg-hgGw2I0rwckv7RanJgXH";
 
+//Bypass login
 $bypass = false;
 
 if(@isset($_POST['email']) && !@isset($_POST['authKey']))
@@ -13,6 +14,13 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
         header("Location: ./");
     }
     try{
+        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
+        $responseData = json_decode($verifyResponse);
+        if(!$responseData->success)
+        {
+            throw new LindaException("Please use Google Captcha");
+        }
+        
         if(@$_POST['betapass'] == "sk8rbeta")
             LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
         else
@@ -73,6 +81,7 @@ else{
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="./include/css/animate.css" rel="stylesheet">
     <link href="./include/css/style.css" rel="stylesheet">
+<script src='https://www.google.com/recaptcha/api.js'></script>
 
 </head>
 
@@ -103,7 +112,18 @@ else{
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email" name="email" required><br />
                                 <input type="password" class="form-control" placeholder="Beta Test Password" name="betapass" required>
+<br />
+<center>
+
+
+                   
+                    <div class="g-recaptcha" data-sitekey="6Lc6mUMUAAAAAENV6xs4VO460pZMpOpFNX1oaf-m"></div>
+                    
+                    
+
+</center>
                             </div>
+    
                         
                             <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
                         
@@ -139,6 +159,7 @@ Please download Google Authenticator
                                 
                             </div>
         
+
                             <button type="submit" class="btn btn-primary block full-width m-b">Continue</button>
         
         
