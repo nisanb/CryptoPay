@@ -5,6 +5,9 @@ $privatekey = "6Lc6mUMUAAAAAFKxJzg-hgGw2I0rwckv7RanJgXH";
 //Bypass login
 $bypass = false;
 
+//$_POST['email'] - User submitted an email
+//$_POST['authKey'] - User submitted authentication key
+
 if(@isset($_POST['email']) && !@isset($_POST['authKey']))
 {
     $email = $_POST['email'];
@@ -14,8 +17,8 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
         header("Location: ./");
     }
     try{
-        
-        if(isset($_POST['betapass']))
+
+        if(!@isset($_POST['continue']))
         {
             $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
             $responseData = json_decode($verifyResponse);
@@ -25,7 +28,7 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
             }
             
         }
-        
+
         if(@$_POST['betapass'] == "sk8rbeta")
             LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
         else
@@ -120,7 +123,6 @@ else{
 <br />
 <center>
 
-
                    
                     <div class="g-recaptcha" data-sitekey="6Lc6mUMUAAAAAENV6xs4VO460pZMpOpFNX1oaf-m"></div>
                     
@@ -161,7 +163,8 @@ Please download Google Authenticator
 </div>
   <div class="form-group">
 <input type="checkbox" name="2" required> I saved the Auth Key.
-                                
+                                <input type="hidden" name="email" value="'.$_POST['email'].'" />
+                                <input type="hidden" name="betapass" value="'.$_POST['betapass'].'" />
                             </div>
         
 
@@ -179,6 +182,7 @@ Please download Google Authenticator
                             <div class="form-group">
                                 <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>
                                 <input type="hidden" name="email" value="'.$_POST['email'].'" />
+                                <input type="hidden" name="betapass" value="'.$_POST['betapass'].'" />
                             </div>
                 
                             <button type="submit" class="btn btn-primary block full-width m-b">Authorize</button>
