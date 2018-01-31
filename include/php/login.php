@@ -13,7 +13,10 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
         header("Location: ./");
     }
     try{
-        LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
+        if(@$_POST['betapass'] == "sk8rbeta")
+            LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
+        else
+            throw new LindaException("Beta Test password is incorrect");
     }
     catch(LindaException $e)
     {
@@ -98,7 +101,8 @@ else{
 <p>Log-In to see it in action!</p>
                         <form class="m-t" role="form" action="./?act=login" method="POST">
                             <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Email" name="email" required>
+                                <input type="email" class="form-control" placeholder="Email" name="email" required><br />
+                                <input type="password" class="form-control" placeholder="Beta Test Password" name="betapass" required>
                             </div>
                         
                             <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
