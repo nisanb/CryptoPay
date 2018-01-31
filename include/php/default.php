@@ -15,13 +15,21 @@ function buildREF(a, b)
 {
     $("#depoinput").val(a);
 
-    
     if (b == "copy") {
         var copyText = document.getElementById("depoinput");
         copyText.select();
-        document.execCommand("Copy");
+        document.execCommand("copy");
+        copyText.addEventListener("copy", function (e) {
+            e.preventDefault();
+            if (e.clipboardData) {
+                e.clipboardData.setData("text/plain", "custom content from click");
+            } else if (window.clipboardData) {
+                window.clipboardData.setData("Text", "custom content from click");
+            }
+        });
         alert("Copied the text: " + copyText.value);
     }
+
 }
 
 function buildSendForm(a, b, c)
@@ -158,13 +166,15 @@ $content .= '
 <script>
     function createWallet(istrue) {
     if(istrue)
-        swal("Success!", "A new wallet was created.", "success");
+        swal("Success!", "A new wallet was created.", "success").then(function(result) {
+        window.location.replace("./");
+        });
     else
         swal("Error!", "Could not create wallet using the label provided ('.@$_POST['walletLabel'].').", "error");
     }';
 if(@$swalCreationSuccess)
     {
-        $include_footer .= '<script>createWallet('.$swalCreationSuccess.')</script>';   
+        $include_footer .= '<script>createWallet('.$swalCreationSuccess.')</script>'; 
     }
     $content .= '
 </script>
