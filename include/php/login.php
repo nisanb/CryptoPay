@@ -14,11 +14,16 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
         header("Location: ./");
     }
     try{
-        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
-        $responseData = json_decode($verifyResponse);
-        if(!$responseData->success)
+        
+        if(!@isset($_POST['betapass']))
         {
-            throw new LindaException("Please use Google Captcha");
+            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
+            $responseData = json_decode($verifyResponse);
+            if(!$responseData->success)
+            {
+                throw new LindaException("Please use Google Captcha");
+            }
+            
         }
         
         if(@$_POST['betapass'] == "sk8rbeta")
