@@ -90,6 +90,13 @@ else{
     <link href="./include/css/animate.css" rel="stylesheet">
     <link href="./include/css/style.css" rel="stylesheet">
 <script src='https://www.google.com/recaptcha/api.js'></script>
+<style>
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+    </style>
 
 </head>
 
@@ -153,7 +160,7 @@ Please download Google Authenticator
 <br />
 <img src="'.$arr["img"].'" />
 <br >
-<strong>**Save The Authentication Key: '. $arr["key"] .'**</strong>
+<strong><u>Save The Authentication Key: '. $arr["key"] .'</u></strong>
 
 
                         <form class="m-t" role="form" action="./?act=login" method="POST">

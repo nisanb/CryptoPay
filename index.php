@@ -39,8 +39,14 @@ switch(@$_GET['act']){
 
 
 function active($menuItem){
+    
   if($menuItem == @$_GET['act'] || ($menuItem == "default" && !isset($_GET['act']))){
-    echo "class=\"active\"";
+    return "class=\"active\"";
+  }
+  if(@isset($_GET['wid']))
+  {
+      if($menuItem == $_GET['wid'])
+          return "class=\"active\"";
   }
 }
 

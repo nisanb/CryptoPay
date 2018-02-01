@@ -173,7 +173,7 @@ $tableContent .=
     <td>'.$walletBalance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance.'\')">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance_available.'\')">withdraw</a>
     </td>
     </tr>';
 }
@@ -812,6 +812,7 @@ $content .= '
                                         </br>                                    
                                         <div>
                                             <input type="hidden" name="payment_do" value="1" />
+                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance_available.'\')">Cancel</a>
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>

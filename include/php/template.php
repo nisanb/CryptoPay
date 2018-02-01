@@ -7,7 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>LindaWallet | <?=$title;?></title>
-<link rel="icon" href="./include/img/linda_icon.png" />
+    
+	<link rel="icon" href="./include/img/linda_icon.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -19,7 +20,7 @@
 
     <link href="./include/css/animate.css" rel="stylesheet">
     <link href="./include/css/style.css" rel="stylesheet">
-
+	
     <?=@$include_header;?>
 
 </head>
@@ -31,7 +32,9 @@
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
                         <div class="dropdown profile-element"> <span>
+                        <a href="./">
                             <img alt="image" class="img-circle" style="width: 50px;" src="./include/img/linda_icon.png" />
+                            </a>
                              </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="./include/css/font-bold" id="profile_name">
@@ -39,9 +42,7 @@
                             </strong>
                             </span> <span class="text-muted text-xs block" id="profile_role"></span></span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                                <li><a href="./?act=profile">Profile</a></li>
-                                <li><a href="#">Followers</a></li>
-                                <li><a href="#">Mailbox</a></li>
+                                <li><a href="./">Refresh</a></li>
                                 <li class="divider"></li>
                                 <li><a href="./?act=logout">Logout</a></li>
                             </ul>
@@ -65,9 +66,24 @@
                     <a href="./?act=notifications"><i class="fa fa-trello"></i> <span class="nav-label">Notifications</span></a>
                     </li>
                   -->
-                    <li <?=active("wallet");?>>
-                    <a href="#"><i class="fa fa-user"></i> <span class="nav-label">My Wallets</span></a>
-                    </li>
+                  <?php 
+                  
+                  /**
+                   * Display wallet menus
+                   * @var Ambiguous $_ACCOUNT
+                   */
+                  $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
+                  foreach($_ACCOUNT['Wallets'] as $wallet)
+                  {
+                      echo '
+                         <li '.active($wallet[3]).' >
+                         <a href="./?act=wallet&wid='.$wallet[3].'"><i class="fa fa-trello"></i> <span class="nav-label">'.$wallet[2].'</span></a>
+                         </li>
+                        ';          
+                  }
+                  
+                  ?>
+                   
 
 <!-- Default Multi-level menu for future usage TODO
                     <li>
@@ -95,9 +111,9 @@
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-            <form role="search" class="navbar-form-custom" action="search_results.html" style="width: 500px;">
+            <form role="search" class="navbar-form-custom" action="#" style="width: 500px;">
                 <div class="form-group" >
-                    <input type="text" placeholder="Search Wallet.." class="form-control" name="-search" id="search">
+                    <input type="text" placeholder="Search Wallet" class="form-control" name="-search" id="search">
                 </div>
                 <ul class="list-group" id="result">
 
@@ -116,7 +132,7 @@
                     <ul class="dropdown-menu dropdown-alerts">
            <li>
                               <div class="dropdown-messages-box">
-                                  <a href="#" class="pull-left">
+                                  <a href="#" class="pull-left">asd
                                       <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
                                   </a>
                                   <div class="media-body">
@@ -191,10 +207,7 @@
 
                 <div class="footer">
                     <div class="pull-right">
-                        Copyright &copy; Lindacoin 2017
-                    </div>
-                    <div>
-                        <strong>Copyright</strong> Linda Wallet &copy; 2018 &bull; 
+                     &bull;   <strong>Copyright</strong> Linda Wallet &copy; 2018 &bull;
                     </div>
                 </div>
             </div>
@@ -228,7 +241,7 @@
     </div>
 
     <!-- Mainly scripts -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js" type="text/javascript"></script>
+    <script src="./include/js/sweetalert.min.js" type="text/javascript"></script>
     <script src="./include/js/jquery-2.1.1.js"></script>
     <script src="./include/js/jquery.timeago.js" type="text/javascript"></script>
 
