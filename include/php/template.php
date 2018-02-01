@@ -271,86 +271,8 @@
 
     <?=@$include_footer;?>
     <script>
-    function copyClipboard(text) {
-  	  /* Get the text field */
-  	  var copyText = text;
-
-
-  	  /* Copy the text inside the text field */
-  	  document.execCommand("Copy");
-
-  	}
+   
         $(document).ready(function() {
-
-          //Search Box Execution
-          $('#search').keyup(function(){
-            $('#result').show();
-            $('#result').html('<a href="#" onclick="$(\'#result\').hide()">[X]</a>');
-            var searchField = $('#search').val();
-            var expression = new RegExp(searchField, "i");
-            $.getJSON('./include/json/users.json', function(data){
-              $.each(data, function(key, value){
-                if(value.name.search(expression) != -1 || value.id.search(expression) != -1)
-                {
-                  $('#result').append('<li class="list-group-item">'
-                  + '<a href="./?act=profile&user='+value.id+'"><img src="'+value.picture+'" height="40" width="40" class="img-thumbnail" /> '
-                  + value.name+'   | <span class="text-muted">'+value.id+'</span></a></li>');
-                }
-              });
-            });
-          });
-
-            
-
-               
-
-                  /*
-                  Notifications Example
-                  <li>
-                      <a href="mailbox.html">
-                          <div>
-                              <i class="fa fa-envelope fa-fw"></i> You have 16 messages
-                              <span class="pull-right text-muted small">4 minutes ago</span>
-                          </div>
-                      </a>
-                  </li>
-                  <li class="divider"></li>
-                  */
-
-                /* Message example
-                <li>
-                    <div class="dropdown-messages-box">
-                        <a href="profile.html" class="pull-left">
-                            <img alt="image" class="img-circle" src="./include/img/a7.jpg">
-                        </a>
-                        <div class="media-body">
-                            <small class="pull-right">46h ago</small>
-                            <strong>asd Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                            <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                        </div>
-                    </div>
-                </li>
-                <li class="divider"></li>
-              */
-
-            /*
-            <li>
-
-
-                <div class="dropdown-messages-box">
-                    <a href="#" class="pull-left">
-                        <img alt="image" class="img-circle" src="./include/img/a7.jpg">
-                    </a>
-                    <div class="media-body">
-                        <small class="pull-right">46h ago</small>
-                        <strong>Mike Loreipsum</strong> started following <strong>Monica Smith</strong>. <br>
-                        <small class="text-muted">3 days ago at 7:58 pm - 10.06.2014</small>
-                    </div>
-                </div>
-            </li>
-            <li class="divider"></li>
-            */
-
 
             setTimeout(function() {
                 toastr.options = {
@@ -360,7 +282,7 @@
                     showMethod: 'slideDown',
                     timeOut: 1500
                 };
-                toastr.warning('Loading JSON data..', 'Welcome to iScience+');
+                toastr.warning('The web wallet is undergoing beta testing!', 'Welcome to Linda+');
 
             }, 0);
             setTimeout(function() {
@@ -371,7 +293,7 @@
                     showMethod: 'slideDown',
                     timeOut: 1500
                 };
-                toastr.success('Loading Complete', 'Welcome to iScience+');
+                toastr.success('Loading Complete', 'Welcome to Linda Web Wallet');
 
             }, 1500);
 
