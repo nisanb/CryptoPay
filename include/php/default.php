@@ -51,9 +51,6 @@ $content = '';
  */
 if(@$_POST['payment_do'])
 {
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
     $payment_from   =   $_POST['payment_from'];
     $payment_auth   =   $_POST['payment_auth'];
     $payment_to     =   str_replace(" ","", $_POST['payment_to']);
