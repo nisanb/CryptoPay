@@ -792,6 +792,7 @@ $content .= '
                                             <span disabled="true" class="input-group-addon">Fee</span> 
                                             <input type="number" name="payment_fee" value="'.@$_POST['payment_fee'].'" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
+
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon"><img style="width: 35px; height: 35x;" src="./include/img/gauth.png" /></span> 
                                             <input type="number" class="form-control" placeholder="Google Auth key" style="height: 50px;" name="payment_auth" required>
