@@ -16,26 +16,16 @@ function buildREF(a, b)
 {
     $("#depoinput").val(a);
 
-<<<<<<< Updated upstream
-=======
+
     if (b == "copy") {
         var copyText = document.getElementById("depoinput");
-        copyText.select();
-        document.execCommand("copy");
-        copyText.addEventListener("copy", function (e) {
-            e.preventDefault();
-            if (e.clipboardData) {
-                e.clipboardData.setData("text/plain", "custom content from click");
-            } else if (window.clipboardData) {
-                window.clipboardData.setData("Text", "custom content from click");
-            }
-        });
+      
         notify("success", "Copied the text: " + copyText.value);
         notify("warning", "Copied the text: " + copyText.value);
         notify("error", "Copied the text: " + copyText.value);
 
     }
->>>>>>> Stashed changes
+
 
 }
 
