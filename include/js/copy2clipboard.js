@@ -110,6 +110,7 @@ function paste(el)
 
 function select_all_and_copy(el) 
 {
+	notify("success","Wallet address has been copied successfully..");
     // Copy textarea, pre, div, etc.
 	if (document.body.createTextRange) {
         // IE 
@@ -117,7 +118,6 @@ function select_all_and_copy(el)
         textRange.moveToElementText(el);
         textRange.select();
         textRange.execCommand("Copy");   
-		tooltip(el, "Copied!");  
     }
 	else if (window.getSelection && document.createRange) {
         // non-IE
@@ -139,8 +139,8 @@ function select_all_and_copy(el)
 	    if (document.queryCommandSupported("copy"))
 	    {
 			var successful = document.execCommand('copy');  
-		    if (successful) tooltip(el, "Copied to clipboard.");
-		    else tooltip(el, "Press CTRL+C to copy");
+		    if (!successful) 
+		     tooltip(el, "Press CTRL+C to copy");
 		}
 		else
 		{

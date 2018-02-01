@@ -728,9 +728,9 @@ $content .= '
                                         <iframe style="border:0; width:50%; height:50%" src="./include/img/'.$selectedQR.'.png"></iframe>
                                         <div class="form-group"><label>Address</label></div>
                                         <div class="input-group col-md-12">
-                                            <input type="text" id="depoinput" disabled="true" class="form-control">
+                                            <input type="text" id="depoinput" class="form-control" readonly="readonly">
                                             <span class="input-group-btn"> 
-                                                <button type="button" class="btn btn-primary">Copy</button> 
+                                                <button type="button" onclick="select_all_and_copy(document.getElementById(\'depoinput\'))" class="btn btn-primary">Copy</button> 
                                             </span>
                                         </div>
                                     </form>
