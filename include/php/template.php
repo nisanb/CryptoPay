@@ -47,7 +47,7 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                            iS+
+                            Linda+
                         </div>
                     </li>
 

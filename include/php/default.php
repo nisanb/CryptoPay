@@ -41,8 +41,10 @@ $content = '';
  */
 if(@$_POST['payment_do'])
 {
+    echo "<pre>";
+    print_r($_POST);
+    echo "</pre>";
     $payment_from   =   $_POST['payment_from'];
-    $payment_from = "LbjUNCvnSW7E7htbQ71HokB4KhmgaEYfy6";
     $payment_auth   =   $_POST['payment_auth'];
     $payment_to     =   str_replace(" ","", $_POST['payment_to']);
     $payment_ext    =   floatval($_POST['payment_amount_ext']);
@@ -78,6 +80,15 @@ if(@$_POST['payment_do'])
     catch(Exception $e)
     {
         echo $e->getMessage();
+        $include_footer .= "
+<script>
+
+$(document).ready(function() {
+    buildSendForm('a','b','3');
+});
+    
+</script>
+";
     }
     
     //done
@@ -738,7 +749,7 @@ $content .= '
                                         </div>
 <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Wallet Address</span> 
-                                            <input disabled="true" type="text" class="form-control" name="payment_from" REQUIRED id="walletSendAddress" /> 
+                                            <input readonly="readonly" style="color: #787878;" type="text" type="text" class="form-control" value="test" name="payment_from" id="walletSendAddress" REQUIRED /> 
                                         </div>
 <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Available Balance</span> 
@@ -747,19 +758,32 @@ $content .= '
 
 <hr />
 
+';
 
+//Withdraw Form Values
+if(!@isset($_POST['payment_do']))
+{
+    $_POST['payment_amount'] = "0";
+    $_POST['payment_amount_ext'] = "0.000000";
+    $_POST['payment_fee'] = "0.0001";
+    $_POST['payment_to'] = "";
+}
+
+
+
+$content .= '
                                         <div class="form-group"><center><label>Send To</label></center> 
-<input type="text" placeholder="Enter address" class="form-control" name="payment_to" REQUIRED></div>
+<input type="text" placeholder="Enter address" value="'.@$_POST['payment_to'].'" class="form-control" name="payment_to" REQUIRED></div>
 
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
-                                            <input type="number" name="payment_amount" class="form-control" REQUIRED> 
+                                            <input type="number" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">.</span>
-                                            <input type="number" name="payment_amount_ext" min="0.000000" max="0.999999" step="0.000001" value="0.000000" class="form-control"> 
+                                            <input type="number" name="payment_amount_ext" value="'.@$_POST['payment_amount_ext'].'" min="0.000000" max="0.999999" step="0.000001" value="0.000000" class="form-control"> 
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Fee</span> 
-                                            <input type="number" name="payment_fee" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
+                                            <input type="number" name="payment_fee" value="'.@$_POST['payment_fee'].'" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon"><img style="width: 35px; height: 35x;" src="./include/img/gauth.png" /></span> 
