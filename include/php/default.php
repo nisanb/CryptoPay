@@ -9,26 +9,13 @@ $include_footer = '  <!-- FooTable -->
 <!-- Morris -->
     <script src="./include/js/plugins/morris/raphael-2.1.0.min.js"></script>
     <script src="./include/js/plugins/morris/morris.js"></script>
+<script type="text/javascript" src="./include/js/copy2clipboard.js"></script>
     <!-- <script src="./include/js/demo/morris-demo.js"></script> -->
 <script>
 function buildREF(a, b)
 {
     $("#depoinput").val(a);
 
-    if (b == "copy") {
-        var copyText = document.getElementById("depoinput");
-        copyText.select();
-        document.execCommand("copy");
-        copyText.addEventListener("copy", function (e) {
-            e.preventDefault();
-            if (e.clipboardData) {
-                e.clipboardData.setData("text/plain", "custom content from click");
-            } else if (window.clipboardData) {
-                window.clipboardData.setData("Text", "custom content from click");
-            }
-        });
-        alert("Copied the text: " + copyText.value);
-    }
 
 }
 
@@ -148,8 +135,9 @@ foreach($_ACCOUNT['Wallets'] as $tmpWallet)
     <td>'.$tmpWallet[2].'
     <td>
 
-    <a href="./?act=wallet&wid='.$tmpWallet[3].'">'.$tmpWallet[3].'</a>
-    <a data-toggle="modal" class="btn btn-primary pull-right" onclick="buildREF(\''.$tmpWallet[3].'\',\'copy\')">Copy</a>
+    <a href="./?act=wallet&wid='.$tmpWallet[3].'" id="w'.$count.'">'.$tmpWallet[3].'</a>
+
+    <a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>
     </td>
     <td>'.$walletBalance.'</td>
     <td>
