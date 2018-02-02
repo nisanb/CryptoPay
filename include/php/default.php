@@ -31,11 +31,13 @@ function buildREF(a, b)
 
 function buildSendForm(a, b, c)
 {
-
+    
     $("#walletSendLabel").val(a);
     $("#walletSendAddress").val(b);
     $("#walletSendAmount").val(c);
-    $("#payment_amount").attr("max", c-$("#payment_fee").val());
+
+    $("#payment_amount").attr("max", c);
+    $("#payment_amount").attr("min", 0.0001);
 }
 
 
@@ -63,7 +65,13 @@ if(@$_POST['payment_do'])
     try
     {
         //Check for negativity
-        if($payment_amount <= 0 || $payment_fee <= 0 || $payment_total <= 0)
+        if($payment_amount == 0)
+            throw new Exception("You must send atleast 0.0001 linda.");
+        
+        if($payment_fee < 0)
+            throw new Exception("Payment fee cannot be negative");
+        
+        if($payment_amount <= 0 || $payment_fee < 0 || $payment_total <= 0)
             throw new Exception("You may not enter negative values.");
             
         if(!Linda::isValidAddress($payment_to))
@@ -86,10 +94,7 @@ if(@$_POST['payment_do'])
         echo $e->getMessage();
         $include_footer .= "
 <script>
-
-$(document).ready(function() {
-    buildSendForm('a','b','3');
-});
+    notify('error', '".$e->getMessage()."');
     
 </script>
 ";
@@ -787,7 +792,7 @@ $content .= '
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
-                                            <input type="number" id="payment_amount" min="0.0001" max="" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
+                                            <input type="number" id="payment_amount" min="0" max="" step="0.0001" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">
                                                 <a onclick="$(\'#payment_amount\').val(($(\'#walletSendAmount\').val() - $(\'#payment_fee\').val()).toFixed(4));"><i class="fa fa-arrow-circle-up"></i> Max</a>
                                             </span>

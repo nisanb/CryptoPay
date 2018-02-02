@@ -282,6 +282,32 @@
     <!-- Toastr -->
     <script src="./include/js/plugins/toastr/toastr.min.js"></script>
 
+<script type="text/javascript">
+function notify(type, text) {
+    setTimeout(function() {
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            showMethod: 'slideDown',
+            timeOut: 3000
+    	};
+    	switch (type) {
+		case 'success':
+            toastr.success('Success', text);
+			break;
+		case 'warning':
+            toastr.warning('Warning', text);
+			break;
+		case 'error':
+            toastr.error('Error', text);
+			break;
+		default:
+			break;
+		}
+    }, 0);
+}
+</script>
     <?=@$include_footer;?>
     <script>
    
@@ -318,32 +344,6 @@
         });
     </script>
 
-<script type="text/javascript">
-function notify(type, text) {
-    setTimeout(function() {
-        toastr.options = {
-            closeButton: true,
-            progressBar: true,
-            positionClass: "toast-bottom-right",
-            showMethod: 'slideDown',
-            timeOut: 3000
-    	};
-    	switch (type) {
-		case 'success':
-            toastr.success('Success', text);
-			break;
-		case 'warning':
-            toastr.warning('Warning', text);
-			break;
-		case 'error':
-            toastr.error('Error', text);
-			break;
-		default:
-			break;
-		}
-    }, 0);
-}
-</script>
     
 </body>
 </html>
