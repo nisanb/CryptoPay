@@ -35,7 +35,7 @@ function buildSendForm(a, b, c)
     $("#walletSendLabel").val(a);
     $("#walletSendAddress").val(b);
     $("#walletSendAmount").val(c);
-
+    $("#payment_amount").attr("max", c-$("#payment_fee").val());
 }
 
 
@@ -54,11 +54,8 @@ if(@$_POST['payment_do'])
     $payment_from   =   $_POST['payment_from'];
     $payment_auth   =   $_POST['payment_auth'];
     $payment_to     =   str_replace(" ","", $_POST['payment_to']);
-    $payment_ext    =   floatval($_POST['payment_amount_ext']);
-    if($payment_ext >= 1) //Example: 500 -> 0.500
-        $payment_ext = floatval("0.".$payment_ext);
 
-    $payment_amount =   intval($_POST['payment_amount']) + $payment_ext;
+    $payment_amount =   floatval($_POST['payment_amount']);
     $payment_fee    =   floatval($_POST['payment_fee']);
     $payment_total  =   floatval($payment_amount + $payment_fee);
     
@@ -782,20 +779,22 @@ if(!@isset($_POST['payment_do']))
 
 
 $content .= '
+
+                                        
                                         <center><label>Send To</label></center> 
                                         <div class="form-group">
                                             <input type="text" placeholder="Enter address" value="'.@$_POST['payment_to'].'" class="form-control" name="payment_to" REQUIRED>
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
-                                            <input type="number" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
+                                            <input type="number" id="payment_amount" min="0.0001" max="" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
                                             <span disabled="true" class="input-group-addon">
-                                                <a><i class="fa fa-arrow-circle-up"></i> Max</a>
+                                                <a onclick="$(\'#payment_amount\').val(($(\'#walletSendAmount\').val() - $(\'#payment_fee\').val()).toFixed(4));"><i class="fa fa-arrow-circle-up"></i> Max</a>
                                             </span>
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Fee</span> 
-                                            <input type="number" name="payment_fee" value="'.@$_POST['payment_fee'].'" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
+                                            <input type="number" id="payment_fee" name="payment_fee" value="'.@$_POST['payment_fee'].'" min="0.0000" step="0.0001" value="0.0001" class="form-control"> 
                                         </div>   
 
                                         <div class="input-group m-b">
