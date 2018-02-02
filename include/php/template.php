@@ -310,13 +310,15 @@ function notify(type, text) {
 </script>
     <?=@$include_footer;?>
     <script>
-   
-        $(document).ready(function() {
+   <?php 
+   if(!isset($_SESSION['showWelcome']))
+   {
+       echo "$(document).ready(function() {
 
             setTimeout(function() {
                 toastr.options = {
                     closeButton: true,
-                    positionClass: "toast-bottom-right",
+                    positionClass: 'toast-bottom-right',
                     progressBar: true,
                     showMethod: 'slideDown',
                     timeOut: 1500
@@ -328,7 +330,7 @@ function notify(type, text) {
                 toastr.options = {
                     closeButton: true,
                     progressBar: true,
-                    positionClass: "toast-bottom-right",
+                    positionClass: 'toast-bottom-right',
                     showMethod: 'slideDown',
                     timeOut: 1500
                 };
@@ -341,7 +343,12 @@ function notify(type, text) {
 
 
 
-        });
+        });";
+       
+       $_SESSION['showWelcome'] = 1;
+   }
+   ?>
+        
     </script>
 
     
