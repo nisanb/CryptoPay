@@ -132,7 +132,7 @@
                     <ul class="dropdown-menu dropdown-alerts">
            <li>
                               <div class="dropdown-messages-box">
-                                  <a href="#" class="pull-left">asd
+                                  <a href="#" class="pull-left">
                                       <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
                                   </a>
                                   <div class="media-body">
