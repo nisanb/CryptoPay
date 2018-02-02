@@ -11,6 +11,14 @@ $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/morris/morris.js"></script>
 <script type="text/javascript" src="./include/js/copy2clipboard.js"></script>
     <!-- <script src="./include/js/demo/morris-demo.js"></script> -->
+<style>
+        #payment_auth::-webkit-inner-spin-button, 
+        #payment_auth::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+    </style>
+
 <script>
 function buildREF(a, b)
 {
@@ -804,7 +812,7 @@ $content .= '
 
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon"><img style="width: 35px; height: 35x;" src="./include/img/gauth.png" /></span> 
-                                            <input type="number" class="form-control" placeholder="Google Auth key" style="height: 50px;" name="payment_auth" required>
+                                            <input type="number" class="form-control" placeholder="Google Auth key" style="height: 50px;" name="payment_auth" id="payment_auth" required>
                                         </div>
                                         </br>                                    
                                         <div>
