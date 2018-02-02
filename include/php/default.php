@@ -162,7 +162,7 @@ $tableContent .=
     <td>'.$walletBalance.'</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance_available.'\')">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$walletBalance.'\')">withdraw</a>
     </td>
     </tr>';
 }
