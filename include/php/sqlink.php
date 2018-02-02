@@ -208,13 +208,9 @@ class Linda{
         //Transfer funds to stealth wallet
         if(!Linda::RPC()->move($walletHash, $stealth, $total, 3))
             throw new Exception("Could not transfer funds to stealth wallet.");
-            echo "<br />sendfrom ".$stealth." ".$to." ".$amount." 10<br />";
         
         //Send the real transaction
         $result = Linda::RPC()->sendfrom($stealth, $to, $amount, 3);
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
         
         $newStealthBalance = abs(Linda::RPC()->getbalance($stealth));
         
@@ -449,7 +445,7 @@ class LindaSQL{
         $conn = LindaSQL::getConn();
         
         $sql = "SELECT account FROM wallets WHERE walletAddress in (\"{$wallet}\")";
-        echo $sql;
+
         if (!$result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information (".$account ." - ".$wallet.").");
