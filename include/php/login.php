@@ -124,7 +124,7 @@ else{
                 {
                     echo '
 <p>Log-In to see it in action!</p>
-                        <form class="m-t" role="form" action="./?act=login" method="POST">
+                        <form class="m-t" role="form" action="./login" method="POST">
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email" name="email" required><br />
                                 <input type="password" class="form-control" placeholder="Beta Test Password" name="betapass" required>
@@ -163,7 +163,7 @@ Please download Google Authenticator
 <strong><u>Save The Authentication Key: '. $arr["key"] .'</u></strong>
 
 
-                        <form class="m-t" role="form" action="./?act=login" method="POST">
+                        <form class="m-t" role="form" action="./login" method="POST">
                             <div class="form-group">
 
 <input type="hidden" name="email" value="'.$_POST['email'].'" />
@@ -186,7 +186,7 @@ Please download Google Authenticator
               else if(@$displayAuth)
               {
                   echo '
-                        <form class="m-t" role="form" action="./?act=login" method="POST">
+                        <form class="m-t" role="form" action="./login" method="POST">
                             <div class="form-group">
                                 <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>
                                 <input type="hidden" name="email" value="'.$_POST['email'].'" />

@@ -44,7 +44,7 @@
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                 <li><a href="/">Refresh</a></li>
                                 <li class="divider"></li>
-                                <li><a href="/?act=logout">Logout</a></li>
+                                <li><a href="/logout">Logout</a></li>
                             </ul>
                         </div>
                         <div class="logo-element">
@@ -55,17 +55,6 @@
                     <li <?=active("default");?>>
                     <a href="/"><i class="fa fa-home"></i> <span class="nav-label">Home</span></a>
                     </li>
-                    <!-- TODO Future
-                    <li <?=active("mailbox");?>>
-                    <a href="/?act=mailbox"><i class="fa fa-inbox"></i> <span class="nav-label">Mailbox</span></a>
-                    </li>
-                    <li <?=active("following");?>>
-                    <a href="/?act=following"><i class="fa fa-users"></i> <span class="nav-label">Followers</span></a>
-                    </li>
-                    <li <?=active("notifications");?>>
-                    <a href="/?act=notifications"><i class="fa fa-trello"></i> <span class="nav-label">Notifications</span></a>
-                    </li>
-                  -->
                   <?php 
                   
                   /**
@@ -77,7 +66,7 @@
                   {
                       echo '
                          <li '.active($wallet[3]).' >
-                         <a href="/?act=wallet&wid='.$wallet[3].'"><i class="fa fa-trello"></i> <span class="nav-label">'.$wallet[2].'</span></a>
+                         <a href="/wallet/'.$wallet[3].'"><i class="fa fa-trello"></i> <span class="nav-label">'.$wallet[2].'</span></a>
                          </li>
                         ';          
                   }
@@ -169,7 +158,7 @@
 
 
                 <li>
-                    <a href="/?act=logout">
+                    <a href="/logout">
                         <i class="fa fa-sign-out"></i> Log out
                     </a>
                 </li>

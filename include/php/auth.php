@@ -58,7 +58,7 @@ if(isset($_POST['user'])){
               echo "<p style=\"color: red;\">User & Password combination is incorrect!</p>";
             }
              ?>
-            <form class="m-t" role="form" action="./?act=login" method="POST">
+            <form class="m-t" role="form" action="./login" method="POST">
                 <div class="form-group">
                     <input type="email" class="form-control" placeholder="Email" required="">
                 </div>

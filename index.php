@@ -7,7 +7,7 @@ require_once './include/php/LindaException.php';
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
 {
     //Need to log - in
-    header("Location: ./?act=login");
+    header("Location: ./login");
 }
 
 
@@ -57,7 +57,7 @@ if($includeTemplate){
   //Verify user is logged in
   if(!isset($_SESSION['UserID'])){
     //Redirect
-    header("Location: ./?act=login");
+    header("Location: ./login");
     return;
   }
   

@@ -163,7 +163,7 @@ $tableContent .=
     <td>'.$tmpWallet[2].'
     <td>
 
-    <a href="./?act=wallet&wid='.$tmpWallet[3].'" id="w'.$count.'">'.$tmpWallet[3].'</a>
+    <a href="./wallet/'.$tmpWallet[3].'" id="w'.$count.'">'.$tmpWallet[3].'</a>
 
     <a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>
     </td>
@@ -712,7 +712,7 @@ $content .= '
                                         <div class="input-group col-md-12">
                                             <input type="text" name="walletLabel" id="walletLabel" class="form-control" REQUIRED>
                                             <span class="input-group-btn"> 
-                                                <button href="./?action=add" class="btn btn-primary">Create</button>
+                                                <button href="./add" class="btn btn-primary">Create</button>
                                             </span>
                                         </div>
                                     </form>
