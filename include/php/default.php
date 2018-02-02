@@ -91,7 +91,7 @@ if(@$_POST['payment_do'])
     }
     catch(Exception $e)
     {
-        echo $e->getMessage();
+        //echo $e->getMessage();
         $include_footer .= "
 <script>
     notify('error', '".$e->getMessage()."');
