@@ -743,35 +743,38 @@ $content .= '
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12"><h3 class="m-t-none m-b">Withdrawal</h3>
-    
                                     <p>You may send coins to other Linda Wallets using the form below.<br />
                                     * Please make sure all input is correct before submitting!</p>
-    <hr />
+                                    <hr />
                                     <form role="form" method="POST">
-<center><label>Send From</label></center> 
-
-                                        <div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Wallet Label</span> 
-                                            <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendLabel" /> 
+                                        <center><label>Send From</label></center> 
+                                        <div class="row">
+                                             <div class="col-md-4">
+                                                <span type="text" class="form-control">Wallet Label</span> 
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendLabel" /> 
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span type="text" class="form-control">Wallet Address</span> 
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input readonly="readonly" style="color: #787878;" type="text" type="text" class="form-control" value="test" name="payment_from" id="walletSendAddress" REQUIRED /> 
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span type="text" class="form-control" >Available Balance</span> 
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendAmount" /> 
+                                            </div>
                                         </div>
-<div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Wallet Address</span> 
-                                            <input readonly="readonly" style="color: #787878;" type="text" type="text" class="form-control" value="test" name="payment_from" id="walletSendAddress" REQUIRED /> 
-                                        </div>
-<div class="input-group m-b">
-                                            <span disabled="true" class="input-group-addon">Available Balance</span> 
-                                            <input disabled="true" type="text" class="form-control" REQUIRED id="walletSendAmount" /> 
-                                        </div>
-
-<hr />
-
+                                        <hr />
 ';
 
 //Withdraw Form Values
 if(!@isset($_POST['payment_do']))
 {
     $_POST['payment_amount'] = "0";
-    $_POST['payment_amount_ext'] = "0.000000";
     $_POST['payment_fee'] = "0.0001";
     $_POST['payment_to'] = "";
 }
@@ -779,14 +782,16 @@ if(!@isset($_POST['payment_do']))
 
 
 $content .= '
-                                        <div class="form-group"><center><label>Send To</label></center> 
-<input type="text" placeholder="Enter address" value="'.@$_POST['payment_to'].'" class="form-control" name="payment_to" REQUIRED></div>
-
+                                        <center><label>Send To</label></center> 
+                                        <div class="form-group">
+                                            <input type="text" placeholder="Enter address" value="'.@$_POST['payment_to'].'" class="form-control" name="payment_to" REQUIRED>
+                                        </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Linda</span> 
                                             <input type="number" name="payment_amount" value="'.@$_POST['payment_amount'].'" class="form-control" REQUIRED> 
-                                            <span disabled="true" class="input-group-addon">.</span>
-                                            <input type="number" name="payment_amount_ext" value="'.@$_POST['payment_amount_ext'].'" min="0.000000" max="0.999999" step="0.000001" value="0.000000" class="form-control"> 
+                                            <span disabled="true" class="input-group-addon">
+                                                <a><i class="fa fa-arrow-circle-up"></i> Max</a>
+                                            </span>
                                         </div>    
                                         <div class="input-group m-b">
                                             <span disabled="true" class="input-group-addon">Fee</span> 
