@@ -65,9 +65,16 @@
                   foreach($_ACCOUNT['Wallets'] as $wallet)
                   {
                       echo '
-                         <li '.active($wallet[3]).' >
-                         <a href="/wallet/'.$wallet[3].'"><i class="fa fa-trello"></i> <span class="nav-label">'.$wallet[2].'</span></a>
-                         </li>
+   <li '.active($wallet[3]).'>
+                    <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">'.$wallet[2].'</span><span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li><a href="/wallet/'.$wallet[3].'">View Transactions</a></li>
+                        <li><a href="#">Deposit</a></li>
+                        <li><a href="#">Withdraw</a></li>
+                        <li><a href="#" style="color: red;">Delete</a></li>
+                    </ul>
+                </li>
+
                         ';          
                   }
                   
