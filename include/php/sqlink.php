@@ -14,7 +14,7 @@ class Linda{
     private static $rpcpass     =   "tTaA4XCUmcZZ867";
     private static $rpcip       =   "127.0.0.1";
     private static $rpcport     =   "33821";
-
+    
 
     private static $rpcconn;
     
@@ -28,8 +28,6 @@ class Linda{
         return substr($email, 0, strpos($email, "@"));
     }
 
-
-    
     /**
      * Grants access to the current RPC Connection
      * @return jsonRPCClient
@@ -264,7 +262,6 @@ class Linda{
         
     }
     
-   
     /**
      * Returns balance by a given account
      * @param unknown $account
@@ -272,14 +269,14 @@ class Linda{
      */
     public static function getBalanceByAccount($account, $minconf = 1)
     {
-        $balance = 0;
+        $totalBalance = 0;
         
         $wallets = LindaSQL::getWalletsByAccount($account);
             foreach($wallets as $wallet)
             {
-                $balance += self::getBalanceByWallet($wallet, $minconf);
+                $totalBalance += self::getBalanceByWallet($wallet, $minconf);
             }
-        return $balance;
+            return $totalBalance;
     }
     
     /**
@@ -305,7 +302,32 @@ class LindaSQL{
     private static $user        =   "root";
     private static $pass        =   "";
     private static $db          =   "linda";
+    private static $timeout     =   31;
+    
+    /**
+     * Check if user submitted an action in the last 31 seconds
+     * @return boolean
+     */
+    public static function checkUserTimeout()
+    {
+        
+        //If there was no POST at all during this session
+        if(!isset($_SESSION['timeout']))
+        {
+            $_SESSION['timeout'] = time();
+            return;
+        }
+        
+        $waitTime = self::$timeout - (time() - $_SESSION['timeout']);
 
+        if($waitTime > 0)
+        {
+            throw new Exception("You are doing it too fast! Please wait ".$waitTime." more seconds..");
+        }
+        
+        $_SESSION['timeout'] = time();
+        return;        
+    }
     
     public static function getWalletData($walletID)
     {

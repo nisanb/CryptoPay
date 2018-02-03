@@ -61,6 +61,7 @@ $content = '';
  */
 if(@$_POST['payment_do'])
 {
+    
     $payment_from   =   $_POST['payment_from'];
     $payment_auth   =   $_POST['payment_auth'];
     $payment_to     =   str_replace(" ","", $_POST['payment_to']);
@@ -72,6 +73,9 @@ if(@$_POST['payment_do'])
     
     try
     {
+        //check user timeout
+        LindaSQL::checkUserTimeout();
+        
         //Check for negativity
         if($payment_amount == 0)
             throw new Exception("You must send atleast 0.0001 linda.");
@@ -101,14 +105,20 @@ if(@$_POST['payment_do'])
     {
         //echo $e->getMessage();
         $include_footer .= "
-<script>
-    notify('error', '".$e->getMessage()."');
-    
-</script>
+            <script>
+                notify('error', '".$e->getMessage()."');
+            </script>
 ";
+       
     }
     
     //done
+    $message = "You have successfully transferred ".$payment_total." to address ".$payment_to;
+    $include_footer .= "
+        <script>
+                notify('success', $message);
+            </script>
+";
 }
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);

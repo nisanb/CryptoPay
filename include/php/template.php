@@ -279,7 +279,7 @@ function notify(type, text) {
             progressBar: true,
             positionClass: "toast-bottom-right",
             showMethod: 'slideDown',
-            timeOut: 3000
+            timeOut: 7000
     	};
     	switch (type) {
 		case 'success':
