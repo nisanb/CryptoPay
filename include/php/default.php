@@ -52,7 +52,7 @@ function buildSendForm(a, b, c)
 </script>
 ';
 
-
+$walletInformation = Linda::getWalletInformation();
 
 $content = '';
 
@@ -286,9 +286,35 @@ $content .= '
                         <h5>Wallet Information</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><a data-toggle="modal" class="btn btn-primary" href="#modal-form">Do something</a></h1>
-                        <div class="stat-percent font-bold text-info">'.$lastWitValue.' Linda <i class="fa fa-level-up"></i></div>
-                        <small>last withdrawal '.$lastWitDate.'</small>
+<table class="table">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-danger m-r-sm">Version: '.$walletInformation["version"].'</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger m-r-sm">Connections: '.$walletInformation[2].'</button>
+                            </td>
+                        </tr>
+<tr>
+                            <td>
+                                <button type="button" class="btn btn-info m-r-sm">Total Supply: '.$walletInformation["moneysupply"].'</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-info m-r-sm">Price BTC: '.$walletInformation[3][0]["price_btc"].'</button>
+                            </td>
+</tr>
+                        <tr>
+                            <td>
+                                <button type="button" class="btn btn-warning m-r-sm">Blocks: '.$walletInformation["blocks"].'</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-warning m-r-sm">Block Size: '.$walletInformation[0]["currentblocksize"].'</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                     </div>
                 </div>
             </div>

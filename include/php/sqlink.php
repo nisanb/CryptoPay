@@ -293,6 +293,67 @@ class Linda{
     }
     
 
+    /**
+     * Retreive general wallet information
+     */
+    public static function getWalletInformation()
+    {
+        $walletFile = "info.wallet";
+        
+        $timeout = 60 * 5; //5 minutes
+        
+        $fileUpdatedTime = (time() - filemtime($walletFile) ) ."seconds ago";
+        
+        
+        //JSON already created
+        if($fileUpdatedTime < $timeout)
+        {
+            $fp = file_get_contents($walletFile);
+            $arr = json_decode($fp, true);
+            
+            echo "<pre>";
+            print_r($arr);
+            echo "</pre>";
+            
+            return $arr;
+        }
+        
+        //Create new JSON
+        $fp = fopen($walletFile, 'w');
+        $arr = self::RPC()->getinfo();
+        
+        
+        array_push($arr, self::RPC()->getstakinginfo());
+        array_push($arr, self::RPC()->getmininginfo());
+        array_push($arr, self::RPC()->getconnectioncount());
+        
+        //Get price
+        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
+        array_push($arr, json_decode($fp2, true));
+        
+        $arr["moneysupply"] = self::bd_nice_number($arr["moneysupply"]);
+        
+        fwrite($fp, json_encode($arr));
+        fclose($fp);
+        
+        return $arr;
+    }
+    
+    public static function bd_nice_number($n) {
+        // first strip any formatting;
+        $n = (0+str_replace(",","",$n));
+        
+        // is this a number?
+        if(!is_numeric($n)) return false;
+        
+        // now filter it;
+        if($n>1000000000000) return round(($n/1000000000000),1).' trillion';
+        else if($n>1000000000) return round(($n/1000000000),1).' billion';
+        else if($n>1000000) return round(($n/1000000),1).' million';
+        else if($n>1000) return round(($n/1000),1).' thousand';
+        
+        return number_format($n);
+    }
 
 }
 
