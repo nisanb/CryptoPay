@@ -311,10 +311,6 @@ class Linda{
             $fp = file_get_contents($walletFile);
             $arr = json_decode($fp, true);
             
-            echo "<pre>";
-            print_r($arr);
-            echo "</pre>";
-            
             return $arr;
         }
         
