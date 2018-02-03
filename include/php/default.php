@@ -298,7 +298,7 @@ $content .= '
                         </tr>
 <tr>
                             <td>
-                                <button type="button" class="btn btn-info m-r-sm">Total Supply: '.$walletInformation["moneysupply"].'</button>
+                                <button type="button" class="btn btn-info m-r-sm">Price USD: $'.$walletInformation[3][0]["price_usd"].'</button>
                             </td>
                             <td>
                                 <button type="button" class="btn btn-info m-r-sm">Price BTC: '.$walletInformation[3][0]["price_btc"].'</button>
