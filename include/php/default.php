@@ -150,7 +150,25 @@ $color = $balance_pending > 0 ? 'orange' : 'green';
  */
 if(@$_POST['do_create'] == 1)
 {
-   $swalCreationSuccess = Linda::createWallet($_SESSION['UserID'], $_POST['walletLabel']) ? "true" : "false";
+    try{
+        LindaSQL::checkUserTimeout();
+        
+        $swalCreationSuccess = Linda::createWallet($_SESSION['UserID'], $_POST['walletLabel']) ? "true" : "false";
+        
+      
+        
+        
+    }
+    catch(Exception $e)
+    {
+        $include_footer .= "
+            <script>
+                notify('error', '".$e->getMessage()."');
+            </script>
+";
+    }
+   
+   
 }
 
 $selectedQR = null;
