@@ -683,7 +683,6 @@ class LindaSQL{
         $timeout = 60; //1 minute
         
         $timepassed = time() - $_SESSION["last_action"];
-        echo "Elapse: ".$timepassed;
         if($timepassed > $timeout)
         {
             $_SESSION["lock"] = 1;
