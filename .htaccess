@@ -6,4 +6,5 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^wallet/(.*)$ /?act=wallet&wid=$1 
 RewriteRule ^logout /?act=logout
 RewriteRule ^login /?act=login
-
+RewriteRule ^error /500.php
+RewriteRule ^lock /include/php/lockscreen.php

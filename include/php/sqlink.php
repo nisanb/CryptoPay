@@ -4,8 +4,6 @@
  * @sk8r
  * (c) LindaProject 2017
  */
-require_once './auth/GoogleAuthenticator.php';
-require_once './include/php/_jsonrpc2.php';
 
 class Linda{
     
@@ -569,7 +567,6 @@ class LindaSQL{
         $email = self::trim_where($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
-        
         if (!$result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");
@@ -679,6 +676,21 @@ class LindaSQL{
         }
 
         return $mysqli;
+    }
+    
+    public static function checkLockScreenTimeout()
+    {
+        $timeout = 60; //1 minute
+        
+        $timepassed = time() - $_SESSION["last_action"];
+        echo "Elapse: ".$timepassed;
+        if($timepassed > $timeout)
+        {
+            $_SESSION["lock"] = 1;
+            header("Location ./lockscreen");
+        }
+        
+        $_SESSION["last_action"] = time();
     }
 
 

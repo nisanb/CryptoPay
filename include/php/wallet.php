@@ -97,8 +97,6 @@ $content .= '
                     <div class="ibox-content">
                         <h1 class="no-margins"><button type="button" class="btn btn-sm btn-primary">
                             Deposit Now</button></h1>
-                        <div class="stat-percent font-bold text-info">'.$lastDepValue.' Linda <i class="fa fa-level-down"></i></div>
-                        <small>last deposit '.$lastDepDate.'</small>
                     </div>
                 </div>
             </div>
@@ -111,8 +109,6 @@ $content .= '
                     <div class="ibox-content">
                         <h1 class="no-margins"><button type="button" class="btn btn-sm btn-primary">
                             Withdraw Now</button></h1>
-                        <div class="stat-percent font-bold text-info">'.$lastWitValue.' Linda <i class="fa fa-level-up"></i></div>
-                        <small>last withdrawal '.$lastWitDate.'</small>
                     </div>
                 </div>
             </div>

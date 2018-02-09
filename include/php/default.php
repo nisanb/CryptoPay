@@ -288,30 +288,23 @@ $content .= '
                     <div class="ibox-content">
 <table class="table">
                         <tbody>
-                        <tr>
+                   <tr>
                             <td>
-                                <button type="button" class="btn btn-danger m-r-sm">Version: '.$walletInformation["version"].'</button>
+<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation[3][0]["price_btc"] * $balance_available, 8).'</a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-danger m-r-sm">Connections: '.$walletInformation[2].'</button>
-                            </td>
-                        </tr>
-<tr>
-                            <td>
-                                <button type="button" class="btn btn-info m-r-sm">Price USD: $'.$walletInformation[3][0]["price_usd"].'</button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-info m-r-sm">Price BTC: '.$walletInformation[3][0]["price_btc"].'</button>
+<a href="#" class="btn btn-sm btn-info">Price/BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation[3][0]["price_btc"], 8).'</button>
                             </td>
 </tr>
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-warning m-r-sm">Blocks: '.$walletInformation["blocks"].'</button>
+<tr>
+                                       <td>
+<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[3][0]["price_usd"] * $balance_available, 8).'</a>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-warning m-r-sm">Block Size: '.$walletInformation[0]["currentblocksize"].'</button>
+<a href="#" class="btn btn-sm btn-info">Price/USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[3][0]["price_usd"], 8).'</button>
                             </td>
-                        </tr>
+</tr>
+               
                         </tbody>
                     </table>
 
