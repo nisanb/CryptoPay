@@ -40,7 +40,6 @@ $transactions = array_reverse($transactions);
 foreach($transactions as $trans)
 {
     $trans["category"] = ucfirst($trans["category"]);
-    
     $color = $trans["category"] == "Send" ? "red" : "green";
     $tranStatus = $trans["confirmations"];
     if($tranStatus > 10)

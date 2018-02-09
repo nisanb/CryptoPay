@@ -694,7 +694,7 @@ class LindaSQL{
         }
         
         
-        $timeout = 60; //1 minute
+        $timeout = 60 * 3; //3 minute
         
         $timepassed = time() - $_SESSION["last_action"];
         if($timepassed > $timeout)

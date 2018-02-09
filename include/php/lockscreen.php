@@ -57,7 +57,7 @@ if(@$_POST["lockScreenPass"])
             <h3>WALLET LOCKED</h3>
             <h7><strong><?php echo @$_SESSION['UserID']; ?></strong></h7>
             <hr />
-            <p>In order to keep you safe, we are locking your wallet every 60 seconds you are inactive at.</p>
+            <p>In order to keep you safe, we are locking your wallet every 3 minutes you are inactive at.</p>
             <p>Please use the Google Authenticator in order to use the wallet again</p>
             <form class="m-t" role="form" method="post" action="./lock">
                 <div class="form-group" >
