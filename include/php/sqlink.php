@@ -680,6 +680,13 @@ class LindaSQL{
     
     public static function checkLockScreenTimeout()
     {
+        if(!@isset($_SESSION["last_action"]))
+        {
+            $_SESSION["last_action"] = time();
+            return;
+        }
+        
+        
         $timeout = 60; //1 minute
         
         $timepassed = time() - $_SESSION["last_action"];
@@ -688,6 +695,7 @@ class LindaSQL{
             $_SESSION["lock"] = 1;
             header("Location ./lockscreen");
         }
+        
         
         $_SESSION["last_action"] = time();
     }
