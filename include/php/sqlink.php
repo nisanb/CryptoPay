@@ -118,6 +118,13 @@ class Linda{
      */
     public static function isValidWalletID($id)
     {
+        /**
+         * Temporary fix
+         */
+        if($id == "skin-config.html")
+        {
+            die();
+        }
         if(!preg_match("/^[a-zA-Z0-9]{34}$/", $id))
             throw new Exception("Invalid Wallet Address supplied - ".$id);
         
