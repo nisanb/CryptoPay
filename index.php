@@ -11,11 +11,13 @@ if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
     header("Location: ./login");
 }
 
-if(@$_SESSION["lock"] == 1)
+if(@$_SESSION["lock"] == 1 && @isset($_SESSION['UserID']))
 {
     header("Location: ./lock");
 }
-LindaSQL::checkLockScreenTimeout();
+
+if(@isset($_SESSION['UserID']))
+    LindaSQL::checkLockScreenTimeout();
 
 
 /* Index Page - Website Manager */

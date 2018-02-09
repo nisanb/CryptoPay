@@ -693,7 +693,7 @@ class LindaSQL{
         if($timepassed > $timeout)
         {
             $_SESSION["lock"] = 1;
-            header("Location ./lockscreen");
+            header("Location ./lock");
         }
         
         
