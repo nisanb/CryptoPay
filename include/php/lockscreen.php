@@ -49,12 +49,14 @@ if(@$_POST["lockScreenPass"])
 <div class="lock-word animated fadeInDown">
     <span class="first-word">LOCKED</span><span>SCREEN</span>
 </div>
-    <div class="middle-box text-center lockscreen animated fadeInDown">
+    <div class="middle-box text-center lockscreen animated fadeInDown" style="width: 400px;">
         <div>
             <div class="m-b-md">
-            <img alt="image" class="img-circle circle-border" src="./include/img/linda_logo.png" style="width: 80%" />
+            <img alt="image" class="img-circle circle-border" src="./include/img/linda_logo.png" style="width: 40%" />
             </div>
             <h3>WALLET LOCKED</h3>
+            <h7><strong><?php echo $_SESSION['UserID']; ?></strong></h7>
+            <hr />
             <p>In order to keep you safe, we are locking your wallet every 60 seconds you are inactive at.</p>
             <p>Please use the Google Authenticator in order to use the wallet again</p>
             <form class="m-t" role="form" method="post" action="./lock">
