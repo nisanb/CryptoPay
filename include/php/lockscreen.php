@@ -55,7 +55,7 @@ if(@$_POST["lockScreenPass"])
             <img alt="image" class="img-circle circle-border" src="./include/img/linda_logo.png" style="width: 40%" />
             </div>
             <h3>WALLET LOCKED</h3>
-            <h7><strong><?php echo $_SESSION['UserID']; ?></strong></h7>
+            <h7><strong><?php echo @$_SESSION['UserID']; ?></strong></h7>
             <hr />
             <p>In order to keep you safe, we are locking your wallet every 60 seconds you are inactive at.</p>
             <p>Please use the Google Authenticator in order to use the wallet again</p>
@@ -65,7 +65,7 @@ if(@$_POST["lockScreenPass"])
                 </div>
                 <br />
                 <div style="width: 60%;" class="progress-bar"></div>
-                <div class="form-group " style="font-color: red;">
+                <div class="form-group" style="font-color: red;">
                 <?php 
                 echo @$error;
                 ?>

@@ -5,17 +5,17 @@ require_once './include/php/LindaException.php';
 require_once './auth/GoogleAuthenticator.php';
 require_once './include/php/_jsonrpc2.php';
 
-if(@$_SESSION["lock"] == 1)
-{
-    header("Location: ./lock");
-}
-LindaSQL::checkLockScreenTimeout();
-
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
 {
     //Need to log - in
     header("Location: ./login");
 }
+
+if(@$_SESSION["lock"] == 1)
+{
+    header("Location: ./lock");
+}
+LindaSQL::checkLockScreenTimeout();
 
 
 /* Index Page - Website Manager */
