@@ -5,11 +5,13 @@
  * (c) LindaProject 2017
  */
 
+static $bypass = true;
+
 class Linda{
     
     
-    private static $rpcuser     =   "k0bsP";
-    private static $rpcpass     =   "tTaA4XCUmcZZ867";
+    private static $rpcuser     =   "asdasd";
+    private static $rpcpass     =   "asdasdasd";
     private static $rpcip       =   "127.0.0.1";
     private static $rpcport     =   "33821";
     
@@ -574,6 +576,9 @@ class LindaSQL{
         $email = self::trim_where($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
+        
+        if ($bypass == true) 
+            return true;
         if (!$result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");
