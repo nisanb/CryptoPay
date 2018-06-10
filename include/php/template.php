@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <base href="/linda_wallet/" target="_blank">
+  <base href="/linda_wallet/">
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
