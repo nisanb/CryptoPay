@@ -8,3 +8,4 @@ RewriteRule ^logout index.php?act=logout
 RewriteRule ^login index.php?act=login
 RewriteRule ^error 500.php
 RewriteRule ^lock include/php/lockscreen.php
+RewriteRule ^api include/php/api.php
