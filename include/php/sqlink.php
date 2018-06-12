@@ -360,6 +360,66 @@ class LindaSQL
     private static $timeout = 31;
 
     /**
+     * Verifies if a given key and domain belong to an existing wallet
+     * @param unknown $key
+     * @param unknown $domain
+     * @throws Exception
+     * @return boolean
+     */
+    public static function verifyAPIKey($key, $domain)
+    {
+        $key    = LindaSQL::trim_where($key);
+        $domain = LindaSQL::trim_where($domain);
+        
+        $conn = LindaSQL::getConn();
+        
+        $sql = "SELECT count(*) as num_results FROM wallets WHERE walletHash in (\"{$key}\") AND domain like (\"%{$domain}%\")";
+   
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive API key information.");
+            exit();
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        return $row["num_results"] > 0;
+    }
+    
+    public static function addTransaction($key, $clientIP,$itemID, $currency)
+    {
+        //Verify inputs
+        $key = LindaSQL::trim_where($key);
+        $clientIP = LindaSQL::trim_where($clientIP);
+        $itemID = intval($itemID);
+        $currency = LindaSQL::trim_where($currency);
+        
+        $conn = LindaSQL::getConn();
+        $sql = "SELECT count(*) as num_results from transactions where iStatus=0 AND 
+                clientIP in (\"{$clientIP}\") AND
+                itemID = {$itemID}";
+        
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive transaction information.");
+            exit();
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        
+        //Transaction was already added -> do attempt to add again
+        if($row["num_results"] > 0)
+            return;
+        
+        //Attempt to add the transaction to the database
+        // TODO
+        
+        
+        $conn = LindaSQL::getConn();
+        
+    }
+    
+    
+    /**
      * Check if user submitted an action in the last 31 seconds
      * 
      * @return boolean

@@ -9,3 +9,4 @@ RewriteRule ^login index.php?act=login
 RewriteRule ^error 500.php
 RewriteRule ^lock include/php/lockscreen.php
 RewriteRule ^api include/php/api.php
+RewriteRule ^pay include/php/pay.php
