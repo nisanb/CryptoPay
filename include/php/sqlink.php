@@ -1,5 +1,8 @@
 <?php
 
+require "Objects/Transaction.php";
+require_once '_jsonrpc2.php';
+
 /**
  * Linda Web Wallet API
  * @sk8r
@@ -283,7 +286,17 @@ class Linda
         
         return self::RPC()->validateaddress($addr)["isvalid"];
     }
-
+    
+    /**
+     * Returns amount of coins received by an account
+     * @param unknown $account
+     * @return unknown
+     */
+    public static function getReceivedByAccount($account)
+    {
+        return self::RPC()->getreceivedbyaccount($account);
+    }
+    
     /**
      * Retreive general wallet information
      */
@@ -383,6 +396,80 @@ class LindaSQL
         
         $row = mysqli_fetch_assoc($result);
         return $row["num_results"] > 0;
+    }
+    
+    public static function updateReceivedTransaction($trans, $received)
+    {
+        $conn = LindaSQL::getConn();
+        
+        if($trans->requiredAmount <= $received)
+        {
+            $sql = "UPDATE transactions set istatus = 2 where id = {$trans->id}";
+            if (! $result = $conn->query($sql)) {
+                // Oh no! The query failed.
+                throw new Exception("Could not update transaction ".$trans->id);
+            }
+        }
+        else
+        {
+            //Partial Payment
+            $sql = "UPDATE transactions set receivedAmount = {$received} where id = {$trans->id}";
+            if (! $result = $conn->query($sql)) {
+                // Oh no! The query failed.
+                throw new Exception("Could not update transaction ".$trans->id);
+            }
+            return;
+        }
+
+        $sql = "SELECT count(*) as num_results from userbalances where walletID in (\"{$trans->creditWallet}\") AND currencyID = {$trans->currency}";
+        if (!$result = $conn->query($sql)) {
+            throw new Exception("Could not query userbalances for wallet " . $trans->creditWallet);
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        
+        //Transaction was already added -> do attempt to add again
+        if($row["num_results"] == 0)
+        {
+            $sql = "INSERT INTO userbalances values (\"{$trans->creditWallet}\", {$trans->currency}, 0)";
+            if (! $result = $conn->query($sql)) {
+                // Oh no! The query failed.
+                throw new Exception("Could not insert new row to userbalances ".$trans->creditWallet." ".$trans->currency);
+            }
+        }
+        
+        $sql = "UPDATE userbalances set balance=balance + {$trans->requiredAmount} where walletID = {$trans->creditWallet} AND currencyID = {$trans->currency}";
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not update userbalances ".$trans->creditWallet." ".$trans->currency." ".$trans->requiredAmount);
+        }
+        
+        $conn->close();
+        
+    }
+    
+    public static function getPandingTransactionAccounts()
+    {
+        $conn = LindaSQL::getConn();
+        
+        /**
+         * iStatus
+         * 0 = Pending Transaction
+         * 1 = Partly Received
+         * 2 = Successfully accounted for
+         */
+        $sql = "select * from transactions where istatus != 2";
+        if (!$result = $conn->query($sql))
+        {
+            throw new Exception("Could not retreive transaction information.");
+            exit();
+        }
+        $arr = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            array_push($arr, new Transaction($row));
+        }
+        
+        return $arr;
     }
     
     public static function addTransaction($key, $clientIP,$itemID, $currency)

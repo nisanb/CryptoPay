@@ -3,7 +3,6 @@ session_start();
 require_once './include/php/sqlink.php';
 require_once './include/php/LindaException.php';
 require_once './auth/GoogleAuthenticator.php';
-require_once './include/php/_jsonrpc2.php';
 
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
 {

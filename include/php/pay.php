@@ -59,11 +59,3 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 ?>
 
-<form method="POST" action="http://localhost/linda_wallet/pay">
-	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
-	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
-	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
-	<?=$hiddenFields;?>
-	<input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png">
-</form>
-
