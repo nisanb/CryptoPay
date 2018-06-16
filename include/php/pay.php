@@ -54,8 +54,6 @@ if(!LindaSQL::verifyAPIKey($_API['key'], $_API['domain']))
 LindaSQL::addTransaction($_API['key'], $_API['clientIP'], $_API['itemID'], "linda");
 
 
-$width = @isset($_GET['width']) ? $_GET['width'] : "128";
-$height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 ?>
 

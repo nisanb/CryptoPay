@@ -480,6 +480,7 @@ class LindaSQL
         $itemID = intval($itemID);
         $currency = LindaSQL::trim_where($currency);
         
+        
         $conn = LindaSQL::getConn();
         $sql = "SELECT count(*) as num_results from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
@@ -497,15 +498,49 @@ class LindaSQL
         if($row["num_results"] > 0)
             return;
         
+        //Acquire currency ID
+        $currency = LindaSQL::getCurrency($currency);
+        
+        //Get wallet ID via item ID
+        $sql = "select walletID from items where id={$itemID}";
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive transaction information.");
+            exit();
+        }
+        $row = mysqli_fetch_assoc($result);
+        $walletID = $row["walletID"];
+        
+        //Generate wallet address
+        $creditWalletAccount = time().Linda::RandomString();
+        $creditWalletAddress = Linda::RPC()->getnewaddress($creditWalletAccount);
         //Attempt to add the transaction to the database
-        // TODO
+        $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
+VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", 5.2, {$itemID}, {$currency})";
         
+        if(!$result = $conn->query($sql))
+        {
+            throw new Exception("Could not insert a new transaction information.");
+            exit();
+        }
         
-        $conn = LindaSQL::getConn();
+        $conn->close();
         
     }
     
-    
+    public static function getCurrency($currency)
+    {
+        $currency = LindaSQL::trim_where($currency);
+        $conn = LindaSQL::getConn();
+        $sql = "select id from currencies where currencyPair in (\"{$currency}\")";
+        if(!$result = $conn->query($sql))
+        {
+            throw new Exception("Could not query currencies - ".$conn->error);
+            exit();
+        }
+        $row = mysqli_fetch_assoc($result);
+        return $row["id"];
+    }
     /**
      * Check if user submitted an action in the last 31 seconds
      * 
@@ -572,7 +607,6 @@ class LindaSQL
                 array_push($tmpWallet, $row["account"]);
                 array_push($tmpWallet, $row["walletHash"]);
                 array_push($tmpWallet, $row["walletLabel"]);
-                array_push($tmpWallet, $row["walletAddress"]);
                 array_push($wallets, $tmpWallet);
             }
             
