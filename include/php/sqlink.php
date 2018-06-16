@@ -472,6 +472,15 @@ class LindaSQL
         return $arr;
     }
     
+    /**
+     * Attempts to add a transaction to the database
+     * Also generates a new wallet receive address
+     * @param unknown $key
+     * @param unknown $clientIP
+     * @param unknown $itemID
+     * @param unknown $currency
+     * @throws Exception
+     */
     public static function addTransaction($key, $clientIP,$itemID, $currency)
     {
         //Verify inputs
