@@ -9,21 +9,9 @@ $content = "";
 
 $walletID = @$_GET['wid'];
 
-$wallet = LindaSQL::getWalletData($walletID);
-$title = "View Wallet - ".$wallet["walletLabel"];
-if($wallet["account"] != $_SESSION['UserID'])
-    throw new Exception ("You tried to view a wallet that doesn't belong to you.");
-
-
+$wallet = LindaSQL::getWalletInformation($walletID);
+$title = "View Wallet - ".$wallet->walletLabel;
     
-    
-$transactions = Linda::getTransactionsByWallet($wallet, @$_GET['from']); //<---- This is what is used to get transactions for a wallet
-
-    
-
-$balance = Linda::getBalanceByWallet($wallet["walletHash"]);
-
-
 $lastDepDate = date("m/d/Y");
 $lastDepValue = 0;
 $lastWitDate = date("m/d/Y");
@@ -36,29 +24,27 @@ $tranDate = null;
 $tranType = "";
 $tranOwner = "";
 $tranAmount = 0;
-$transactions = array_reverse($transactions);
+$transactions = array_reverse($wallet->transactions);
 foreach($transactions as $trans)
 {
-    $trans["category"] = ucfirst($trans["category"]);
-    $color = $trans["category"] == "Send" ? "red" : "green";
-    $tranStatus = $trans["confirmations"];
+    $color = "green";
+    $tranStatus = $trans->iStatus;
     if($tranStatus > 10)
         $tranStatus = 10;
-
-        $tranDate = date('m/d/Y G:i:s', $trans["time"]);
+        $tranDate = date('m/d/Y G:i:s', strtotime($trans->timeStarted));
 
     $test = Linda::RPC()->gettransaction("e6661ec176d221a6e415dcb2617989a8addcc50bbced6f65871115f9db27449f");
     $tableContent .=
     '<tr>
     <td>'.$tranCount++.'</td>
-<td>'.$trans["txid"].'</td>
-    <td aling="center" title="Total Confirmations: '.$trans["confirmations"].'">
+<td>'.$trans->id.'</td>
+    <td aling="center" title="Total Confirmations: '.$tranStatus.'">
         <span class="pie" style="display: none;">'.$tranStatus.','.(10-$tranStatus).'</span>
     </td>
     <td>'.$tranDate.'</td>
     
-    <td aling="center"><span style="color: '.$color.'">'.$trans["category"].'</span></td>
-    <td><span style="color: '.$color.'">'.$trans["amount"].'</span> Linda</td>
+    <td aling="center"><span style="color: '.$color.'">Received</span></td>
+    <td><span style="color: '.$color.'">'.$trans->requiredAmount.'</span> Linda</td>
     </tr>';
      
 }
@@ -81,7 +67,7 @@ $content .= '
                         <h5>Total Income</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">'.$balance.' Linda</h1>
+                        <h1 class="no-margins">0 Linda</h1>
                         <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
                         <small>Total views</small>
                     </div>

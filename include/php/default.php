@@ -122,8 +122,8 @@ if(@$_POST['payment_do'])
 }
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-$balance = Linda::getBalanceByAccount($_SESSION['UserID']);
-$balance_available = Linda::getBalanceByAccount($_SESSION['UserID'], 10);
+$balance = 0;
+$balance_available = 0;
 $balance_pending = $balance - $balance_available;
 
 $include_footer.= '
@@ -153,7 +153,7 @@ if(@$_POST['do_create'] == 1)
     try{
         LindaSQL::checkUserTimeout();
         
-        $swalCreationSuccess = Linda::createWallet($_SESSION['UserID'], $_POST['walletLabel']) ? "true" : "false";
+        $swalCreationSuccess = LindaSQL::addWallet($_SESSION['UserID'], $_POST['walletLabel'], $_POST['walletDomain']) ? "true" : "false";
         
       
         
@@ -179,26 +179,27 @@ $lastWitValue = 0;
 $tableContent = null;
 $count = 1;
 $qrVar = null;
-foreach($_ACCOUNT['Wallets'] as $tmpWallet)
+foreach(LindaSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
-    $walletBalance = Linda::getBalanceByWallet($tmpWallet[1]);  
-    QRcode::png($tmpWallet[3], "./include/img/".$tmpWallet[2].".png");
-    $selectedQR = $tmpWallet[2];
+    $walletBalance = 0;
+    QRcode::png($tmpWallet->id, "./include/img/".$tmpWallet->id.".png");
+    $selectedQR = $tmpWallet->id;
 
 $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
-    <td>'.$tmpWallet[2].'
+    
     <td>
 
-    <a href="./wallet/'.$tmpWallet[3].'" id="w'.$count.'">'.$tmpWallet[3].'</a>
-
-    <a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>
+    <a href="./wallet/'.$tmpWallet->id.'" id="w'.$count.'">'.$tmpWallet->walletLabel.'</a>
+    </td>
+<td>'.$tmpWallet->domain.'</td>
+    <!--<a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>-->
     </td>
     <td>'.$walletBalance.'</td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet[3].'\')">deposit</a>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$walletBalance.'\')">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet->id.'\')">deposit</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->walletLabel.'\',\''.$tmpWallet->id.'\', \''.$walletBalance.'\')">withdraw</a>
     </td>
     </tr>';
 }
@@ -350,7 +351,7 @@ $content .= '
 
                         <th>#</th>
                         <th>Label </th>
-                        <th>Address </th>
+                        <th>Domain </th>
                         <th>Balance</th>
                         <th>Action </th>
 
@@ -754,10 +755,15 @@ $content .= '
                                     <p>create a new wallet.</p>
     
                                     <form name="form" action="" method="post">
-                                        <div class="form-group"><label>Label</label></div>
+                                        <div class="form-group"><label>Label</label>
+                                            <input type="text" name="walletLabel" id="walletLabel" class="form-control" REQUIRED>
+                                        </div>
+                                        <div class="form-group"><label>Domain</label>
+                                            <input type="text" name="walletDomain" id="walletDomain" class="form-control" REQUIRED>
+                                        </div>
                                         <input type="hidden" value="1" name="do_create" />
                                         <div class="input-group col-md-12">
-                                            <input type="text" name="walletLabel" id="walletLabel" class="form-control" REQUIRED>
+                                            
                                             <span class="input-group-btn"> 
                                                 <button href="./add" class="btn btn-primary">Create</button>
                                             </span>
@@ -864,7 +870,7 @@ $content .= '
                                         </br>                                    
                                         <div>
                                             <input type="hidden" name="payment_do" value="1" />
-                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet[2].'\',\''.$tmpWallet[3].'\', \''.$balance_available.'\')">Cancel</a>
+                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->id.'\',\''.$tmpWallet->walletLabel.'\', \''.$balance_available.'\')">Cancel</a>
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>

@@ -1,6 +1,7 @@
 <?php
 
 require "Objects/Transaction.php";
+require "Objects/Wallet.php";
 require_once '_jsonrpc2.php';
 
 /**
@@ -75,44 +76,6 @@ class Linda
     }
 
     /**
-     * Returns received transactions made by an account and wallet
-     * 
-     * @param unknown $account            
-     * @param unknown $wallet            
-     * @return array
-     */
-    public static function getTransactionsByWallet($wallet, $from = 0)
-    {
-        $toReturn = array();
-        if (! @isset($from))
-            $from = 0;
-        
-        $returnedList = self::RPC()->listtransactions($wallet["walletHash"], 10, $from);
-        
-        $tranList = array();
-        
-        foreach ($returnedList as $trans) {
-            if ($trans["category"] == "receive")
-                if (! isset($tranList[$trans["time"]])) {
-                    $tranList[$trans["time"]] = $trans;
-                } else {
-                    print_r($trans);
-                }
-        }
-        
-        $returnedList = self::RPC()->listtransactions($wallet["walletHash"] . "-stealth", 10, $from);
-        foreach ($returnedList as $trans) {
-            if ($trans["category"] == "send")
-                if (! isset($tranList[$trans["time"]])) {
-                    $trans["amount"] += $trans["fee"];
-                    $tranList[$trans["time"]] = $trans;
-                }
-        }
-        
-        return $tranList;
-    }
-
-    /**
      * Returns TRUE if a wallet is valid
      * 
      * @param unknown $id            
@@ -126,20 +89,10 @@ class Linda
         if ($id == "skin-config.html") {
             die();
         }
-        if (! preg_match("/^[a-zA-Z0-9]{34}$/", $id))
+        if (! preg_match("/^[0-9]{1}$/", $id))
             throw new Exception("Invalid Wallet Address supplied - " . $id);
         
         return true;
-    }
-
-    public static function getBalanceByWallet($wallet, $minconf = 1)
-    {
-        /**
-         * Build the JSON Array for Listunspent
-         * 
-         * @var array $arr TODO Put security
-         */
-        return self::RPC()->getbalance($wallet, $minconf);
     }
 
     /**
@@ -148,9 +101,9 @@ class Linda
      * @param unknown $str            
      * @return number
      */
-    public static function validateStringNumber($str)
+    public static function validateStringNumber($str, $includeDots = false)
     {
-        return preg_match("/^[a-zA-Z0-9 ]+$/", $str);
+        return $includeDots == false ? preg_match("/^[a-zA-Z0-9 ]+$/", $str) : preg_match("/^[a-zA-Z0-9 .]+$/", $str);
     }
 
     public static function RandomString()
@@ -221,57 +174,6 @@ class Linda
             throw new Exception("Could not transfer funds back to stealth wallet.");
     }
 
-    /**
-     * Creates a wallet by a given account ID
-     * 
-     * @param unknown $account            
-     * @return number
-     */
-    public static function createWallet($account, $label = "Default Wallet")
-    {
-        if (! self::validateStringNumber($label)) {
-            return false;
-        }
-        
-        // Generate wallet label
-        $walletHash = $account . Linda::RandomString();
-        
-        // Check if not maxed out
-        /*
-         * if(LindaSQL::getAmountOfWalletsByUser($account) > 0)
-         * throw new Exception ("You have maxed out your wallets!");
-         */
-        // Generate address
-        $walletID = self::RPC()->getnewaddress($walletHash);
-        
-        // Generate stealth wallet
-        self::RPC()->getnewaddress($walletHash . "-stealth");
-        
-        // Add to SQL
-        LindaSQL::addWallet($account, $walletID, $walletHash, $label);
-        
-        // Verify wallet was created
-        self::isValidWalletID($walletID);
-        
-        return true;
-    }
-
-    /**
-     * Returns balance by a given account
-     * 
-     * @param unknown $account            
-     * @return number
-     */
-    public static function getBalanceByAccount($account, $minconf = 1)
-    {
-        $totalBalance = 0;
-        
-        $wallets = LindaSQL::getWalletsByAccount($account);
-        foreach ($wallets as $wallet) {
-            $totalBalance += self::getBalanceByWallet($wallet, $minconf);
-        }
-        return $totalBalance;
-    }
 
     /**
      * TRUE only if an address is valid
@@ -537,6 +439,29 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         
     }
     
+    /**
+     * Returns balance by a given account
+     *
+     * @param unknown $account
+     * @return number
+     */
+    public static function getWalletsByAccount($email)
+    {
+        $wallets = array();
+        $email = self::trim_where($email);
+        
+        $sql = "SELECT * FROM wallets where account=\"$email\"";
+        if (! $result = LindaSQL::getConn()->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
+        }
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+            array_push($wallets, new Wallet($row));
+        }
+        return $wallets;
+    }
+    
     public static function getCurrency($currency)
     {
         $currency = LindaSQL::trim_where($currency);
@@ -563,7 +488,9 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
             $_SESSION['timeout'] = time();
             return;
         }
-        
+        $bypass = 1;
+        if($bypass == 1)
+            return;
         $waitTime = self::$timeout - (time() - $_SESSION['timeout']);
         
         if ($waitTime > 0) {
@@ -574,22 +501,38 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         return;
     }
 
-    public static function getWalletData($walletID)
+    public static function getWalletInformation($walletID)
     {
         // Validate
         Linda::isValidAddress($walletID);
         $walletID = self::trim_where($walletID);
-        $tmpWallet = array();
+
+        $sql = "select * from wallets where id = {$walletID}";
+        if (!$result = LindaSQL::getConn()->query($sql)) {
+            throw new Exception("Could not retreive wallet information.");
+        }
+        $row = mysqli_fetch_assoc($result);
+
+        if($row["account"] != $_SESSION['UserID']){
+            throw new Exception("You tried to view a wallet that does not belong to you.");
+        }
         
-        $sql = "select * from wallets where walletAddress = \"$walletID\"";
+        $wallet = new Wallet($row);
+        
+        $transactions = array();
+        $sql = "select * from transactions where creditWallet = {$walletID}";
         if ($result = LindaSQL::getConn()->query($sql)) {
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
-                return $row;
+               array_push($transactions, new Transaction($row));
             }
+        } else {
+            throw new Exception("Could not retreive wallet information for address " . $walletID);
         }
+        $wallet->transactions = $transactions;
         
-        throw new Exception("Could not retreive wallet information for address " . $walletID);
+        return $wallet;
+        
     }
 
     /**
@@ -604,7 +547,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         $sql = "select * from wallets where account=\"$email\"";
         if (! $result = LindaSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.");
+            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
         }
         
         $wallets = array();
@@ -614,8 +557,8 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
             while ($row = mysqli_fetch_assoc($result)) {
                 $tmpWallet = array();
                 array_push($tmpWallet, $row["account"]);
-                array_push($tmpWallet, $row["walletHash"]);
                 array_push($tmpWallet, $row["walletLabel"]);
+                array_push($tmpWallet, $row["domain"]);
                 array_push($wallets, $tmpWallet);
             }
             
@@ -629,30 +572,15 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
     public static function getAmountOfWalletsByUser($email)
     {
         $email = self::trim_where($email);
-        $sql = "select count(*) from wallets where account=\"$email\"";
+        $sql = "select count(*) as num_results from wallets where account in (\"{$email}\")";
         if (! $result = LindaSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.");
+            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
         }
         
         $result = @mysqli_fetch_assoc($result);
         
-        return $result;
-    }
-
-    public static function getWalletsByAccount($email)
-    {
-        $email = self::trim_where($email);
-        
-        $sql = "SELECT walletHash FROM wallets where account=\"$email\"";
-        if (! $result = LindaSQL::getConn()->query($sql)) {
-            // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.");
-        }
-        
-        $arr = mysqli_fetch_assoc($result);
-        
-        return $arr;
+        return $result["num_results"];
     }
 
     /**
@@ -719,23 +647,47 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
      * @param unknown $email            
      * @param unknown $walletID            
      */
-    public static function addWallet($email, $walletID, $walletHash, $label)
+    public static function addWallet($email, $label = "Default Wallet", $domain = "domain")
     {
+        if (! Linda::validateStringNumber($label)) {
+            throw new Exception ("Invalid label provided.");
+        }
+        
+        if(! Linda::validateStringNumber($domain, true)) {
+            throw new Exception ("Invalid domain provided.");
+        }
+        
+        if(LindaSQL::getAmountOfWalletsByUser($email) > 15){
+            throw new Exception ("You have maxed out your wallets!");
+        }
+        
+        if(!self::verifyEmpty("select count(*) as num_rows from wallets where walletLabel in (\"{$label}\")
+                                AND account in (\"{$_SESSION['UserID']}\")"))
+            throw new Exception ("You already created a wallet with this label.");
+        
+        
         $email = self::trim_insert($email);
         $label = self::trim_insert($label);
-        $walletHash = self::trim_insert($walletHash);
-        $walletID = self::trim_insert($walletID);
-        
-        Linda::isValidWalletID($walletID);
+        $domain = self::trim_insert($domain);
         
         $conn = LindaSQL::getConn();
-        $sql = "INSERT INTO wallets VALUES (\"$email\",\"$walletHash\",\"$label\",\"$walletID\")";
+        $sql = "INSERT INTO wallets (account, walletLabel, domain) VALUES (\"{$email}\",\"{$label}\",\"{$domain}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not generate a new wallet");
+            throw new Exception("Could not generate a new wallet.<br />".$sql);
         }
         
         return true;
+    }
+    
+    public static function verifyEmpty($sql)
+    {
+        $conn = LindaSQL::getConn();
+        if (!$result = $conn->query($sql)){
+            throw new Exception("Could not query for empty verification " .$sql);
+        }
+        $row = mysqli_fetch_row($result);
+        return $row[0]==0;
     }
 
     public static function verify($email, $authKey)
@@ -809,7 +761,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         if ($result->num_rows === 0) {
             
             $authKey = self::init($email);
-            Linda::createWallet($email);
+            LindaSQL::addWallet($email);
             
             return true;
         }

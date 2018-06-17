@@ -29,10 +29,7 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
             
         }
 
-        if(@$_POST['betapass'] == "sk8rbeta")
-            LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
-        else
-            throw new LindaException("Beta Test password is incorrect");
+        LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
     }
     catch(LindaException $e)
     {
@@ -127,7 +124,6 @@ else{
                         <form class="m-t" role="form" action="./login" method="POST">
                             <div class="form-group">
                                 <input type="email" class="form-control" placeholder="Email" name="email" required><br />
-                                <input type="password" class="form-control" placeholder="Beta Test Password" name="betapass" required>
 <br />
 <center>
 
@@ -172,7 +168,6 @@ Please download Google Authenticator
   <div class="form-group">
 <input type="checkbox" name="2" required> I saved the Auth Key.
                                 <input type="hidden" name="email" value="'.$_POST['email'].'" />
-                                <input type="hidden" name="betapass" value="'.$_POST['betapass'].'" />
                             </div>
         
 
@@ -190,7 +185,6 @@ Please download Google Authenticator
                             <div class="form-group">
                                 <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>
                                 <input type="hidden" name="email" value="'.$_POST['email'].'" />
-                                <input type="hidden" name="betapass" value="'.$_POST['betapass'].'" />
                             </div>
                 
                             <button type="submit" class="btn btn-primary block full-width m-b">Authorize</button>

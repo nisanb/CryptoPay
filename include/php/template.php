@@ -64,14 +64,14 @@
                    * Display wallet menus
                    * @var Ambiguous $_ACCOUNT
                    */
-                  $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-                  foreach($_ACCOUNT['Wallets'] as $wallet)
+                  $wallets = LindaSQL::getWalletsByAccount($_SESSION['UserID']);
+                  foreach($wallets as $wallet)
                   {
                       echo '
-   <li '.active($wallet[3]).'>
-                    <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">'.$wallet[2].'</span><span class="fa arrow"></span></a>
+   <li '.active($wallet->id).'>
+                    <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">'.$wallet->walletLabel.'</span><span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li><a href="./wallet/'.$wallet[3].'">View Transactions</a></li>
+                        <li><a href="./wallet/'.$wallet->id.'">View Transactions</a></li>
                         <li><a href="#">Deposit</a></li>
                         <li><a href="#">Withdraw</a></li>
                         <li><a href="#" style="color: red;">Delete</a></li>
