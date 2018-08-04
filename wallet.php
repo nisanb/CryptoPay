@@ -1,3 +1,4 @@
+LKT9tDLhqMkfUhKLaj9DjuL2WK3cVhMLPa
 addmultisigaddress <nrequired> <'["key","key"]'> [account]
 addnode <node> <add|remove|onetry>
 addredeemscript <redeemScript> [account]

@@ -3,8 +3,14 @@
  * API Class 
  * @var Ambiguous $_API
  */
-
+require_once "sqlink.php";
 $_API['key'] = @isset($_POST['key']) ? $_POST['key'] : @$_GET['key'];
+
+$_API['price'] = @$_GET['price'];
+$_API['itemID'] = @$_GET['itemID'];
+$_API['itemName'] = @$_GET['itemName'];
+$_API['currency'] = @$_GET['currency']; //BTC, LTC, Linda
+Linda::getPriceInBTC($_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
 
 
@@ -31,7 +37,6 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $_API['clientIP'] = $_SERVER['REMOTE_ADDR'];
 }
 
-require "sqlink.php";
 $_USER['domain'] = $_SERVER['HTTP_HOST'];
 if(!isset($_API['key']))
 {
@@ -54,7 +59,9 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
-	<input type="hidden" name="itemID" value="1" />
+	<input type="hidden" name="itemPrice" value="<?=$_API['price'];?>" />
+	<input type="hidden" name="itemName" value="<?=$_API['itemName'];?>" />
+	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
 	<?=$hiddenFields;?>
 	<input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png">
 </form>

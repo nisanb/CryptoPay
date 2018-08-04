@@ -7,16 +7,19 @@
 if(!isset($_POST['key'])
     || !isset($_POST['domain'])
     || !isset($_POST['ipClient'])
-    || !isset($_POST['itemID']))
+    || !isset($_POST['itemID'])
+    || !isset($_POST['itemPrice'])
+    || !isset($_POST['itemName']))
 {
-    die("Payment details were not transferred.");
+    die("Payment details were not transfered.");
 }
 
 $_API['key']       = $_POST['key'];
 $_API['domain']    = $_POST['domain'];
 $_API['ipClient']  = $_POST['ipClient'];
 $_API['itemID']    = $_POST['itemID'];
-
+$_API['itemName']  = $_POST['itemName'];
+$_API['itemPrice'] = $_POST['itemPrice'];
 
 require "sqlink.php";
 
@@ -51,7 +54,7 @@ if(!LindaSQL::verifyAPIKey($_API['key'], $_API['domain']))
     die('Error #1512 - Could not verify domain ownership.');
 }
 
-LindaSQL::addTransaction($_API['key'], $_API['clientIP'], $_API['itemID'], "linda");
+LindaSQL::addTransaction($_API['key'], $_API['clientIP'], $_API['itemID'], "linda", $_API['itemPrice']);
 
 
 

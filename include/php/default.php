@@ -122,8 +122,8 @@ if(@$_POST['payment_do'])
 }
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-$balance = 0;
-$balance_available = 0;
+$balance = 55;
+$balance_available = 52;
 $balance_pending = $balance - $balance_available;
 
 $include_footer.= '

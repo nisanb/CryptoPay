@@ -20,9 +20,9 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
 
         if(!@isset($_POST['continue']))
         {
-            $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
+            $verifyResponse = @file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$privatekey.'&response='.$_POST['g-recaptcha-response']);
             $responseData = json_decode($verifyResponse);
-            if(!$responseData->success)
+            if(!@$responseData->success)
             {
                 throw new LindaException("Please use Google Captcha");
             }

@@ -89,8 +89,8 @@ class Linda
         if ($id == "skin-config.html") {
             die();
         }
-        if (! preg_match("/^[0-9]{1}$/", $id))
-            throw new Exception("Invalid Wallet Address supplied - " . $id);
+        //if (! preg_match("/^[0-9]{0}$/", $id))
+            //throw new Exception("Invalid Wallet Address supplied - " . $id);
         
         return true;
     }
@@ -106,11 +106,11 @@ class Linda
         return $includeDots == false ? preg_match("/^[a-zA-Z0-9 ]+$/", $str) : preg_match("/^[a-zA-Z0-9 .]+$/", $str);
     }
 
-    public static function RandomString()
+    public static function RandomString($amount = 30)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randstring = "";
-        for ($i = 0; $i < 30; $i ++) {
+        for ($i = 0; $i < $amount; $i ++) {
             if ($i % 10 == 0)
                 $randstring .= "-";
             $randstring .= $characters[rand(0, strlen($characters) - 1)];
@@ -229,13 +229,27 @@ class Linda
         // Get price
         $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
         array_push($arr, json_decode($fp2, true));
-        
+        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
+        array_push($arr, json_decode($fp2, true));
+     
         $arr["moneysupply"] = self::bd_nice_number($arr["moneysupply"]);
+     
         
         fwrite($fp, json_encode($arr));
         fclose($fp);
         
         return $arr;
+    }
+    
+    //TODO - Convert 
+    public static function getPriceInBTC($price)
+    {
+        return "10";
+        $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
+        $jsonDecode = json_decode($fp, true);
+        $btcPrice = $jsonDecode[4][0]["price_usd"];
+        $price = $price / $btcPrice;
+        echo "Price: " . $price;
     }
 
     public static function bd_nice_number($n)
@@ -287,9 +301,7 @@ class LindaSQL
         $domain = LindaSQL::trim_where($domain);
         
         $conn = LindaSQL::getConn();
-        
-        $sql = "SELECT count(*) as num_results FROM wallets WHERE walletHash in (\"{$key}\") AND domain like (\"%{$domain}%\")";
-   
+        $sql = "SELECT count(*) as num_results FROM wallets WHERE walletAPI in (\"{$key}\") AND domain like (\"%{$domain}%\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive API key information.");
@@ -383,15 +395,14 @@ class LindaSQL
      * @param unknown $currency
      * @throws Exception
      */
-    public static function addTransaction($key, $clientIP,$itemID, $currency)
+    public static function addTransaction($key, $clientIP,$itemID, $currency, $price)
     {
         //Verify inputs
         $key = LindaSQL::trim_where($key);
         $clientIP = LindaSQL::trim_where($clientIP);
         $itemID = intval($itemID);
         $currency = LindaSQL::trim_where($currency);
-        
-        
+
         $conn = LindaSQL::getConn();
         $sql = "SELECT count(*) as num_results from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
@@ -413,24 +424,25 @@ class LindaSQL
         $currency = LindaSQL::getCurrency($currency);
         
         //Get wallet ID via item ID
-        $sql = "select walletID from items where id={$itemID}";
+        $sql = "select id from wallets where walletAPI in (\"{$key}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not retreive transaction information.");
+            throw new Exception("API Key is wrong");
             exit();
         }
         $row = mysqli_fetch_assoc($result);
-        $walletID = $row["walletID"];
+        $walletID = $row["id"];
         
         //Generate wallet address
         $creditWalletAccount = time().Linda::RandomString();
         $creditWalletAddress = Linda::RPC()->getnewaddress($creditWalletAccount);
         //Attempt to add the transaction to the database
         $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
-VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", 5.2, {$itemID}, {$currency})";
+VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
         
         if(!$result = $conn->query($sql))
         {
+            echo $sql."<br />";
             throw new Exception("Could not insert a new transaction information.");
             exit();
         }
@@ -661,6 +673,8 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
             throw new Exception ("You have maxed out your wallets!");
         }
         
+        $_SESSION['UserID'] = isset($_SESSION['UserID']) == true ? $_SESSION['UserID'] : $email;
+        
         if(!self::verifyEmpty("select count(*) as num_rows from wallets where walletLabel in (\"{$label}\")
                                 AND account in (\"{$_SESSION['UserID']}\")"))
             throw new Exception ("You already created a wallet with this label.");
@@ -670,8 +684,10 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         $label = self::trim_insert($label);
         $domain = self::trim_insert($domain);
         
+        $walletAPI = Linda::RandomString(25);
+        
         $conn = LindaSQL::getConn();
-        $sql = "INSERT INTO wallets (account, walletLabel, domain) VALUES (\"{$email}\",\"{$label}\",\"{$domain}\")";
+        $sql = "INSERT INTO wallets (account, walletLabel, domain, walletAPI) VALUES (\"{$email}\",\"{$label}\",\"{$domain}\", \"{$walletAPI}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not generate a new wallet.<br />".$sql);
