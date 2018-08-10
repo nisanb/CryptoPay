@@ -1,4 +1,5 @@
 <?php
+echo "<a href='http://192.168.1.7/linda_wallet/api?key=-EcreiaSpMA-IST6JMgvYs-yx&price=10&itemName=test&itemID=5'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API
@@ -55,7 +56,7 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 ?>
 
-<form method="POST" action="http://localhost/linda_wallet/pay">
+<form method="POST" action="http://192.168.1.7/linda_wallet/pay">
 	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
