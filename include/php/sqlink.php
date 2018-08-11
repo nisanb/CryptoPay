@@ -848,4 +848,79 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         
         $_SESSION["last_action"] = time();
     }
+    
+    
+
+    public static function getTotalBalaceOfAccount(){
+        if (isset ($_SESSION["UserID"])){
+            $userid = $_SESSION["UserID"];
+        }
+    
+        $conn = LindaSQL::getConn();
+        $email = self::trim_where($userid);
+    
+        $sql = "SELECT currencyID, SUM(balance) as sum FROM userbalances WHERE user = (\"$email\") GROUP BY currencyID";
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive account information.");
+            exit();
+        }
+
+        //read currencies exchance values
+        $walletFile = "info.wallet";
+        $fp = file_get_contents($walletFile);
+        $obj = json_decode($fp, true);
+        $linda2Btc = LindaSQL::ConvertCurrecncyToBitcoinOrUsd("btc", 3, null);
+        
+        $balance = 0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            //$balance += $row["sum"];
+            if ($row["currencyID"] != 2){
+                $balance += $row["sum"] * $linda2Btc;
+            }
+            else{
+                $balance += $row["sum"];                
+            }                
+        }
+    
+        return $balance;
+    
+    }
+    
+    
+    public static function ConvertCurrecncyToBitcoinOrUsd($showIn ,$currency, $amount){
+        if (!$amount) $amount = 1;
+        
+        //read currencies exchance values
+        $walletFile = "info.wallet";
+        $fp = file_get_contents($walletFile);
+        $obj = json_decode($fp, true);        
+            
+        $ratio = $obj[$currency][0]["price_".$showIn];
+        if (!$ratio){
+        throw new Exception("Currency conversion error");
+        exit();
+        }
+        
+        return $ratio * $amount;
+    }
+    
+    public static function ConvertBitcoinOrUsdToCurrency($convertFrom ,$currency, $amount){
+        if (!$amount) $amount = 1;
+    
+        //read currencies exchance values
+        $walletFile = "info.wallet";
+        $fp = file_get_contents($walletFile);
+        $obj = json_decode($fp, true);
+    
+        $ratio = $obj[$currency][0]["price_".$convertFrom];
+        if (!$ratio){
+            throw new Exception("Currency conversion error");
+            exit();
+        }
+        
+        return $ratio * $amount;
+    }
+    
+    
 }
