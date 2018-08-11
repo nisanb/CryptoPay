@@ -6,20 +6,19 @@
 **/
 
 require "sqlink.php";
-echo "Querying for transactions..<br />";
 
-$array = LindaSQL::getPandingTransactionAccounts();
+$trans = LindaSQL::getTransactionByAddress($_POST['address']);
 
-if(!is_array($array))
-    exit();
-foreach($array as $trans)
+$accountAddress = $trans->creditWalletAccount;
+$received = Linda::getReceivedByAccount($accountAddress);
+$txid = $trans->id;
+if($received > 0)
 {
-    $accountAddress = $trans->creditWalletAccount;
-    $received = Linda::getReceivedByAccount($accountAddress);
-    $txid = $trans->id;
-    echo "Transaction required: " . $trans->requiredAmount ." Received: ". Linda::getReceivedByAccount($accountAddress) ."<br />";
-    if($received > 0)
-    {
-        LindaSQL::updateReceivedTransaction($trans, $received);
-    }
+    LindaSQL::updateReceivedTransaction($trans, $received);
 }
+$toReturn["received"] = Linda::getReceivedByAccount($accountAddress);
+$toReturn["required"] = $trans->requiredAmount;
+$toReturn["currency"] = LindaSQL::getCurrency($trans->currency);
+$toReturn["status"] = $trans->iStatus;
+
+echo json_encode($toReturn);

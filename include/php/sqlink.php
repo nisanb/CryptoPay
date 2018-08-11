@@ -232,6 +232,15 @@ class Linda
         $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
         array_push($arr, json_decode($fp2, true));
      
+        /*
+         *     
+        // Get price
+        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
+        $arr["linda"] = json_decode($fp2, true)[0];
+        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
+        $arr["btc"] = json_decode($fp2, true)[];
+     
+     */
         $arr["moneysupply"] = self::bd_nice_number($arr["moneysupply"]);
      
         
@@ -370,6 +379,26 @@ class LindaSQL
         
     }
     
+    public static function getTransactionByAddress($address)
+    {
+        $address = lindaSQL::trim_where($address);
+        $conn = LindaSQL::getConn();
+        /**
+         * iStatus
+         * 0 = Pending Transaction
+         * 1 = Partly Received
+         * 2 = Successfully accounted for
+         */
+        $sql = "select * from transactions where creditWalletAddress in (\"{$address}\")";
+        if (!$result = $conn->query($sql))
+        {
+            throw new Exception("Could not retreive transaction information.");
+            exit();
+        }
+        $row = mysqli_fetch_assoc($result);
+        $conn->close();
+       return new Transaction($row);
+    }
     public static function getPandingTransactionAccounts()
     {
         $conn = LindaSQL::getConn();
@@ -409,27 +438,23 @@ class LindaSQL
         $key = LindaSQL::trim_where($key);
         $clientIP = LindaSQL::trim_where($clientIP);
         $itemID = intval($itemID);
-        $currency = LindaSQL::trim_where($currency);
+        $currency = LindaSQL::getCurrency(LindaSQL::trim_where($currency));
 
         $conn = LindaSQL::getConn();
-        $sql = "SELECT count(*) as num_results from transactions where iStatus=0 AND 
+        $sql = "SELECT creditWalletAddress from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
-                itemID = {$itemID}";
-        
+                itemID = {$itemID}
+                AND currency = {$currency}";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not retreive transaction information.");
+            throw new Exception("Could not retreive transaction information." + $conn->error);
             exit();
         }
         
         $row = mysqli_fetch_assoc($result);
-        
-        //Transaction was already added -> do attempt to add again
-        if($row["num_results"] > 0)
-            return;
-        
-        //Acquire currency ID
-        $currency = LindaSQL::getCurrency($currency);
+        if(mysqli_num_rows($result) > 0){
+            return $row["creditWalletAddress"];
+        }
         
         //Get wallet ID via item ID
         $sql = "select id from wallets where walletAPI in (\"{$key}\")";
@@ -455,7 +480,9 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
             exit();
         }
         
+        
         $conn->close();
+        return $creditWalletAddress;
         
     }
     
