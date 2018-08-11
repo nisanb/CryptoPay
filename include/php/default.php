@@ -55,7 +55,7 @@ function buildSendForm(a, b, c)
 $walletInformation = Linda::getWalletInformation();
 
 $content = '';
-
+echo Linda::getWalletData();
 /**
  * A payment has been submitted
  */

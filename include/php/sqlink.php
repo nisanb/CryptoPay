@@ -241,6 +241,14 @@ class Linda
         return $arr;
     }
     
+    public static function getWalletData(){
+        $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
+        $jsonDecode = json_decode($fp, true);
+        echo "<pre>";
+        print_r($jsonDecode);
+        echo "</pre>";
+    }
+    
     //TODO - Convert 
     public static function getPriceInBTC($price)
     {
@@ -345,7 +353,7 @@ class LindaSQL
         //Transaction was already added -> do attempt to add again
         if($row["num_results"] == 0)
         {
-            $sql = "INSERT INTO userbalances values (\"{$trans->creditWallet}\", {$trans->currency}, 0)";
+            $sql = "INSERT INTO userbalances values (\"{$_SESSION['UserID']}\",\"{$trans->creditWallet}\", {$trans->currency}, 0)";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not insert new row to userbalances ".$trans->creditWallet." ".$trans->currency);

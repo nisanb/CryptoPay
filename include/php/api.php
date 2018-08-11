@@ -1,5 +1,7 @@
 <?php
-echo "<a href='http://192.168.1.7/linda_wallet/api?key=-EcreiaSpMA-IST6JMgvYs-yx&price=10&itemName=test&itemID=5'>click</a>";
+session_start();
+
+echo "<a href='http://192.168.1.7/linda_wallet/api?key=-EcreiaSpMA-IST6JMgvYs-yx&price=10&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API
@@ -22,14 +24,14 @@ $_API['domain'] = $_SERVER['HTTP_HOST'];
 $getArray = explode('&',$_SERVER["QUERY_STRING"]);
 $hiddenFields = "";
 
-foreach (preg_grep("/^forward\_.*/", $getArray) as $tmpValue)
+foreach (preg_grep("/^my\_.*/", $getArray) as $tmpValue)
 {
     $vars = explode('=',$tmpValue);
     $key = $vars[0];
     $value = $vars[1];
     $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
 }
-
+$_SESSION['fields'] = $hiddenFields;
 if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $_API['clientIP'] = $_SERVER['HTTP_CLIENT_IP'];
 } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {

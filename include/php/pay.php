@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 if(!isset($_POST['key'])
     || !isset($_POST['domain'])
     || !isset($_POST['ipClient'])
@@ -15,10 +17,12 @@ $_API['ipClient']  = $_POST['ipClient'];
 $_API['itemID']    = $_POST['itemID'];
 $_API['itemName']  = $_POST['itemName'];
 $_API['itemPrice'] = $_POST['itemPrice'];
-/*echo "<pre>";
-print_r($_API);
+
+echo "<pre>";
+print_r($_POST);
+echo "<br />";
+echo "<textarea>".$_SESSION['fields']."</textarea>";
 echo "</pre>";
-*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +38,6 @@ echo "</pre>";
     /*! =========================================================
  *
  Material Bootstrap Wizard - V1.0.1
- 
 *
 * =========================================================
 *
@@ -2592,14 +2595,20 @@ footer .pull-center {
 		                            </div>
 		                            <div class="tab-pane" id="captain">
 		                                <h4 class="info-text">Please select a cryptocurrency to pay with </h4>
-		                                <form id="generateCrypto">
+		                                <form method="POST" id="generateCrypto">
 		                                	<div class="form-group label-floating">
 		                                        	<label class="control-label">Select Cryptocurrency</label>
-	                                        		<select class="form-control" class="selectpicker" required="">
+	                                        		<select name="currency" class="form-control" class="selectpicker" required="">
 														<option disabled="" selected=""></option>
 	                                                	<option value="btc" data-subtext="test"> Bitcoin </option>
 	                                                	<option value="linda"> Linda</option>
 		                                        	</select>
+		                                        	<?php 
+		                                        	foreach($_API as $key=>$value){
+		                                        	    echo "<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />";
+		                                        	}
+		                                        	echo $_SESSION['fields'];
+		                                        	?>
 		                                    	</div>
 		                                    	<div class="form-group label-floating">
 		                                    		<button type="submit">Pay Now</button>
@@ -2613,15 +2622,22 @@ footer .pull-center {
 		                                    	<script>
     (function($){
         function processForm( e ){
-           alert("Posting..");
             $.ajax({
-                url: 'users.php',
+                url: 'cgi.php',
                 dataType: 'text',
                 type: 'post',
                 contentType: 'application/x-www-form-urlencoded',
+                dataType : 'json',
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
-                    $('#response pre').html( data );
+
+					for (i in data)
+					{
+						status += i + "=>" + data[i]+"\n";
+						
+					}
+                    var body = data.body;
+                    $('#response pre').html( status +"<br />"+body);
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
                 	$('#response pre').html( errorThrown );
