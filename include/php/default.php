@@ -122,7 +122,7 @@ if(@$_POST['payment_do'])
 
 $_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
 $balance = LindaSQL::getTotalBalaceOfAccount();
-$balance_available = 52;
+$balance_available = 10;
 $balance_pending = $balance - $balance_available;
 
 $include_footer.= '
@@ -243,7 +243,7 @@ if(@$swalCreationSuccess)
                     </div>
 
                     <div class="ibox-content">
-                        <h1 class="no-margins">'.$balance.' Linda</h1>
+                        <h1 class="no-margins">'.$balance.' BTC</h1>
 <hr />
 <span class="label label-info pull-left" style="background-color: green;">Available: '.$balance_available.'</span>
 

@@ -254,7 +254,7 @@ class Linda
         $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
         $jsonDecode = json_decode($fp, true);
         echo "<pre>";
-        print_r($jsonDecode);
+        //print_r($jsonDecode);
         echo "</pre>";
     }
     
@@ -567,7 +567,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         $wallet = new Wallet($row);
         
         $transactions = array();
-        $sql = "select * from transactions where creditWallet = {$walletID}";
+        $sql = "SELECT c.currencyName, t.* FROM transactions t JOIN currencies c ON (t.currency = c.id) where creditWallet = {$walletID}";
         if ($result = LindaSQL::getConn()->query($sql)) {
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
@@ -581,6 +581,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         return $wallet;
         
     }
+    
 
     /**
      * Returns an array with wallet IDs associated with an account
@@ -878,7 +879,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
     
     
 
-    public static function getTotalBalaceOfAccount(){
+    public static function getTotalBalaceOfAccount($walletId = 0){
         if (isset ($_SESSION["UserID"])){
             $userid = $_SESSION["UserID"];
         }
@@ -886,7 +887,14 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         $conn = LindaSQL::getConn();
         $email = self::trim_where($userid);
     
-        $sql = "SELECT currencyID, SUM(balance) as sum FROM userbalances WHERE user = (\"$email\") GROUP BY currencyID";
+        $sql = '';
+        if ($walletId > 0){
+            $sql = "SELECT c.currencyName, t.currency as currencyID, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
+        }
+        else{
+            $sql = "SELECT currencyID, SUM(balance) as sum FROM userbalances WHERE user = (\"$email\") GROUP BY currencyID";
+        }
+        
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");
@@ -896,18 +904,24 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         //read currencies exchance values
         $walletFile = "info.wallet";
         $fp = file_get_contents($walletFile);
+        
+        if (!LindaSQL::isValidJsonFile($fp)) {
+            throw new Exception("Could not read currency exchange from cyptopia");
+            exit();
+        }
+        
         $obj = json_decode($fp, true);
         $linda2Btc = LindaSQL::ConvertCurrecncyToBitcoinOrUsd("btc", 3, null);
-        
+        echo $linda2Btc;
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
             //$balance += $row["sum"];
-            if ($row["currencyID"] != 2){
+            if ($row["currencyID"] !=1){
                 $balance += $row["sum"] * $linda2Btc;
             }
             else{
-                $balance += $row["sum"];                
-            }                
+                $balance += $row["sum"];
+            }
         }
     
         return $balance;
@@ -925,12 +939,14 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
             
         $ratio = $obj[$currency][0]["price_".$showIn];
         if (!$ratio){
-        throw new Exception("Currency conversion error");
-        exit();
+            return 0;
+//         throw new Exception("Currency conversion error");
+//         exit();
         }
         
         return $ratio * $amount;
     }
+    
     
     public static function ConvertBitcoinOrUsdToCurrency($convertFrom ,$currency, $amount){
         if (!$amount) $amount = 1;
@@ -942,11 +958,19 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
     
         $ratio = $obj[$currency][0]["price_".$convertFrom];
         if (!$ratio){
-            throw new Exception("Currency conversion error");
-            exit();
+            return 0;
+//             throw new Exception("Currency conversion error");
+//             exit();
         }
         
         return $ratio * $amount;
+    }
+    
+    
+    //validate json file
+    public static function isValidJsonFile($string){
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
     }
     
     

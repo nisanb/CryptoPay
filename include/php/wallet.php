@@ -10,6 +10,7 @@ $content = "";
 $walletID = @$_GET['wid'];
 
 $wallet = LindaSQL::getWalletInformation($walletID);
+$income = LindaSQL::getTotalBalaceOfAccount($walletID);
 $title = "View Wallet - ".$wallet->walletLabel;
     
 $lastDepDate = date("m/d/Y");
@@ -25,6 +26,7 @@ $tranType = "";
 $tranOwner = "";
 $tranAmount = 0;
 $transactions = array_reverse($wallet->transactions);
+
 foreach($transactions as $trans)
 {
     $color = "green";
@@ -44,7 +46,7 @@ foreach($transactions as $trans)
     <td>'.$tranDate.'</td>
     
     <td aling="center"><span style="color: '.$color.'">Received</span></td>
-    <td><span style="color: '.$color.'">'.$trans->requiredAmount.'</span> Linda</td>
+    <td><span style="color: '.$color.'">'.$trans->receivedAmount.'</span> '.$trans->currency.'</td>
     </tr>';
      
 }
@@ -67,7 +69,7 @@ $content .= '
                         <h5>Total Income</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">0 Linda</h1>
+                        <h1 class="no-margins">'. $income .' BTC</h1>
                         <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
                         <small>Total views</small>
                     </div>

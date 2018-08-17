@@ -58,7 +58,7 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 ?>
 
-<form method="POST" action="http://192.168.1.7/linda_wallet/pay">
+<form method="POST" action="pay">
 	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />

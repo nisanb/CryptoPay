@@ -9,6 +9,7 @@ class Transaction {
     public $creditWalletAddress;
     public $clientIP;
     public $requiredAmount;
+    public $receivedAmount;
     public $itemID;
     public $currency;
     /**
@@ -25,8 +26,9 @@ class Transaction {
         $this->creditWalletAddress  = $row["creditWalletAddress"];
         $this->clientIP             = $row["clientIP"];
         $this->requiredAmount       = $row["requiredAmount"];
+        $this->receivedAmount       = $row["receivedAmount"];
         $this->itemID               = $row["itemID"];
-        $this->currency             = $row["currency"];
+        $this->currency             = $row["currencyName"];
         
     }
     
