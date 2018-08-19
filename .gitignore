@@ -3,5 +3,5 @@ web_hw2/
 *.tar
 CMS/
 UI_Project/
-*.wallet
+info.wallet
 include/img/qrwallets/*
