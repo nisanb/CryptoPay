@@ -912,7 +912,7 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
         
         $obj = json_decode($fp, true);
         $linda2Btc = LindaSQL::ConvertCurrecncyToBitcoinOrUsd("btc", 3, null);
-        echo $linda2Btc;
+//         echo $linda2Btc;
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
             //$balance += $row["sum"];

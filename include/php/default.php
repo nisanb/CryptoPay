@@ -181,7 +181,7 @@ $qrVar = null;
 foreach(LindaSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
     $walletBalance = 0;
-    QRcode::png($tmpWallet->id, "./include/img/".$tmpWallet->id.".png");
+    QRcode::png($tmpWallet->id, "./include/img/qrwallets/".$tmpWallet->id.".png");
     $selectedQR = $tmpWallet->id;
 
 $tableContent .=
@@ -784,7 +784,7 @@ $content .= '
                                     <p>Send coins to this wallet.</p>
     
                                     <form role="form">
-                                        <iframe style="border:0; width:50%; height:50%" src="./include/img/'.$selectedQR.'.png"></iframe>
+                                        <iframe style="border:0; width:50%; height:50%" src="./include/img/qrwallets/'.$selectedQR.'.png"></iframe>
                                         <div class="form-group"><label>Address</label></div>
                                         <div class="input-group col-md-12">
                                             <input type="text" id="depoinput" class="form-control" readonly="readonly">
