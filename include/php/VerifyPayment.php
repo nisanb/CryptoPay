@@ -3,14 +3,14 @@ require "sqlink.php";
 
 $transactionId = "Empty Value";
 $sql = "";
+$myObj = $res = new \stdClass();
 
-
-if (isset($_Get['TranactionId'])){
-    $transactionId = $_GET['TranactionId'];
+if (isset($_GET['transID'])){
+    $transactionId = $_GET['transID'];
     $sql = "SELECT * FROM transactions WHERE id = " .$transactionId;
 }
 
-echo "TransactionId => " .$transactionId;
+//echo "TransactionId => " .$transactionId . "</br>";
 
 $conn = LindaSQL::getConn();
 if (!$result = $conn->query($sql)){
@@ -20,4 +20,11 @@ if (!$result = $conn->query($sql)){
 
 $row = mysqli_fetch_assoc($result);
 $paidAmount = $row["receivedAmount"];
-echo $paidAmount;
+
+$myObj->tranaction = $transactionId;
+$myObj->marchantid = "xxxxxxxxxxxxx";
+$myObj->recieved = $paidAmount;
+
+$myJSON = json_encode($myObj);
+
+echo $myJSON;

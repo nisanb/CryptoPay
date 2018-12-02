@@ -19,13 +19,14 @@ class GlobalParams{
     public static $rpcip = "127.0.0.1";
     public static $rpcport = "33821";
 
-    //remote sql parms
+    //local sql parms
 
     public static $server = "localhost";
     public static $user = "root";
     public static $pass = "";
     public static $db = "linda";
 
+    //renote ip
     public static $SERVER_IP = "40.87.133.89";
 }
 
