@@ -22,9 +22,12 @@ $row = mysqli_fetch_assoc($result);
 $paidAmount = $row["receivedAmount"];
 
 $myObj->tranaction = $transactionId;
-$myObj->marchantid = "xxxxxxxxxxxxx";
+//$myObj->marchantid = "xxxxxxxxxxxxx";
 $myObj->recieved = $paidAmount;
 
 $myJSON = json_encode($myObj);
 
 echo $myJSON;
+
+
+
