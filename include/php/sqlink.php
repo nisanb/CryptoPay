@@ -9,17 +9,36 @@ require_once '_jsonrpc2.php';
  * @sk8r
  * (c) LindaProject 2017
  */
+
+class GlobalParams{
+    public static $workLocal = TRUE;
+
+    //remote rpc params
+    public static $rpcuser = "asdasd";
+    public static $rpcpass = "asdasdasd";
+    public static $rpcip = "127.0.0.1";
+    public static $rpcport = "33821";
+
+    //remote sql parms
+
+    public static $server = "localhost";
+    public static $user = "root";
+    public static $pass = "";
+    public static $db = "linda";
+
+    public static $SERVER_IP = "40.87.133.89";
+}
+
+
+
+
 class Linda
 {
 
     private static $rpcuser = "asdasd";
-
     private static $rpcpass = "asdasdasd";
-
     private static $rpcip = "127.0.0.1";
-
     private static $rpcport = "33821";
-
     private static $rpcconn;
 
     /**
@@ -42,6 +61,13 @@ class Linda
     {
         if (! isset(self::$rpcconn) || self::$rpcconn == null) {
             // self::$rpcconn = new jsonRPCClient('http://'.self::$rpcuser.':'.self::$rpcpass.'@'.self::$rpcip.':'.self::$rpcport.'/');
+            self::$rpcip = GlobalParams::$SERVER_IP;
+            if (GlobalParams::$workLocal == TRUE){
+                self::$rpcuser = "asdasd";                
+                self::$rpcpass = "asdasdasd";               
+                self::$rpcip = "127.0.0.1";              
+                self::$rpcport = "33821";
+            }
             self::$rpcconn = new jsonRPCClient(self::$rpcuser, self::$rpcpass, self::$rpcip, self::$rpcport);
         }
         return self::$rpcconn;
@@ -847,8 +873,16 @@ VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", 
      * 
      * @return mysqli
      */
-    private static function getConn()
+    public static function getConn()
     {
+        self::$server = GlobalParams::$SERVER_IP;
+        if (GlobalParams::$workLocal == TRUE){  
+            self::$server = "localhost";
+            self::$user = "root";           
+            self::$pass = "";     
+            self::$db = "linda";
+        }
+        
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);
         
         // In case SQL Connection did not work
