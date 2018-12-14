@@ -1,9 +1,10 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /linda_wallet/
+RewriteBase /CryptoPay/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^wallet/(.*)$ index.php?act=wallet&wid=$1 
+RewriteRule ^wallet/(.*)$ index.php?act=wallet&wid=$1
+RewriteRule ^iframe index.php?act=iframe
 RewriteRule ^logout index.php?act=logout
 RewriteRule ^login index.php?act=login
 RewriteRule ^error 500.php

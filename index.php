@@ -30,6 +30,7 @@ switch(@$_GET['act']){
   break;
 
   case "wallet":
+  case "iframe":
       $includePage = $_GET['act'];
       $includeTemplate = true;
   break; 
