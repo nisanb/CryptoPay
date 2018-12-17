@@ -235,7 +235,8 @@ class Linda
         
         $timeout = 60 * 5; // 5 minutes
         
-        $fileUpdatedTime = (time() - filemtime($walletFile)) . "seconds ago";
+        
+        $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
         // JSON already created
         if ($fileUpdatedTime < $timeout) {
@@ -247,16 +248,17 @@ class Linda
         
         // Create new JSON
         $fp = fopen($walletFile, 'w');
-        $arr = self::RPC()->getinfo();
+//         $arr = self::RPC()->getinfo();
         
-        array_push($arr, self::RPC()->getstakinginfo());
-        array_push($arr, self::RPC()->getmininginfo());
-        array_push($arr, self::RPC()->getconnectioncount());
+//         array_push($arr, self::RPC()->getstakinginfo());
+//         array_push($arr, self::RPC()->getmininginfo());
+//         array_push($arr, self::RPC()->getconnectioncount());
         
         // Get price
-        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
-        array_push($arr, json_decode($fp2, true));
+        $arr = array();
         $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
+        array_push($arr, json_decode($fp2, true));
+        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
         array_push($arr, json_decode($fp2, true));
      
         /*
@@ -268,9 +270,6 @@ class Linda
         $arr["btc"] = json_decode($fp2, true)[];
      
      */
-        $arr["moneysupply"] = self::bd_nice_number($arr["moneysupply"]);
-     
-        
         fwrite($fp, json_encode($arr));
         fclose($fp);
         
@@ -280,9 +279,6 @@ class Linda
     public static function getWalletData(){
         $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
         $jsonDecode = json_decode($fp, true);
-        echo "<pre>";
-        //print_r($jsonDecode);
-        echo "</pre>";
     }
     
     //TODO - Convert 
