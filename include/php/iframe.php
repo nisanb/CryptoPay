@@ -38,8 +38,9 @@ $include_footer = '  <!-- FooTable -->
                 console.log(\'Color ->\' + color)
                 icon = selectedIconName + ".svg";
                 $("#preview").empty();
-                $("#preview").append(\'<img src="./include/img/iframeImages/\' + icon + \'" style="width:\' + width  +\'px;" />\');
-				//$("#code").empty();
+                $("#preview").append(\'<button type="button" class="btn btn-w-m" style="font-size: 2em; color: white; background-color: blue; width:300px;" >Pay\' +
+										\'<img src="iframeImages/' + icon + '" style="width:' + width  +'px;" /></Button>\');				
+              //$("#code").empty();
 				$("#code").val(\'<iframe id="cryptopay" src="cryptopay/pay.php?key=\'+marchantId+\'&img=\'+selectedIconName+\'&w=\'+width+\'&c=\'+color+\'" />\');
             }
 			
