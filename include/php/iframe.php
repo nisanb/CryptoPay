@@ -1,4 +1,21 @@
 <?php
+$userId ='';
+$walledId = '';
+if (isset($_SESSION['UserID'])){
+    $userId = $_SESSION['UserID'];
+}
+
+if (isset($_GET['walletId'])){
+    $walledId = $_GET['walletId'];
+}
+
+if (!CryptoSQL::verifyOwner($userId, $walledId)){
+    new Exception("Wllet does not belong to user");
+}
+
+    
+
+
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
                     <script scr="./include/js/SVGJS.js"> </script>';
 $include_footer = '  <!-- FooTable -->
@@ -64,7 +81,7 @@ $include_footer = '  <!-- FooTable -->
 										\'<img src="iframeImages/\' + icon + \'" style="width:\' + iconWidth  +\'px; padding-right:10px" /></Button>\');
 				//$("#code").empty();
 				$("#code").val(\'<iframe id="cryptopay" src="cryptopay/pay.php?key=\'+marchantId+\'&img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+\' +
-								\'bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'/>\');
+								\'bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'&wallet='. $walledId .'/>\');
             }
 			
 			function copy(){
@@ -88,22 +105,22 @@ $content = "";
 
 
 
-$income = CryptoSQL::getTotalBalaceOfAccount($walletID);
-$title = "View Wallet - ".$wallet->walletLabel;
+// $income = CryptoSQL::getTotalBalaceOfAccount($walletID);
+// $title = "View Wallet - ".$wallet->walletLabel;
     
-$lastDepDate = date("m/d/Y");
-$lastDepValue = 0;
-$lastWitDate = date("m/d/Y");
-$lastWitValue = 0;
+// $lastDepDate = date("m/d/Y");
+// $lastDepValue = 0;
+// $lastWitDate = date("m/d/Y");
+// $lastWitValue = 0;
 
-$tableContent = null;
-$tranCount = 1;
-$tranStatus = 1;
-$tranDate = null;
-$tranType = "";
-$tranOwner = "";
-$tranAmount = 0;
-$transactions = array_reverse($wallet->transactions);
+// $tableContent = null;
+// $tranCount = 1;
+// $tranStatus = 1;
+// $tranDate = null;
+// $tranType = "";
+// $tranOwner = "";
+// $tranAmount = 0;
+// $transactions = array_reverse($wallet->transactions);
 
 $content .='
             <div id="ifarmeGeneratorContent" class="wrapper wrapper-content animated fadeInRight">
