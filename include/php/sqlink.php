@@ -509,8 +509,8 @@ class CryptoSQL
         $creditWalletAccount = time().Bitcoin::RandomString();
         $creditWalletAddress = Bitcoin::RPC()->getnewaddress($creditWalletAccount);
         //Attempt to add the transaction to the database
-        $sql = "insert into transactions (id ,istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
-                VALUES (Bitcoin::getGUID() ,0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
+        $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
+                VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
         
         if(!$result = $conn->query($sql))
         {

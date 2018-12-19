@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-echo "<a href='http://192.168.1.7/linda_wallet/api?key=-EcreiaSpMA-IST6JMgvYs-yx&price=10&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
+echo "<a href='http://localhost/CryptoPay/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API
