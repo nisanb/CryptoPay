@@ -31,13 +31,13 @@ if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $_POST['clientIP'] = $_SERVER['REMOTE_ADDR'];
 }
 
-if(!LindaSQL::verifyAPIKey($_POST['key'], $_POST['domain']))
+if(!CryptoSQL::verifyAPIKey($_POST['key'], $_POST['domain']))
 {
     $toReturn["status"] = "0";
     $toReturn["body"] = "Could not verify domain ownership";
 }
 
-$address = LindaSQL::addTransaction($_POST['key'], $_POST['clientIP'], $_POST['itemID'], $_POST['currency'], $_POST['itemPrice']);
+$address = CryptoSQL::addTransaction($_POST['key'], $_POST['clientIP'], $_POST['itemID'], $_POST['currency'], $_POST['itemPrice']);
 
 $toReturn["status"] = "1";
 $toReturn["body"] = $address;

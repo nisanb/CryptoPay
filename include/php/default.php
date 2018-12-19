@@ -52,7 +52,7 @@ function buildSendForm(a, b, c)
 </script>
 ';
 
-$walletInformation = Linda::getWalletInformation();
+$walletInformation = Bitcoin::getWalletInformation();
 
 $content = '';
 /**
@@ -73,7 +73,7 @@ if(@$_POST['payment_do'])
     try
     {
         //check user timeout
-        LindaSQL::checkUserTimeout();
+        CryptoSQL::checkUserTimeout();
         
         //Check for negativity
         if($payment_amount == 0)
@@ -85,18 +85,18 @@ if(@$_POST['payment_do'])
         if($payment_amount <= 0 || $payment_fee < 0 || $payment_total <= 0)
             throw new Exception("You may not enter negative values.");
             
-        if(!Linda::isValidAddress($payment_to))
+        if(!Bitcoin::isValidAddress($payment_to))
             throw new Exception("The wallet you have tried to send is invalid (".$payment_to.").");
                 
         //Verify the wallet sent from is the wallet of the session owner
-        /*if(!LindaSQL::verify($_SESSION['UserID'], $payment_auth))
+        /*if(!CryptoSQL::verify($_SESSION['UserID'], $payment_auth))
             throw new Exception("Google Authentication key is incorrect. Please try again.");
         */
         //Verify that the wallet owner is the user logged in
-        if(!LindaSQL::verifyOwner($_SESSION['UserID'], $payment_from))
+        if(!CryptoSQL::verifyOwner($_SESSION['UserID'], $payment_from))
             throw new Exception("You attempted to send cash from a wallet which is not owned by you.");
         
-        Linda::sendCash($payment_from, $payment_to, $payment_amount, $payment_fee);
+        Bitcoin::sendCash($payment_from, $payment_to, $payment_amount, $payment_fee);
         
         
     }
@@ -120,10 +120,8 @@ if(@$_POST['payment_do'])
 ";
 }
 
-$_ACCOUNT['Wallets'] = LindaSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-$balance = LindaSQL::getTotalBalaceOfAccount();
-$balance_available = 10;
-$balance_pending = $balance - $balance_available;
+$_ACCOUNT['Wallets'] = CryptoSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
+$balance = CryptoSQL::getTotalBalaceOfAccount();
 
 $include_footer.= '
 <script>
@@ -132,8 +130,8 @@ $(function() {
 
     Morris.Donut({
         element: \'morris-donut-chart\',
-        data: [{ label: "Available Coins", value: '.$balance_available.' },
-            { label: "Pending Coins", value: '.$balance_pending.' },
+        data: [{ label: "Available BTC", value: '.$balance.' },
+            { label: "Pending Coins", value: 0 },
             ],
         resize: true,
         colors: [\'green\', \'orange\'],
@@ -143,16 +141,15 @@ $(function() {
 </script>
 ';
 
-$color = $balance_pending > 0 ? 'orange' : 'green';
 /**
  * Creation of a new wallet
  */
 if(@$_POST['do_create'] == 1)
 {
     try{
-        LindaSQL::checkUserTimeout();
+        CryptoSQL::checkUserTimeout();
         
-        $swalCreationSuccess = LindaSQL::addWallet($_SESSION['UserID'], $_POST['walletLabel'], $_POST['walletDomain']) ? "true" : "false";
+        $swalCreationSuccess = CryptoSQL::addWallet($_SESSION['UserID'], $_POST['walletLabel'], $_POST['walletDomain']) ? "true" : "false";
         
       
         
@@ -178,7 +175,7 @@ $lastWitValue = 0;
 $tableContent = null;
 $count = 1;
 $qrVar = null;
-foreach(LindaSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
+foreach(CryptoSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
     $walletBalance = 0;
     QRcode::png($tmpWallet->id, "./include/img/qrwallets/".$tmpWallet->id.".png");
@@ -195,9 +192,8 @@ $tableContent .=
 <td>'.$tmpWallet->domain.'</td>
     <!--<a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>-->
     </td>
-    <td>'.$walletBalance.'</td>
+    <td>'.$walletBalance.' BTC</td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#deposit-form" onclick="buildREF(\''.$tmpWallet->id.'\')">deposit</a>
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->walletLabel.'\',\''.$tmpWallet->id.'\', \''.$walletBalance.'\')">withdraw</a>
     </td>
     </tr>';
@@ -228,16 +224,8 @@ if(@$swalCreationSuccess)
                     <div class="ibox-title">
                         ';
                         $per = 100;
-                        if($balance_pending > 0)
-                        {
-                            $per = number_format(($balance_available / $balance * 100), 0, '.', ',');
-                            $content .= '<span class="label label-warning pull-right" style="background-color: '.$color.'"><i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i> Syncing...</span>';
-                            
-                        }
-                        else
-                        {
-                            $content .= '<span class="label label-success pull-right" style="background-color: '.$color.';">Fully Synced</span>';
-                        }
+                       
+                            $content .= '<span class="label label-success pull-right" style="background-color: green;">Fully Synced</span>';
                         $content .= '
                         <h5>Wallet Status</h5>
                     </div>
@@ -245,20 +233,12 @@ if(@$swalCreationSuccess)
                     <div class="ibox-content">
                         <h1 class="no-margins">'.$balance.' BTC</h1>
 <hr />
-<span class="label label-info pull-left" style="background-color: green;">Available: '.$balance_available.'</span>
+<span class="label label-info pull-left" style="background-color: green;">BTC</span>
 
 <span class="label label-info pull-left" style="background-color: white; color: black;">+</span> 
-<span class="label label-info pull-left" style="background-color: orange;">Pending: '.$balance_pending.'</span> 
+<span class="label label-info pull-left" style="background-color: orange;">LINDA</span> 
 
-                        <div class="stat-percent font-bold text-success" style="color: '.$color.'">'.$per.'%';
-                        if($balance_pending > 0)
-                        {
-                            $content .= '/100% Available';
-                        }
-              
-$content .= '
-
- <i class="fa fa-bolt" style="color: '.$color.'"></i></div>
+             
 <br />
 
                         
@@ -282,7 +262,7 @@ $content .= '
             <div class="col-lg-4">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-info pull-right">'.Linda::getEmailPrefix($_SESSION['UserID']).'</span>
+                        <span class="label label-info pull-right">'.Bitcoin::getEmailPrefix($_SESSION['UserID']).'</span>
                         <h5>Wallet Information</h5>
                     </div>
                     <div class="ibox-content">
@@ -290,18 +270,16 @@ $content .= '
                         <tbody>
                    <tr>
                             <td>
-<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation[3][0]["price_btc"] * $balance_available, 8).'</a>
+<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation[0][0]["price_btc"] * $balance, 8).'</a>
                             </td>
-                            <td>
-<a href="#" class="btn btn-sm btn-info">Price/BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation[3][0]["price_btc"], 8).'</button>
+            <td>
+<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[0][0]["price_usd"] * $balance, 8).'</a>
                             </td>
 </tr>
 <tr>
-                                       <td>
-<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[3][0]["price_usd"] * $balance_available, 8).'</a>
-                            </td>
-                            <td>
-<a href="#" class="btn btn-sm btn-info">Price/USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[3][0]["price_usd"], 8).'</button>
+                               
+                            <td colspan="2" align="center">
+<a href="#" class="btn btn-sm btn-info">BTC/USD: <span class="fa fa-usd"></span>'.number_format($walletInformation[0][0]["price_usd"], 8).'</button>
                             </td>
 </tr>
                
@@ -869,7 +847,7 @@ $content .= '
                                         </br>                                    
                                         <div>
                                             <input type="hidden" name="payment_do" value="1" />
-                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->id.'\',\''.$tmpWallet->walletLabel.'\', \''.$balance_available.'\')">Cancel</a>
+                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->id.'\',\''.$tmpWallet->walletLabel.'\', \''.$balance.'\')">Cancel</a>
                                             <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>

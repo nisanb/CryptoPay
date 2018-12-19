@@ -88,7 +88,7 @@ $content = "";
 
 
 
-$income = LindaSQL::getTotalBalaceOfAccount($walletID);
+$income = CryptoSQL::getTotalBalaceOfAccount($walletID);
 $title = "View Wallet - ".$wallet->walletLabel;
     
 $lastDepDate = date("m/d/Y");

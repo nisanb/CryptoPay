@@ -13,7 +13,7 @@ $_API['price'] = @$_GET['price'];
 $_API['itemID'] = @$_GET['itemID'];
 $_API['itemName'] = @$_GET['itemName'];
 $_API['currency'] = @$_GET['currency']; //BTC, LTC, Linda
-Linda::getPriceInBTC($_API['price']);
+Bitcoin::getPriceInBTC($_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
 
 
@@ -46,7 +46,7 @@ if(!isset($_API['key']))
     die('Error #1511 - Missing API Key.');   
 }
 
-if(!LindaSQL::verifyAPIKey($_API['key'], $_API['domain']))
+if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
 {
     die('Error #1512 - Could not verify domain ownership.');
 }

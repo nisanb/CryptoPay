@@ -16,7 +16,7 @@ if(@$_SESSION["lock"] == 1 && @isset($_SESSION['UserID']))
 }
 
 if(@isset($_SESSION['UserID']))
-    LindaSQL::checkLockScreenTimeout();
+    CryptoSQL::checkLockScreenTimeout();
 
 
 /* Index Page - Website Manager */

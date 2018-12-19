@@ -49,12 +49,12 @@ if(!isset($_API['key']))
     die('Error #1511 - Missing API Key.');   
 }
 
-if(!LindaSQL::verifyAPIKey($_API['key'], $_API['domain']))
+if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
 {
     die('Error #1512 - Could not verify domain ownership.');
 }
 
-LindaSQL::addTransaction($_API['key'], $_API['clientIP'], $_API['itemID'], "linda", $_API['itemPrice']);
+CryptoSQL::addTransaction($_API['key'], $_API['clientIP'], $_API['itemID'], "linda", $_API['itemPrice']);
 
 
 

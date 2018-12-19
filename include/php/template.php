@@ -41,7 +41,7 @@
                              </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="./include/css/font-bold" id="profile_name">
-                            <?=Linda::getEmailPrefix($_SESSION['UserID']);?><b class="caret"></b> 
+                            <?=Bitcoin::getEmailPrefix($_SESSION['UserID']);?><b class="caret"></b> 
                             </strong>
                             </span> <span class="text-muted text-xs block" id="profile_role"></span></span> </a>
                             <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -64,7 +64,7 @@
                    * Display wallet menus
                    * @var Ambiguous $_ACCOUNT
                    */
-                  $wallets = LindaSQL::getWalletsByAccount($_SESSION['UserID']);
+                  $wallets = CryptoSQL::getWalletsByAccount($_SESSION['UserID']);
                   foreach($wallets as $wallet)
                   {
                       echo '

@@ -12,7 +12,7 @@ if (isset($_GET['transID'])){
 
 //echo "TransactionId => " .$transactionId . "</br>";
 
-$conn = LindaSQL::getConn();
+$conn = CryptoSQL::getConn();
 if (!$result = $conn->query($sql)){
     echo "Could not find deatils of transaction " .$transactionId;
     exit();

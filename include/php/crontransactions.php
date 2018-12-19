@@ -7,18 +7,18 @@
 
 require "sqlink.php";
 
-$trans = LindaSQL::getTransactionByAddress($_POST['address']);
+$trans = CryptoSQL::getTransactionByAddress($_POST['address']);
 
 $accountAddress = $trans->creditWalletAccount;
-$received = Linda::getReceivedByAccount($accountAddress);
+$received = Bitcoin::getReceivedByAccount($accountAddress);
 $txid = $trans->id;
 if($received > 0)
 {
-    LindaSQL::updateReceivedTransaction($trans, $received);
+    CryptoSQL::updateReceivedTransaction($trans, $received);
 }
-$toReturn["received"] = Linda::getReceivedByAccount($accountAddress);
+$toReturn["received"] = Bitcoin::getReceivedByAccount($accountAddress);
 $toReturn["required"] = $trans->requiredAmount;
-$toReturn["currency"] = LindaSQL::getCurrency($trans->currency);
+$toReturn["currency"] = CryptoSQL::getCurrency($trans->currency);
 $toReturn["status"] = $trans->iStatus;
 
 echo json_encode($toReturn);

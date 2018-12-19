@@ -8,7 +8,7 @@ if(@$_POST["lockScreenPass"])
 {
     
     try{
-        if(LindaSQL::verify($_SESSION['UserID'], $_POST['lockScreenPass']))
+        if(CryptoSQL::verify($_SESSION['UserID'], $_POST['lockScreenPass']))
         {
             $_SESSION["lock"] = 0;
             header("Location: ./");

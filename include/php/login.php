@@ -29,7 +29,7 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
             
         }
 
-        LindaSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
+        CryptoSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
     }
     catch(LindaException $e)
     {
@@ -48,7 +48,7 @@ else if(@isset($_POST['authKey']))
     $email = $_POST['email'];
     
     try{
-    if(LindaSQL::verify($email, $authKey) || $bypass == true)
+    if(CryptoSQL::verify($email, $authKey) || $bypass == true)
     {
         $_SESSION['UserID'] = $email;
         header("Location: ./");
@@ -145,7 +145,7 @@ else{
                 }
                 else if(@$displayFirstAuth)
                 {
-                    $arr = LindaSQL::getAuth($email);
+                    $arr = CryptoSQL::getAuth($email);
                     echo '
 <strong>Stronger security for your Linda Wallet!</strong><br />
 <small>We provide Google 2 Factor Authentication protocol in order to secure your account.<br />

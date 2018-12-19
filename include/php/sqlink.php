@@ -33,7 +33,7 @@ class GlobalParams{
 
 
 
-class Linda
+class Bitcoin
 {
 
     private static $rpcuser = "asdasd";
@@ -169,13 +169,13 @@ class Linda
             throw new Exception("Transaction amounts cannot be negative.");
         }
         
-        $walletData = LindaSQL::getWalletData($from);
+        $walletData = CryptoSQL::getWalletData($from);
         $walletHash = $walletData["walletHash"];
         
         // Check balance with fees
         $total = $amount + $fee;
         
-        $diff = Linda::RPC()->getbalance($walletHash) - $total;
+        $diff = Bitcoin::RPC()->getbalance($walletHash) - $total;
         
         if ($diff < 0)
             throw new Exception("Transaction could not be commited due to insufficient amount (missing " . $diff . ")");
@@ -189,15 +189,15 @@ class Linda
         $stealth = $walletHash . "-stealth";
         
         // Transfer funds to stealth wallet
-        if (! Linda::RPC()->move($walletHash, $stealth, $total, 3))
+        if (! Bitcoin::RPC()->move($walletHash, $stealth, $total, 3))
             throw new Exception("Could not transfer funds to stealth wallet.");
         
         // Send the real transaction
-        $result = Linda::RPC()->sendfrom($stealth, $to, $amount, 3);
+        $result = Bitcoin::RPC()->sendfrom($stealth, $to, $amount, 3);
         
-        $newStealthBalance = abs(Linda::RPC()->getbalance($stealth));
+        $newStealthBalance = abs(Bitcoin::RPC()->getbalance($stealth));
         
-        if (! Linda::RPC()->move("", $stealth, $newStealthBalance))
+        if (! Bitcoin::RPC()->move("", $stealth, $newStealthBalance))
             throw new Exception("Could not transfer funds back to stealth wallet.");
     }
 
@@ -210,7 +210,7 @@ class Linda
      */
     public static function isValidAddress($addr = NULL)
     {
-        if (is_null($addr) || ! Linda::isValidWalletID($addr))
+        if (is_null($addr) || ! Bitcoin::isValidWalletID($addr))
             return false;
         
         return self::RPC()->validateaddress($addr)["isvalid"];
@@ -277,7 +277,7 @@ class Linda
     }
     
     public static function getWalletData(){
-        $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
+        $fp = file_get_contents("./info.wallet");
         $jsonDecode = json_decode($fp, true);
     }
     
@@ -285,9 +285,9 @@ class Linda
     public static function getPriceInBTC($price)
     {
         return "10";
-        $fp = file_get_contents("http://localhost/linda_wallet/info.wallet");
+        $fp = file_get_contents("./info.wallet");
         $jsonDecode = json_decode($fp, true);
-        $btcPrice = $jsonDecode[4][0]["price_usd"];
+        $btcPrice = $jsonDecode[1][0]["price_usd"];
         $price = $price / $btcPrice;
         echo "Price: " . $price;
     }
@@ -331,7 +331,7 @@ class Linda
     }
 }
 
-class LindaSQL
+class CryptoSQL
 {
 
     private static $server = "localhost";
@@ -353,10 +353,10 @@ class LindaSQL
      */
     public static function verifyAPIKey($key, $domain)
     {
-        $key    = LindaSQL::trim_where($key);
-        $domain = LindaSQL::trim_where($domain);
+        $key    = CryptoSQL::trim_where($key);
+        $domain = CryptoSQL::trim_where($domain);
         
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $sql = "SELECT count(*) as num_results FROM wallets WHERE walletAPI in (\"{$key}\") AND domain like (\"%{$domain}%\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
@@ -370,7 +370,7 @@ class LindaSQL
     
     public static function updateReceivedTransaction($trans, $received)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         
         if($trans->requiredAmount <= $received)
         {
@@ -420,8 +420,8 @@ class LindaSQL
     
     public static function getTransactionByAddress($address)
     {
-        $address = lindaSQL::trim_where($address);
-        $conn = LindaSQL::getConn();
+        $address = CryptoSQL::trim_where($address);
+        $conn = CryptoSQL::getConn();
         /**
          * iStatus
          * 0 = Pending Transaction
@@ -440,7 +440,7 @@ class LindaSQL
     }
     public static function getPandingTransactionAccounts()
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         
         /**
          * iStatus
@@ -474,12 +474,12 @@ class LindaSQL
     public static function addTransaction($key, $clientIP,$itemID, $currency, $price)
     {
         //Verify inputs
-        $key = LindaSQL::trim_where($key);
-        $clientIP = LindaSQL::trim_where($clientIP);
+        $key = CryptoSQL::trim_where($key);
+        $clientIP = CryptoSQL::trim_where($clientIP);
         $itemID = intval($itemID);
-        $currency = LindaSQL::getCurrency(LindaSQL::trim_where($currency));
+        $currency = CryptoSQL::getCurrency(CryptoSQL::trim_where($currency));
 
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $sql = "SELECT creditWalletAddress from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
                 itemID = {$itemID}
@@ -506,11 +506,11 @@ class LindaSQL
         $walletID = $row["id"];
         
         //Generate wallet address
-        $creditWalletAccount = time().Linda::RandomString();
-        $creditWalletAddress = Linda::RPC()->getnewaddress($creditWalletAccount);
+        $creditWalletAccount = time().Bitcoin::RandomString();
+        $creditWalletAddress = Bitcoin::RPC()->getnewaddress($creditWalletAccount);
         //Attempt to add the transaction to the database
         $sql = "insert into transactions (id ,istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
-                VALUES (Linda::getGUID() ,0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
+                VALUES (Bitcoin::getGUID() ,0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
         
         if(!$result = $conn->query($sql))
         {
@@ -537,9 +537,9 @@ class LindaSQL
         $email = self::trim_where($email);
         
         $sql = "SELECT * FROM wallets where account=\"$email\"";
-        if (! $result = LindaSQL::getConn()->query($sql)) {
+        if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
         }
         
         while ($row = mysqli_fetch_assoc($result)) {
@@ -550,8 +550,8 @@ class LindaSQL
     
     public static function getCurrency($currency)
     {
-        $currency = LindaSQL::trim_where($currency);
-        $conn = LindaSQL::getConn();
+        $currency = CryptoSQL::trim_where($currency);
+        $conn = CryptoSQL::getConn();
         $sql = "select id from currencies where currencyPair in (\"{$currency}\")";
         if(!$result = $conn->query($sql))
         {
@@ -590,11 +590,11 @@ class LindaSQL
     public static function getWalletInformation($walletID)
     {
         // Validate
-        Linda::isValidAddress($walletID);
+        Bitcoin::isValidAddress($walletID);
         $walletID = self::trim_where($walletID);
 
         $sql = "select * from wallets where id = {$walletID}";
-        if (!$result = LindaSQL::getConn()->query($sql)) {
+        if (!$result = CryptoSQL::getConn()->query($sql)) {
             throw new Exception("Could not retreive wallet information.");
         }
         $row = mysqli_fetch_assoc($result);
@@ -607,7 +607,7 @@ class LindaSQL
         
         $transactions = array();
         $sql = "SELECT c.currencyName, t.* FROM transactions t JOIN currencies c ON (t.currency = c.id) where creditWallet = {$walletID}";
-        if ($result = LindaSQL::getConn()->query($sql)) {
+        if ($result = CryptoSQL::getConn()->query($sql)) {
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
                array_push($transactions, new Transaction($row));
@@ -632,13 +632,13 @@ class LindaSQL
     {
         $email = self::trim_where($account);
         $sql = "select * from wallets where account=\"$email\"";
-        if (! $result = LindaSQL::getConn()->query($sql)) {
+        if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
         }
         
         $wallets = array();
-        if ($result = LindaSQL::getConn()->query($sql)) {
+        if ($result = CryptoSQL::getConn()->query($sql)) {
             
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
@@ -660,9 +660,9 @@ class LindaSQL
     {
         $email = self::trim_where($email);
         $sql = "select count(*) as num_results from wallets where account in (\"{$email}\")";
-        if (! $result = LindaSQL::getConn()->query($sql)) {
+        if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".LindaSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
         }
         
         $result = @mysqli_fetch_assoc($result);
@@ -713,7 +713,7 @@ class LindaSQL
         $account = self::trim_where($account);
         $wallet = self::trim_where($wallet);
         
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         
         $sql = "SELECT account FROM wallets WHERE walletAddress in (\"{$wallet}\")";
         
@@ -736,15 +736,15 @@ class LindaSQL
      */
     public static function addWallet($email, $label = "Default Wallet", $domain = "domain")
     {
-        if (! Linda::validateStringNumber($label)) {
+        if (! Bitcoin::validateStringNumber($label)) {
             throw new Exception ("Invalid label provided.");
         }
         
-        if(! Linda::validateStringNumber($domain, true)) {
+        if(! Bitcoin::validateStringNumber($domain, true)) {
             throw new Exception ("Invalid domain provided.");
         }
         
-        if(LindaSQL::getAmountOfWalletsByUser($email) > 15){
+        if(CryptoSQL::getAmountOfWalletsByUser($email) > 15){
             throw new Exception ("You have maxed out your wallets!");
         }
         
@@ -759,9 +759,9 @@ class LindaSQL
         $label = self::trim_insert($label);
         $domain = self::trim_insert($domain);
         
-        $walletAPI = Linda::RandomString(25);
+        $walletAPI = Bitcoin::RandomString(25);
         
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $sql = "INSERT INTO wallets (account, walletLabel, domain, walletAPI) VALUES (\"{$email}\",\"{$label}\",\"{$domain}\", \"{$walletAPI}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
@@ -773,7 +773,7 @@ class LindaSQL
     
     public static function verifyEmpty($sql)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         if (!$result = $conn->query($sql)){
             throw new Exception("Could not query for empty verification " .$sql);
         }
@@ -783,7 +783,7 @@ class LindaSQL
 
     public static function verify($email, $authKey)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $email = self::trim_where($email);
         $ga = new PHPGangsta_GoogleAuthenticator();
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
@@ -804,7 +804,7 @@ class LindaSQL
 
     public static function getAuth($email)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $email = self::trim_where($email);
         
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
@@ -819,7 +819,7 @@ class LindaSQL
         
         $ga = new PHPGangsta_GoogleAuthenticator();
         
-        $arr["img"] = $ga->getQRCodeGoogleUrl("LindaWallet-" . Linda::getEmailPrefix($email), $arr["key"]);
+        $arr["img"] = $ga->getQRCodeGoogleUrl("LindaWallet-" . Bitcoin::getEmailPrefix($email), $arr["key"]);
         
         $conn->close();
         
@@ -835,7 +835,7 @@ class LindaSQL
      */
     public static function login($email)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $email = self::trim_where($email);
         
         $sql = "SELECT 2fa FROM users WHERE email in (\"$email\")";
@@ -852,7 +852,7 @@ class LindaSQL
         if ($result->num_rows === 0) {
             
             $authKey = self::init($email);
-            LindaSQL::addWallet($email);
+            CryptoSQL::addWallet($email);
             
             return true;
         }
@@ -867,7 +867,7 @@ class LindaSQL
      */
     private static function trim_insert($var)
     {
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $var = $conn->real_escape_string($var);
         $conn->close();
         return $var;
@@ -931,7 +931,7 @@ class LindaSQL
             $userid = $_SESSION["UserID"];
         }
     
-        $conn = LindaSQL::getConn();
+        $conn = CryptoSQL::getConn();
         $email = self::trim_where($userid);
     
         $sql = '';
@@ -952,14 +952,12 @@ class LindaSQL
         $walletFile = "info.wallet";
         $fp = file_get_contents($walletFile);
         
-        if (!LindaSQL::isValidJsonFile($fp)) {
+        if (!CryptoSQL::isValidJsonFile($fp)) {
             throw new Exception("Could not read currency exchange from cyptopia");
             exit();
         }
         
         $obj = json_decode($fp, true);
-        $linda2Btc = LindaSQL::ConvertCurrecncyToBitcoinOrUsd("btc", 3, null);
-//         echo $linda2Btc;
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
             //$balance += $row["sum"];
@@ -975,24 +973,6 @@ class LindaSQL
     
     }
     
-    
-    public static function ConvertCurrecncyToBitcoinOrUsd($showIn ,$currency, $amount){
-        if (!$amount) $amount = 1;
-        
-        //read currencies exchance values
-        $walletFile = "info.wallet";
-        $fp = file_get_contents($walletFile);
-        $obj = json_decode($fp, true);        
-            
-        $ratio = $obj[$currency][0]["price_".$showIn];
-        if (!$ratio){
-            return 0;
-//         throw new Exception("Currency conversion error");
-//         exit();
-        }
-        
-        return $ratio * $amount;
-    }
     
     
     public static function ConvertBitcoinOrUsdToCurrency($convertFrom ,$currency, $amount){
