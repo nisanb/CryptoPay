@@ -66,6 +66,13 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 	<input type="hidden" name="itemName" value="<?=$_API['itemName'];?>" />
 	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
 	<?=$hiddenFields;?>
+	%ITEM%
+	<!-- frame id="cryptopay" src="cryptopay/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
+	<button class="<?_API['bc'] ?>" style="font-size: 2em; width:<?$_API['bw']?>;">
+		<img src="./include/img/iframeImages/<?$_API['img'] ?>.svg" style="width:<?$_API['iw'] ?>; padding-right:10px">
+	</button>
+	
+	
 	<input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png">
 </form>
 

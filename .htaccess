@@ -4,7 +4,7 @@ RewriteBase /CryptoPay/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^wallet/(.*)$ index.php?act=wallet&wid=$1
-RewriteRule ^iframe index.php?act=iframe
+RewriteRule ^iframe/(.*)$ index.php?act=iframe&wid=$1
 RewriteRule ^logout index.php?act=logout
 RewriteRule ^login index.php?act=login
 RewriteRule ^error 500.php

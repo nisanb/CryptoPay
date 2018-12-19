@@ -1,17 +1,17 @@
 <?php
 $userId ='';
-$walledId = '';
+$walletID = 'empty';
 if (isset($_SESSION['UserID'])){
     $userId = $_SESSION['UserID'];
 }
 
-if (isset($_GET['walletId'])){
-    $walledId = $_GET['walletId'];
+if (isset($_GET['wid'])){
+    $walletID = $_GET['wid'];
 }
 
-if (!CryptoSQL::verifyOwner($userId, $walledId)){
-    new Exception("Wllet does not belong to user");
-}
+// if (!CryptoSQL::verifyOwner($userId, $walledId)){
+//     new Exception("Wllet does not belong to user");
+// }
 
     
 
@@ -21,9 +21,14 @@ $include_header = '<link href="./include/css/plugins/footable/footable.core.css"
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
             <script>
-            var marchantId = \'mickey.shalev@gmail.com\';
+            var marchantId = \''.$userId.'\';
+            var key = \'' . $apiKey . '\';
+            var itemID = "";
+            var itemName = "";
+            var price = "";
+            
 			var selectedIconName = \'1\';
-            var icon = \'1.svg\';
+            var icon = "1.svg";
             var iconHight = 50;
             var iconWidth = 50;
             var iconColor = "black";
@@ -60,7 +65,7 @@ $include_footer = '  <!-- FooTable -->
 				buttonWidth = $("#buttonWidth").val();
 				if (!$.isNumeric(buttonWidth) || buttonWidth < 20 || buttonWidth > 500){
 					return;
-				}				
+				}
 				buildIcon();
 			}
 			
@@ -78,10 +83,10 @@ $include_footer = '  <!-- FooTable -->
                 icon = selectedIconName + ".svg";
                 $("#preview").empty();
                 $("#preview").append(\'<button type="button" class="\' + buttonClass + \'" style="font-size: 2em; width:\' + buttonWidth +\'px;" >\' + buttonText + 
-										\'<img src="iframeImages/\' + icon + \'" style="width:\' + iconWidth  +\'px; padding-right:10px" /></Button>\');
+										\'<img src="./include/img/iframeImages/\' + icon + \'" style="width:\' + iconWidth  +\'px; padding-right:10px" /></Button>\');
 				//$("#code").empty();
-				$("#code").val(\'<iframe id="cryptopay" src="cryptopay/pay.php?key=\'+marchantId+\'&img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+\' +
-								\'bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'&wallet='. $walledId .'/>\');
+				$("#code").val(\'<iframe id="cryptopay" src="cryptopay/api.php?img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+
+								\'&bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'&key=\'+ key +\'&itemId=\'+ itemId +\'/>\');
             }
 			
 			function copy(){
@@ -93,8 +98,11 @@ $include_footer = '  <!-- FooTable -->
 			$(document).ready(function (){
 				var toAppend = \'\';
 				for (var i=1; i <= 28; i++){
-					toAppend += \'<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon(\'+i+\')"><img src="iframeImages/\'+i+\'.svg"/> </div></div>\';
-				}
+                    toAppend += \'<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon(\'+i+\')"><img src="./include/img/iframeImages/\'+i+\'.svg"/> </div></div>\';
+                }
+				for (var i=1; i <= 28; i++){
+                    toAppend += \'<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon(\'+i+\')"><img src="./include/img/iframeImages/\'+i+\'.svg"/> </div></div>\';
+                }                
 				toAppend += \'<div class="clearfix"></div>\';
 				$("#imageContainer").append(toAppend);
 			});
@@ -105,22 +113,22 @@ $content = "";
 
 
 
-// $income = CryptoSQL::getTotalBalaceOfAccount($walletID);
-// $title = "View Wallet - ".$wallet->walletLabel;
+$income = CryptoSQL::getTotalBalaceOfAccount($walletID);
+$title = "View Wallet - ".$wallet->walletLabel;
     
-// $lastDepDate = date("m/d/Y");
-// $lastDepValue = 0;
-// $lastWitDate = date("m/d/Y");
-// $lastWitValue = 0;
+$lastDepDate = date("m/d/Y");
+$lastDepValue = 0;
+$lastWitDate = date("m/d/Y");
+$lastWitValue = 0;
 
-// $tableContent = null;
-// $tranCount = 1;
-// $tranStatus = 1;
-// $tranDate = null;
-// $tranType = "";
-// $tranOwner = "";
-// $tranAmount = 0;
-// $transactions = array_reverse($wallet->transactions);
+$tableContent = null;
+$tranCount = 1;
+$tranStatus = 1;
+$tranDate = null;
+$tranType = "";
+$tranOwner = "";
+$tranAmount = 0;
+$transactions = array_reverse($wallet->transactions);
 
 $content .='
             <div id="ifarmeGeneratorContent" class="wrapper wrapper-content animated fadeInRight">
@@ -149,8 +157,16 @@ $content .='
 							<button type="button" class="btn btn-w-m btn-danger" onclick="setSeletedClass(\'btn btn-w-m btn-danger\')">Red</button>					
 						</p>	
 					</div>
-
-					
+                    <div class="ibox float-e-margins">
+                        <h2>Item</h2>
+                        Item ID
+                        <input id="itemId" class="form-control" value=""/>
+						Item name
+                        <input id="itemName" maxlength="3" class="form-control" value=""/>
+                        Item Price
+                        <input id="itemPrice" class="form-control" value=""/>
+                    </div>    
+			
                 </div>
 			
 
