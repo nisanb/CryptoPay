@@ -76,7 +76,7 @@ try{
 catch(Exception $e)
 {
     $_SESSION["err"] = $e->getMessage();
-    header("Location: http://localhost/linda_wallet/error");
+    header("Location: /CryptoPay/error");
 }
 
 
