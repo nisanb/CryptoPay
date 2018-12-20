@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-echo "<a href='http://localhost/CryptoSell/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
+// echo "<a href='http://localhost/CryptoSell/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API
@@ -56,6 +56,16 @@ if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
 $width = @isset($_GET['width']) ? $_GET['width'] : "128";
 $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
+
+
+function getButtonCodeToColor($code){
+    if ($code == 1) return "btn btn-w-m btn-default";
+    else if ($code == 2) return "btn btn-w-m btn-primary";
+    else if ($code == 3) return "btn btn-w-m btn-success";
+    else if ($code == 4) return "btn btn-w-m btn-info";
+    else if ($code == 5) return "btn btn-w-m btn-warning";
+    else if ($code == 6) return "btn btn-w-m btn-danger";
+}
 ?>
 <!-- bw=100	 	-> button width -->
 <!-- bc=3 		-> button color   -->
@@ -70,19 +80,27 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 
 <!-- crnc=Linda	-> currency -->
-
+	<link rel="icon" href="./include/img/linda_icon.png" />
+    <link href="./include/css/bootstrap.min.css" rel="stylesheet">
+	
 
 <form method="POST" action="pay">
-	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
+	<input type="hidden" name="key" value="<?=$_GET['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
-	<input type="hidden" name="itemPrice" value="<?=$_API['prc'];?>" />
-	<input type="hidden" name="itemName" value="<?=$_API['in'];?>" />
-	<input type="hidden" name="itemID" value="<?=$_API['iid']?>" />
+	<input type="hidden" name="itemPrice" value="<?=$_GET['prc'];?>" />
+	<input type="hidden" name="itemName" value="<?=$_GET['in'];?>" />
+	<input type="hidden" name="itemID" value="<?=$_GET['iid']?>" />
 	<?=$hiddenFields;?>
 	<!-- frame id="CryptoSell" src="CryptoSell/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
-	<button class="<?_API['bc'] ?>" style="font-size: 2em; width:<?$_API['bw']?>;"><?$_API['bt'] ?>
-		<img src="./include/img/iframeImages/<?$_API['img'] ?>.svg" style="width:<?$_API['iw'] ?>; padding-right:10px">
+	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;"><?=$_GET['bt']?>
+		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iw'] ?>; padding-right:10px">
+		<br />
+		
+		<label style="font-size: 0.3em; padding-top:2px; font-weight: normal;">Powered by CryptoSell
+			<img src="./include/img/iframeImages/copyright.png" style="width:15px;">
+		</label>
+		
 	</button>
 	
 	
