@@ -930,8 +930,8 @@ class CryptoSQL
         $fp = file_get_contents($walletFile);
         
         if (! CryptoSQL::isValidJsonFile($fp)) {
-            throw new Exception("Could not read currency exchange from cyptopia");
-            exit();
+            //throw new Exception("Could not read currency exchange from cyptopia");
+            //exit();
         }
         
         $obj = json_decode($fp, true);

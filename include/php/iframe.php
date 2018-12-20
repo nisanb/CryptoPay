@@ -18,117 +18,30 @@ if (isset($_GET['wid'])){
 
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
                     <script scr="./include/js/SVGJS.js"> </script>';
+
 $include_footer = '  <!-- FooTable -->
-    <script src="./include/js/plugins/footable/footable.all.min.js"></script>
-            <script>
-            var marchantId = \''.$userId.'\';
-            var key = \'' . $apiKey . '\';
-            var itemID = "";
-            var itemName = "";
-            var price = "";
-            
-			var selectedIconName = \'1\';
-            var icon = "1.svg";
-            var iconHight = 50;
-            var iconWidth = 50;
-            var iconColor = "black";
-			var buttonClass = "btn btn-w-m btn-default";
-			var buttonWidth = 100;
-			var buttonHight = 50;
-			var buttonText = "";
-			
-            function getSelectedIcon(num) {
-                selectedIconName = num;
-                buildIcon();
-            }
-
-            function changeIconWidth(){
-                iconWidth = $("#iconWidth").val();
-				if (!$.isNumeric(iconWidth) || iconWidth < 20 || iconWidth > 500){
-					return;
-				}
-                buildIcon();
-            }
-			
-			function changeColor(){
-				iconColor = $("#iconColor").val();
-				buildIcon();
-			}
-
-
-			function setSeletedClass(selectedClass){
-				buttonClass = selectedClass;
-				buildIcon();
-			}
-			
-			function changeButtonWidth(){
-				buttonWidth = $("#buttonWidth").val();
-				if (!$.isNumeric(buttonWidth) || buttonWidth < 20 || buttonWidth > 500){
-					return;
-				}
-				buildIcon();
-			}
-			
-			function changeButtonText(){
-				buttonText = $("#buttonText").val();
-				buildIcon();
-			}
-			
-            function buildIcon() {
-				console.log($(\'1.svg\').toString());
-                console.log(\'Icon -> \' + icon);
-                console.log(\'Width -> \' + iconWidth);
-                console.log(\'Color -> \' + iconColor);
-				console.log(\'Button Class -> \' + buttonClass);
-                icon = selectedIconName + ".svg";
-                $("#preview").empty();
-                $("#preview").append(\'<button type="button" class="\' + buttonClass + \'" style="font-size: 2em; width:\' + buttonWidth +\'px;" >\' + buttonText + 
-										\'<img src="./include/img/iframeImages/\' + icon + \'" style="width:\' + iconWidth  +\'px; padding-right:10px" /></Button>\');
-				//$("#code").empty();
-				$("#code").val(\'<iframe id="CryptoSell" src="CryptoSell/api.php?img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+
-								\'&bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'&key=\'+ key +\'&itemId=\'+ itemId +\'/>\');
-            }
-			
-			function copy(){
-				  var copyText = document.getElementById("code");
-				  copyText.select();
-				  document.execCommand("copy");
-			}
-			
-			$(document).ready(function (){
-				var toAppend = \'\';
-				for (var i=1; i <= 28; i++){
-                    toAppend += \'<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon(\'+i+\')"><img src="./include/img/iframeImages/\'+i+\'.svg"/> </div></div>\';
-                }
-				for (var i=1; i <= 28; i++){
-                    toAppend += \'<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon(\'+i+\')"><img src="./include/img/iframeImages/\'+i+\'.svg"/> </div></div>\';
-                }                
-				toAppend += \'<div class="clearfix"></div>\';
-				$("#imageContainer").append(toAppend);
-			});
-			
-    </script>
+<script src="./include/js/iframeScript.js"> </script>
 ';
 $content = "";
 
 
 
-$income = CryptoSQL::getTotalBalaceOfAccount($walletID);
+// $income = CryptoSQL::getTotalBalaceOfAccount($walletID);
 $title = "View Wallet - ".$wallet->walletLabel;
     
-$lastDepDate = date("m/d/Y");
-$lastDepValue = 0;
-$lastWitDate = date("m/d/Y");
-$lastWitValue = 0;
+// $lastDepDate = date("m/d/Y");
+// $lastDepValue = 0;
+// $lastWitDate = date("m/d/Y");
+// $lastWitValue = 0;
 
-$tableContent = null;
-$tranCount = 1;
-$tranStatus = 1;
-$tranDate = null;
-$tranType = "";
-$tranOwner = "";
-$tranAmount = 0;
-$transactions = array_reverse($wallet->transactions);
+// $tableContent = null;
+// $tranCount = 1;
+// $tranStatus = 1;
+// $tranDate = null;
+// $tranType = "";
+// $tranOwner = "";
+// $tranAmount = 0;
+// $transactions = array_reverse($wallet->transactions);
 
 $content .='
             <div id="ifarmeGeneratorContent" class="wrapper wrapper-content animated fadeInRight">
@@ -149,22 +62,28 @@ $content .='
 						<input id="buttonText" maxlength="20" class="form-control" value="" onchange="changeButtonText()"/>		
 					Select button type
 						<p>
-							<button type="button" class="btn btn-w-m btn-default" onclick="setSeletedClass(\'btn btn-w-m btn-default\')">Default</button>
-							<button type="button" class="btn btn-w-m btn-primary" onclick="setSeletedClass(\'btn btn-w-m btn-primary\')">Green</button>
-							<button type="button" class="btn btn-w-m btn-success" onclick="setSeletedClass(\'btn btn-w-m btn-success\')">Blue</button>
-							<button type="button" class="btn btn-w-m btn-info" onclick="setSeletedClass(\'btn btn-w-m btn-info\')">Turquoise</button>
-							<button type="button" class="btn btn-w-m btn-warning" onclick="setSeletedClass(\'btn btn-w-m btn-warning\')">Yellow</button>
-							<button type="button" class="btn btn-w-m btn-danger" onclick="setSeletedClass(\'btn btn-w-m btn-danger\')">Red</button>					
+							<button type="button" class="btn btn-w-m btn-default" onclick="setSeletedClass(1)">Default</button>
+							<button type="button" class="btn btn-w-m btn-primary" onclick="setSeletedClass(2)">Green</button>
+							<button type="button" class="btn btn-w-m btn-success" onclick="setSeletedClass(3)">Blue</button>
+							<button type="button" class="btn btn-w-m btn-info" onclick="setSeletedClass(4)">Turquoise</button>
+							<button type="button" class="btn btn-w-m btn-warning" onclick="setSeletedClass(5)">Yellow</button>
+							<button type="button" class="btn btn-w-m btn-danger" onclick="setSeletedClass(6)">Red</button>					
 						</p>	
 					</div>
                     <div class="ibox float-e-margins">
                         <h2>Item</h2>
                         Item ID
-                        <input id="itemId" class="form-control" value=""/>
+                        <input id="itemId" maxlength="40" class="form-control" value="" onfocusout="itemIdChanged()"/>
 						Item name
-                        <input id="itemName" maxlength="3" class="form-control" value=""/>
+                        <input id="itemName" maxlength="20" class="form-control" value="" onfocusout="itemNameChanged()"/>
                         Item Price
-                        <input id="itemPrice" class="form-control" value=""/>
+                        <input id="itemPrice" type="number" class="form-control" value="" onfocusout="itemIPriceChanged()"/>
+                        Curreny
+                        <select id="coinType" class="form-control" onchange="currenyChanged()">
+                            <option value="">- Select Currency - </option>
+                            <option value="BTC">Bitcoin</option>
+                            <option value="Linda">Linda</option>
+                        </select>
                     </div>    
 			
                 </div>
@@ -224,6 +143,10 @@ $content .='
                 </div>
             </div>
         </div>
+    
+    
+    <input id="key" hidden="hidden" value="' . $walletID . '"/>
+    <input id="userId" hidden="hidden" value="' .$userId. '" />
 ';
 
 

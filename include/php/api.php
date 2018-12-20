@@ -57,22 +57,35 @@ $width = @isset($_GET['width']) ? $_GET['width'] : "128";
 $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 
 ?>
+<!-- bw=100	 	-> button width -->
+<!-- bc=3 		-> button color   -->
+<!-- bt=asd		-> button text -->
+<!-- img=1		-> img name -->
+<!-- iw=50		-> image width -->
+<!-- ic=black	-> icon color -->
+<!-- key=1		-> wallet id -->
+<!-- iid=asd	-> item id -->
+<!-- in=213		-> item name -->
+<!-- prc=1000	-> item price -->
+
+
+<!-- crnc=Linda	-> currency -->
+
 
 <form method="POST" action="pay">
 	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
-	<input type="hidden" name="itemPrice" value="<?=$_API['price'];?>" />
-	<input type="hidden" name="itemName" value="<?=$_API['itemName'];?>" />
-	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
+	<input type="hidden" name="itemPrice" value="<?=$_API['prc'];?>" />
+	<input type="hidden" name="itemName" value="<?=$_API['in'];?>" />
+	<input type="hidden" name="itemID" value="<?=$_API['iid']?>" />
 	<?=$hiddenFields;?>
-	%ITEM%
 	<!-- frame id="CryptoSell" src="CryptoSell/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
-	<button class="<?_API['bc'] ?>" style="font-size: 2em; width:<?$_API['bw']?>;">
+	<button class="<?_API['bc'] ?>" style="font-size: 2em; width:<?$_API['bw']?>;"><?$_API['bt'] ?>
 		<img src="./include/img/iframeImages/<?$_API['img'] ?>.svg" style="width:<?$_API['iw'] ?>; padding-right:10px">
 	</button>
 	
 	
-	<input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png">
+	<!--input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png"-->
 </form>
 
