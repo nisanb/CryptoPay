@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 16, 2018 at 10:10 PM
+-- Generation Time: Dec 20, 2018 at 11:18 AM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 7.2.5
 
@@ -44,29 +44,8 @@ CREATE TABLE `currencies` (
 --
 
 INSERT INTO `currencies` (`id`, `currencyName`, `currencyPair`, `cmc`, `rpcIP`, `rpcPort`, `rpcUser`, `rpcPass`) VALUES
-(1, 'Bitcoin', 'BTC', 'https://coinmarketcap.com/currencies/bitcoin/', '-', 0, '-', '-'),
-(2, 'Linda', 'Linda', 'https://coinmarketcap.com/currencies/linda/', '192.168.1.21', 33821, 'asdasd', 'asdasdasd');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `items`
---
-
-CREATE TABLE `items` (
-  `id` int(5) NOT NULL,
-  `walletID` int(5) NOT NULL,
-  `itemName` varchar(300) NOT NULL,
-  `currencyID` int(5) NOT NULL,
-  `currencyAmount` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `items`
---
-
-INSERT INTO `items` (`id`, `walletID`, `itemName`, `currencyID`, `currencyAmount`) VALUES
-(1, 1, 'test item', 2, 3);
+(1, 'Bitcoin', 'BTC', 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd', '127.0.0.1', 33821, 'asdasd', 'asdasdasd'),
+(2, 'Linda', 'Linda', 'https://api.coinmarketcap.com/v1/ticker/linda/?convert=btc', '192.168.1.21', 33821, 'asdasd', 'asdasdasd');
 
 -- --------------------------------------------------------
 
@@ -88,13 +67,6 @@ CREATE TABLE `transactions` (
   `receivedAmount` double NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `istatus`, `timeStarted`, `creditWallet`, `creditWalletAccount`, `creditWalletAddress`, `clientIP`, `requiredAmount`, `itemID`, `currency`, `receivedAmount`) VALUES
-(1, 0, '2018-06-16 18:52:51', 1, '1529175171-O8GOKT8v9U-i5NzfI2T7A-2hxSZ4fh27', 'LVyrwAJxnk4EikcH4BVUv6Bj3Dny2v4XD6', '::1', 5.2, 1, 2, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -102,17 +74,11 @@ INSERT INTO `transactions` (`id`, `istatus`, `timeStarted`, `creditWallet`, `cre
 --
 
 CREATE TABLE `userbalances` (
+  `user` varchar(200) NOT NULL,
   `walletID` int(5) NOT NULL,
   `currencyID` int(5) NOT NULL,
   `balance` double DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `userbalances`
---
-
-INSERT INTO `userbalances` (`walletID`, `currencyID`, `balance`) VALUES
-(1, 2, 44.60102061402305);
 
 -- --------------------------------------------------------
 
@@ -125,13 +91,6 @@ CREATE TABLE `users` (
   `2fa` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`email`, `2fa`) VALUES
-('nisan.univ@gmail.com', 'WUFYZCYZGX6FTGBP');
-
 -- --------------------------------------------------------
 
 --
@@ -141,18 +100,10 @@ INSERT INTO `users` (`email`, `2fa`) VALUES
 CREATE TABLE `wallets` (
   `id` int(5) NOT NULL,
   `account` varchar(200) NOT NULL,
-  `walletHash` varchar(200) NOT NULL,
   `walletLabel` varchar(200) NOT NULL,
-  `domain` varchar(300) NOT NULL
+  `domain` varchar(300) NOT NULL,
+  `walletAPI` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `wallets`
---
-
-INSERT INTO `wallets` (`id`, `account`, `walletHash`, `walletLabel`, `domain`) VALUES
-(1, 'nisan.univ@gmail.com', 'nisan.univ@gmail.com-PrPxoCA9Mp-6JjSFMKTPH-457SqQGDsH', 'Default Wallet', ''),
-(2, 'nisan.univ@gmail.com', '123', 'testwakk', 'localhost');
 
 --
 -- Indexes for dumped tables
@@ -163,13 +114,6 @@ INSERT INTO `wallets` (`id`, `account`, `walletHash`, `walletLabel`, `domain`) V
 --
 ALTER TABLE `currencies`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `items`
---
-ALTER TABLE `items`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `walletID` (`walletID`);
 
 --
 -- Indexes for table `transactions`
@@ -184,8 +128,9 @@ ALTER TABLE `transactions`
 -- Indexes for table `userbalances`
 --
 ALTER TABLE `userbalances`
-  ADD PRIMARY KEY (`walletID`,`currencyID`),
-  ADD KEY `currencyID` (`currencyID`);
+  ADD PRIMARY KEY (`walletID`,`currencyID`,`user`) USING BTREE,
+  ADD KEY `currencyID` (`currencyID`),
+  ADD KEY `user` (`user`);
 
 --
 -- Indexes for table `users`
@@ -208,42 +153,29 @@ ALTER TABLE `wallets`
 -- AUTO_INCREMENT for table `currencies`
 --
 ALTER TABLE `currencies`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `items`
---
-ALTER TABLE `items`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `transactions`
 --
 ALTER TABLE `transactions`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `wallets`
 --
 ALTER TABLE `wallets`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `items`
---
-ALTER TABLE `items`
-  ADD CONSTRAINT `items_ibfk_1` FOREIGN KEY (`walletID`) REFERENCES `wallets` (`id`);
-
---
 -- Constraints for table `transactions`
 --
 ALTER TABLE `transactions`
   ADD CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`creditWallet`) REFERENCES `wallets` (`id`),
-  ADD CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`itemID`) REFERENCES `items` (`id`),
   ADD CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`currency`) REFERENCES `currencies` (`id`);
 
 --
@@ -251,7 +183,8 @@ ALTER TABLE `transactions`
 --
 ALTER TABLE `userbalances`
   ADD CONSTRAINT `userbalances_ibfk_2` FOREIGN KEY (`currencyID`) REFERENCES `currencies` (`id`),
-  ADD CONSTRAINT `userbalances_ibfk_3` FOREIGN KEY (`walletID`) REFERENCES `wallets` (`id`);
+  ADD CONSTRAINT `userbalances_ibfk_3` FOREIGN KEY (`walletID`) REFERENCES `wallets` (`id`),
+  ADD CONSTRAINT `userbalances_ibfk_4` FOREIGN KEY (`user`) REFERENCES `users` (`email`);
 
 --
 -- Constraints for table `wallets`

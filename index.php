@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once './include/php/sqlink.php';
-require_once './include/php/LindaException.php';
+require_once './include/php/CryptoException.php';
 require_once './auth/GoogleAuthenticator.php';
 
 if(!@isset($_SESSION['UserID']) && @$_GET['act'] != "login")
@@ -76,7 +76,7 @@ try{
 catch(Exception $e)
 {
     $_SESSION["err"] = $e->getMessage();
-    header("Location: /CryptoPay/error");
+    header("Location: /CryptoSell/error");
 }
 
 

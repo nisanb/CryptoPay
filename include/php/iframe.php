@@ -85,7 +85,7 @@ $include_footer = '  <!-- FooTable -->
                 $("#preview").append(\'<button type="button" class="\' + buttonClass + \'" style="font-size: 2em; width:\' + buttonWidth +\'px;" >\' + buttonText + 
 										\'<img src="./include/img/iframeImages/\' + icon + \'" style="width:\' + iconWidth  +\'px; padding-right:10px" /></Button>\');
 				//$("#code").empty();
-				$("#code").val(\'<iframe id="cryptopay" src="cryptopay/api.php?img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+
+				$("#code").val(\'<iframe id="CryptoSell" src="CryptoSell/api.php?img=\'+selectedIconName+\'&iw=\'+iconWidth+\'&ic=\'+iconColor+
 								\'&bw=\' + buttonWidth + \'&bc=\'+ buttonClass +\'&bt=\'+ buttonText +\'&key=\'+ key +\'&itemId=\'+ itemId +\'/>\');
             }
 			

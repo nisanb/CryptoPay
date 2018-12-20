@@ -2,13 +2,13 @@
 <html>
 
 <head>
-  <base href="/CryptoPay/">
+  <base href="/CryptoSell/">
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>LindaWallet | <?=$title;?></title>
+    <title>CryptoSell | <?=$title;?></title>
     <head>
 </head>
 	<link rel="icon" href="./include/img/linda_icon.png" />
@@ -51,7 +51,7 @@
                             </ul>
                         </div>
                         <div class="logo-element">
-                            Linda+
+                            CryptoSell+
                         </div>
                     </li>
 
@@ -121,7 +121,7 @@
         </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <span class="m-r-sm text-muted welcome-message">LindaCoin Web Wallet</span>
+                    <span class="m-r-sm text-muted welcome-message">CryptoSell</span>
                 </li>
               
                 <li class="dropdown">
@@ -137,7 +137,7 @@
                                   <div class="media-body">
                                       <small class="pull-right" style="color: blue;">New</small>
                                       Your wallet has been created!<br /><br />
-                                      <small class="text-muted">From Linda Project</small>
+                                      <small class="text-muted">From CryptoSell</small>
                                   </div>
                               </div>
                           </li>
@@ -149,8 +149,8 @@
                                   </a>
                                   <div class="media-body">
                                       <small class="pull-right" style="color: blue;">New</small>
-                                      Linda Wallet - Beta Released!<br /><br />
-                                      <small class="text-muted">From Linda Project</small>
+                                      CryptoSell - Beta Released!<br /><br />
+                                      <small class="text-muted">From CryptoSell</small>
                                   </div>
                               </div>
                           </li>
@@ -183,7 +183,7 @@
               <div class="wrapper wrapper-content">
                 <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2><img src="./include/img/linda_icon.png" style="height: 25px; width: 25px;" />&nbsp;&nbsp;Linda Wallet - <?=$title;?></h2>
+                    <h2><img src="./include/img/linda_icon.png" style="height: 25px; width: 25px;" />&nbsp;&nbsp;CryptoSell - <?=$title;?></h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="./">Home</a>
@@ -206,7 +206,7 @@
 
                 <div class="footer">
                     <div class="pull-right">
-                     &bull;   <strong>Copyright</strong> Linda Wallet &copy; 2018 &bull;
+                     &bull;   <strong>Copyright</strong> CryptoSell &copy; 2018 &bull;
                     </div>
                 </div>
             </div>
@@ -322,7 +322,7 @@ function notify(type, text) {
                     showMethod: 'slideDown',
                     timeOut: 1500
                 };
-                toastr.warning('The web wallet is undergoing beta testing!', 'Welcome to Linda+');
+                toastr.warning('The web wallet is undergoing beta testing!', 'Welcome to CryptoSell+');
 
             }, 0);
             setTimeout(function() {
@@ -333,7 +333,7 @@ function notify(type, text) {
                     showMethod: 'slideDown',
                     timeOut: 1500
                 };
-                toastr.success('Loading Complete', 'Welcome to Linda Web Wallet');
+                toastr.success('Loading Complete', 'Welcome to CryptoSell');
 
             }, 1500);
 

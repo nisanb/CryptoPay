@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-echo "<a href='http://localhost/CryptoPay/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
+echo "<a href='http://localhost/CryptoSell/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API
@@ -67,7 +67,7 @@ $height = @isset($_GET['height']) ? $_GET['height'] : "32";
 	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
 	<?=$hiddenFields;?>
 	%ITEM%
-	<!-- frame id="cryptopay" src="cryptopay/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
+	<!-- frame id="CryptoSell" src="CryptoSell/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
 	<button class="<?_API['bc'] ?>" style="font-size: 2em; width:<?$_API['bw']?>;">
 		<img src="./include/img/iframeImages/<?$_API['img'] ?>.svg" style="width:<?$_API['iw'] ?>; padding-right:10px">
 	</button>

@@ -24,14 +24,14 @@ if(@isset($_POST['email']) && !@isset($_POST['authKey']))
             $responseData = json_decode($verifyResponse);
             if(!@$responseData->success)
             {
-                throw new LindaException("Please use Google Captcha");
+                throw new CryptoException("Please use Google Captcha");
             }
             
         }
 
         CryptoSQL::login($email) == true ? $displayFirstAuth=true : $displayAuth=true;
     }
-    catch(LindaException $e)
+    catch(CryptoException $e)
     {
         $error = $e->getMessage();
         $displayLogin = true;
@@ -55,10 +55,10 @@ else if(@isset($_POST['authKey']))
     }
     else{
         $displayAuth = true;
-        throw new LindaException("Google authentication key is incorrect, please try again.");
+        throw new CryptoException("Google authentication key is incorrect, please try again.");
     }
     }
-    catch(LindaException $e)
+    catch(CryptoException $e)
     {
         $error = $e->getMessage();
     }
@@ -80,7 +80,7 @@ else{
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LindaWallet | Login</title>
+    <title>CryptoSell | Login</title>
     <link rel="icon" href="./include/img/linda_icon.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -110,7 +110,7 @@ else{
                 </h1>
 
             </div>
-            <h3>Welcome to Linda Web Wallet</h3>
+            <h3>Welcome to CryptoSell</h3>
             
             <?php
                 if(isset($error)){
@@ -147,7 +147,7 @@ else{
                 {
                     $arr = CryptoSQL::getAuth($email);
                     echo '
-<strong>Stronger security for your Linda Wallet!</strong><br />
+<strong>Stronger security for your CryptoSell Wallet!</strong><br />
 <small>We provide Google 2 Factor Authentication protocol in order to secure your account.<br />
 Please download Google Authenticator 
 (<a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en">Android</a> / 
@@ -196,7 +196,7 @@ Please download Google Authenticator
               }
             
             ?>
-            <p class="m-t"> <small>Linda Web Wallet &copy; 2018<br /></small> </p>
+            <p class="m-t"> <small>CryptoSell &copy; 2018<br /></small> </p>
         </div>
     </div>
 

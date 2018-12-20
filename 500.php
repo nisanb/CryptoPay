@@ -9,7 +9,7 @@ session_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Linda Wallet | Error Occured</title>
+    <title>CryptoSell | Error Occured</title>
 <link rel="icon" href="./include/img/linda_icon.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -35,7 +35,7 @@ session_start();
             <?=$_SESSION["err"];?>
             </strong>
             <br /><br /><br />
-            You can go back to main page: <br/><a href="./" class="btn btn-primary m-t">Linda Wallet</a>
+            You can go back to main page: <br/><a href="./" class="btn btn-primary m-t">CryptoSell</a>
         </div>
     </div>
 

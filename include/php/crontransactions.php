@@ -1,6 +1,6 @@
 <?php
 /**
- * Linda Wallet API
+ * CryptoSell Wallet API
  * Cron API for analyzing transactions
  * Will ask RPC client to each wallet transactions incoming if a transaction has been sent
 **/

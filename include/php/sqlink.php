@@ -6,9 +6,9 @@ require "Objects/Currency.php";
 require_once '_jsonrpc2.php';
 
 /**
- * Linda Web Wallet API
+ * CryptoSell API
  * @sk8r
- * (c) LindaProject 2017
+ * (c) CryptoSell 2018
  */
 class GlobalParams
 {
@@ -31,7 +31,7 @@ class GlobalParams
 
     public static $pass = "";
 
-    public static $db = "linda";
+    public static $db = "CryptoSell";
     
     // renote ip
     public static $SERVER_IP = "40.87.133.89";
@@ -330,7 +330,7 @@ class CryptoSQL
 
     private static $pass = "";
 
-    private static $db = "linda";
+    private static $db = "CryptoSell";
 
     private static $timeout = 31;
 
@@ -670,7 +670,7 @@ class CryptoSQL
         
         if (! filter_var($email, FILTER_VALIDATE_EMAIL) || ! checkdnsrr($domain_name, 'MX')) {
             // invalid emailaddress
-            throw new LindaException("Please use a valid email address.");
+            throw new CryptoException("Please use a valid email address.");
         }
         
         $sql = "INSERT INTO users VALUES (\"$email\", \"$authKey\")";
@@ -802,7 +802,7 @@ class CryptoSQL
         
         $ga = new PHPGangsta_GoogleAuthenticator();
         
-        $arr["img"] = $ga->getQRCodeGoogleUrl("LindaWallet-" . Bitcoin::getEmailPrefix($email), $arr["key"]);
+        $arr["img"] = $ga->getQRCodeGoogleUrl("CryptoSell-" . Bitcoin::getEmailPrefix($email), $arr["key"]);
         
         $conn->close();
         
@@ -876,7 +876,7 @@ class CryptoSQL
             self::$server = "localhost";
             self::$user = "root";
             self::$pass = "";
-            self::$db = "linda";
+            self::$db = "CryptoSell";
         }
         
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);

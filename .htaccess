@@ -1,6 +1,6 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /CryptoPay/
+RewriteBase /CryptoSell/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^wallet/(.*)$ index.php?act=wallet&wid=$1

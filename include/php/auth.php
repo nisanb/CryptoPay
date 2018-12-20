@@ -30,7 +30,7 @@ if(isset($_POST['user'])){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LindaWallet | Login</title>
+    <title>CryptoSell | Login</title>
 
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -51,7 +51,7 @@ if(isset($_POST['user'])){
                 </h1>
 
             </div>
-            <h3>Welcome to Linda Web Wallet</h3>
+            <h3>Welcome to CryptoSell</h3>
             <p>Log-In to see it in action!</p>
             <?php
             if(isset($error)){
@@ -68,7 +68,7 @@ if(isset($_POST['user'])){
   
               
             </form>
-            <p class="m-t"> <small>Linda Web Walet &copy; 2018<br /></small> </p>
+            <p class="m-t"> <small>CryptoSell &copy; 2018<br /></small> </p>
         </div>
     </div>
 
