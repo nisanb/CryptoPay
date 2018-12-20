@@ -169,7 +169,8 @@ echo "</pre>";
                  $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
              },
              error: function( jqXhr, textStatus, errorThrown ){
-             	$('#response2').html( errorThrown );
+                 console.log ("I hit an error!");
+             	$('#response2').html( "Erorr occured." );
                  console.log( errorThrown );
              }
          });
@@ -201,11 +202,19 @@ echo "</pre>";
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
                 	$('#displayLoading').hide();
+                	if(data.status == 0)
+                	{
+                    	//Error occured
+                		$('#response').html( data.body );
+                		console.log("Error Details below");
+                		console.log(data);
+                		return;
+                	}
+                	
                     $('#response').html("Please transfer " + data.itemPrice + " " + data.currency + " to " + data.body + "");
                     startWaiting(data.body);
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
-                    console.log(jqXhr);
                 	$('#response').html( errorThrown );
                     console.log( errorThrown );
                 }

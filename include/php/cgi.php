@@ -8,7 +8,7 @@ if(empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUE
 }
 
 $toReturn["status"] = "0";
-
+try{
 if(!isset($_POST['currency'])
     || !isset($_POST['itemPrice'])
     || !isset($_POST['itemName'])
@@ -17,6 +17,7 @@ if(!isset($_POST['currency'])
 {
     $toReturn["status"] = "0";
     $toReturn["body"] = "Something went wrong!";
+    throw new Exception;
 }
 foreach($_POST as $key=>$value)
 {
@@ -35,12 +36,22 @@ if(!CryptoSQL::verifyAPIKey($_POST['key'], $_POST['domain']))
 {
     $toReturn["status"] = "0";
     $toReturn["body"] = "Could not verify domain ownership";
+    throw new Exception;
+}
+
+$_ITEM['price'] = floatval($_POST['itemPrice']);
+if($_ITEM['price'] == 0)
+{
+    $toReturn["status"] = "0";
+    $toReturn["body"] = "Item price is invalid!";
+    throw new Exception;
 }
 
 $address = CryptoSQL::addTransaction($_POST['key'], $_POST['clientIP'], $_POST['itemID'], $_POST['currency'], $_POST['itemPrice']);
 
 $toReturn["status"] = "1";
 $toReturn["body"] = $address;
-
+}
+catch(Exception $e) { }
 echo json_encode($toReturn);
 ?>

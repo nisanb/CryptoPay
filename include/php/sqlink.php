@@ -1,7 +1,8 @@
 <?php
-
 require "Objects/Transaction.php";
 require "Objects/Wallet.php";
+require "Objects/Currency.php";
+
 require_once '_jsonrpc2.php';
 
 /**
@@ -9,42 +10,49 @@ require_once '_jsonrpc2.php';
  * @sk8r
  * (c) LindaProject 2017
  */
+class GlobalParams
+{
 
-class GlobalParams{
     public static $workLocal = TRUE;
-
-    //remote rpc params
+    
+    // remote rpc params
     public static $rpcuser = "asdasd";
+
     public static $rpcpass = "asdasdasd";
+
     public static $rpcip = "127.0.0.1";
+
     public static $rpcport = "33821";
-
-    //local sql parms
-
+    
+    // local sql parms
     public static $server = "localhost";
-    public static $user = "root";
-    public static $pass = "";
-    public static $db = "linda";
 
-    //renote ip
+    public static $user = "root";
+
+    public static $pass = "";
+
+    public static $db = "linda";
+    
+    // renote ip
     public static $SERVER_IP = "40.87.133.89";
 }
-
-
-
 
 class Bitcoin
 {
 
     private static $rpcuser = "asdasd";
+
     private static $rpcpass = "asdasdasd";
+
     private static $rpcip = "127.0.0.1";
+
     private static $rpcport = "33821";
+
     private static $rpcconn;
 
     /**
      * Will return the username by an email
-     * 
+     *
      * @param unknown $email            
      * @return string
      */
@@ -55,7 +63,7 @@ class Bitcoin
 
     /**
      * Grants access to the current RPC Connection
-     * 
+     *
      * @return jsonRPCClient
      */
     public static function RPC()
@@ -63,10 +71,10 @@ class Bitcoin
         if (! isset(self::$rpcconn) || self::$rpcconn == null) {
             // self::$rpcconn = new jsonRPCClient('http://'.self::$rpcuser.':'.self::$rpcpass.'@'.self::$rpcip.':'.self::$rpcport.'/');
             self::$rpcip = GlobalParams::$SERVER_IP;
-            if (GlobalParams::$workLocal == TRUE){
-                self::$rpcuser = "asdasd";                
-                self::$rpcpass = "asdasdasd";               
-                self::$rpcip = "127.0.0.1";              
+            if (GlobalParams::$workLocal == TRUE) {
+                self::$rpcuser = "asdasd";
+                self::$rpcpass = "asdasdasd";
+                self::$rpcip = "127.0.0.1";
                 self::$rpcport = "33821";
             }
             self::$rpcconn = new jsonRPCClient(self::$rpcuser, self::$rpcpass, self::$rpcip, self::$rpcport);
@@ -76,7 +84,7 @@ class Bitcoin
 
     /**
      * TODO
-     * 
+     *
      * @param unknown $account            
      * @param unknown $trans            
      */
@@ -85,7 +93,7 @@ class Bitcoin
 
     /**
      * Returns transactions associated by an account
-     * 
+     *
      * @param unknown $account            
      * @return unknown
      */
@@ -104,7 +112,7 @@ class Bitcoin
 
     /**
      * Returns TRUE if a wallet is valid
-     * 
+     *
      * @param unknown $id            
      * @return number
      */
@@ -116,15 +124,15 @@ class Bitcoin
         if ($id == "skin-config.html") {
             die();
         }
-        //if (! preg_match("/^[0-9]{0}$/", $id))
-            //throw new Exception("Invalid Wallet Address supplied - " . $id);
+        // if (! preg_match("/^[0-9]{0}$/", $id))
+        // throw new Exception("Invalid Wallet Address supplied - " . $id);
         
         return true;
     }
 
     /**
      * Returns if a given string consists only from chars and numbers
-     * 
+     *
      * @param unknown $str            
      * @return number
      */
@@ -147,7 +155,7 @@ class Bitcoin
 
     /**
      * Sends cash to a wallet
-     * 
+     *
      * @param unknown $from            
      * @param unknown $to            
      * @param unknown $amount            
@@ -179,20 +187,20 @@ class Bitcoin
         
         if ($diff < 0)
             throw new Exception("Transaction could not be commited due to insufficient amount (missing " . $diff . ")");
-        
-        // All input is verified
-        
+            
+            // All input is verified
+            
         // 1. move funds to stealth account
-        // 2. sendfrom stealthaccount to address - amount without fees with min conf 5
-        // 3. done
+            // 2. sendfrom stealthaccount to address - amount without fees with min conf 5
+            // 3. done
         
         $stealth = $walletHash . "-stealth";
         
         // Transfer funds to stealth wallet
         if (! Bitcoin::RPC()->move($walletHash, $stealth, $total, 3))
             throw new Exception("Could not transfer funds to stealth wallet.");
-        
-        // Send the real transaction
+            
+            // Send the real transaction
         $result = Bitcoin::RPC()->sendfrom($stealth, $to, $amount, 3);
         
         $newStealthBalance = abs(Bitcoin::RPC()->getbalance($stealth));
@@ -201,10 +209,9 @@ class Bitcoin
             throw new Exception("Could not transfer funds back to stealth wallet.");
     }
 
-
     /**
      * TRUE only if an address is valid
-     * 
+     *
      * @param unknown $addr            
      * @return boolean
      */
@@ -215,17 +222,18 @@ class Bitcoin
         
         return self::RPC()->validateaddress($addr)["isvalid"];
     }
-    
+
     /**
      * Returns amount of coins received by an account
-     * @param unknown $account
+     * 
+     * @param unknown $account            
      * @return unknown
      */
     public static function getReceivedByAccount($account)
     {
         return self::RPC()->getreceivedbyaccount($account);
     }
-    
+
     /**
      * Retreive general wallet information
      */
@@ -235,53 +243,38 @@ class Bitcoin
         
         $timeout = 60 * 5; // 5 minutes
         
-        
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
         // JSON already created
-        if ($fileUpdatedTime < $timeout) {
-            $fp = file_get_contents($walletFile);
-            $arr = json_decode($fp, true);
+        if ($fileUpdatedTime > $timeout) {
             
-            return $arr;
+            // Create new JSON
+            $fp = fopen($walletFile, 'w');
+            
+            $currencies = CryptoSQL::getCurrencies();
+            
+            foreach ($currencies as $curr) {
+                // Get price
+                $fp2 = file_get_contents($curr->cmc);
+                $jsonObject = json_decode($fp2)[0];
+                $data[$curr->currencyPair] = ($jsonObject);
+            }
+            $jsonData = (json_encode($data));
+            fwrite($fp, CryptoSQL::indent($jsonData));
+            fclose($fp);
         }
-        
-        // Create new JSON
-        $fp = fopen($walletFile, 'w');
-//         $arr = self::RPC()->getinfo();
-        
-//         array_push($arr, self::RPC()->getstakinginfo());
-//         array_push($arr, self::RPC()->getmininginfo());
-//         array_push($arr, self::RPC()->getconnectioncount());
-        
-        // Get price
-        $arr = array();
-        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
-        array_push($arr, json_decode($fp2, true));
-        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
-        array_push($arr, json_decode($fp2, true));
-     
-        /*
-         *     
-        // Get price
-        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/linda/?convert=usd");
-        $arr["linda"] = json_decode($fp2, true)[0];
-        $fp2 = file_get_contents("https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=usd");
-        $arr["btc"] = json_decode($fp2, true)[];
-     
-     */
-        fwrite($fp, json_encode($arr));
-        fclose($fp);
-        
+        $fp = file_get_contents($walletFile);
+        $arr = json_decode($fp, true);
         return $arr;
     }
-    
-    public static function getWalletData(){
+
+    public static function getWalletData()
+    {
         $fp = file_get_contents("./info.wallet");
         $jsonDecode = json_decode($fp, true);
     }
     
-    //TODO - Convert 
+    // TODO - Convert
     public static function getPriceInBTC($price)
     {
         return "10";
@@ -300,33 +293,30 @@ class Bitcoin
         // is this a number?
         if (! is_numeric($n))
             return false;
-        
-        // now filter it;
+            
+            // now filter it;
         if ($n > 1000000000000)
             return round(($n / 1000000000000), 1) . ' trillion';
-        else if ($n > 1000000000)
-            return round(($n / 1000000000), 1) . ' billion';
-        else if ($n > 1000000)
-            return round(($n / 1000000), 1) . ' million';
-        else if ($n > 1000)
-            return round(($n / 1000), 1) . ' thousand';
+        else 
+            if ($n > 1000000000)
+                return round(($n / 1000000000), 1) . ' billion';
+            else 
+                if ($n > 1000000)
+                    return round(($n / 1000000), 1) . ' million';
+                else 
+                    if ($n > 1000)
+                        return round(($n / 1000), 1) . ' thousand';
         
         return number_format($n);
     }
-    
-    
-    
-    public static function getGUID(){
-        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+
+    public static function getGUID()
+    {
+        mt_srand((double) microtime() * 10000); // optional for php 4.2.0 and up.
         $charid = strtoupper(md5(uniqid(rand(), true)));
-        $hyphen = chr(45);// "-"
-        $uuid = chr(123)// "{"
-        .substr($charid, 0, 8).$hyphen
-        .substr($charid, 8, 4).$hyphen
-        .substr($charid,12, 4).$hyphen
-        .substr($charid,16, 4).$hyphen
-        .substr($charid,20,12)
-        .chr(125);// "}"
+        $hyphen = chr(45); // "-"
+        $uuid = chr(123) . // "{"
+substr($charid, 0, 8) . $hyphen . substr($charid, 8, 4) . $hyphen . substr($charid, 12, 4) . $hyphen . substr($charid, 16, 4) . $hyphen . substr($charid, 20, 12) . chr(125); // "}"
         return $uuid;
     }
 }
@@ -346,14 +336,15 @@ class CryptoSQL
 
     /**
      * Verifies if a given key and domain belong to an existing wallet
-     * @param unknown $key
-     * @param unknown $domain
+     * 
+     * @param unknown $key            
+     * @param unknown $domain            
      * @throws Exception
      * @return boolean
      */
     public static function verifyAPIKey($key, $domain)
     {
-        $key    = CryptoSQL::trim_where($key);
+        $key = CryptoSQL::trim_where($key);
         $domain = CryptoSQL::trim_where($domain);
         
         $conn = CryptoSQL::getConn();
@@ -367,57 +358,52 @@ class CryptoSQL
         $row = mysqli_fetch_assoc($result);
         return $row["num_results"] > 0;
     }
-    
+
     public static function updateReceivedTransaction($trans, $received)
     {
         $conn = CryptoSQL::getConn();
         
-        if($trans->requiredAmount <= $received)
-        {
+        if ($trans->requiredAmount <= $received) {
             $sql = "UPDATE transactions set istatus = 2 where id = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
-                throw new Exception("Could not update transaction ".$trans->id);
+                throw new Exception("Could not update transaction " . $trans->id);
             }
-        }
-        else
-        {
-            //Partial Payment
+        } else {
+            // Partial Payment
             $sql = "UPDATE transactions set receivedAmount = {$received} where id = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
-                throw new Exception("Could not update transaction ".$trans->id);
+                throw new Exception("Could not update transaction " . $trans->id);
             }
             return;
         }
-
+        
         $sql = "SELECT count(*) as num_results from userbalances where walletID in (\"{$trans->creditWallet}\") AND currencyID = {$trans->currency}";
-        if (!$result = $conn->query($sql)) {
+        if (! $result = $conn->query($sql)) {
             throw new Exception("Could not query userbalances for wallet " . $trans->creditWallet);
         }
         
         $row = mysqli_fetch_assoc($result);
         
-        //Transaction was already added -> do attempt to add again
-        if($row["num_results"] == 0)
-        {
+        // Transaction was already added -> do attempt to add again
+        if ($row["num_results"] == 0) {
             $sql = "INSERT INTO userbalances values (\"{$_SESSION['UserID']}\",\"{$trans->creditWallet}\", {$trans->currency}, 0)";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
-                throw new Exception("Could not insert new row to userbalances ".$trans->creditWallet." ".$trans->currency);
+                throw new Exception("Could not insert new row to userbalances " . $trans->creditWallet . " " . $trans->currency);
             }
         }
         
         $sql = "UPDATE userbalances set balance=balance + {$trans->requiredAmount} where walletID = {$trans->creditWallet} AND currencyID = {$trans->currency}";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not update userbalances ".$trans->creditWallet." ".$trans->currency." ".$trans->requiredAmount);
+            throw new Exception("Could not update userbalances " . $trans->creditWallet . " " . $trans->currency . " " . $trans->requiredAmount);
         }
         
         $conn->close();
-        
     }
-    
+
     public static function getTransactionByAddress($address)
     {
         $address = CryptoSQL::trim_where($address);
@@ -429,15 +415,15 @@ class CryptoSQL
          * 2 = Successfully accounted for
          */
         $sql = "select * from transactions where creditWalletAddress in (\"{$address}\")";
-        if (!$result = $conn->query($sql))
-        {
+        if (! $result = $conn->query($sql)) {
             throw new Exception("Could not retreive transaction information.");
             exit();
         }
         $row = mysqli_fetch_assoc($result);
         $conn->close();
-       return new Transaction($row);
+        return new Transaction($row);
     }
+
     public static function getPandingTransactionAccounts()
     {
         $conn = CryptoSQL::getConn();
@@ -449,8 +435,7 @@ class CryptoSQL
          * 2 = Successfully accounted for
          */
         $sql = "select * from transactions where istatus != 2";
-        if (!$result = $conn->query($sql))
-        {
+        if (! $result = $conn->query($sql)) {
             throw new Exception("Could not retreive transaction information.");
             exit();
         }
@@ -461,24 +446,25 @@ class CryptoSQL
         
         return $arr;
     }
-    
+
     /**
      * Attempts to add a transaction to the database
      * Also generates a new wallet receive address
-     * @param unknown $key
-     * @param unknown $clientIP
-     * @param unknown $itemID
-     * @param unknown $currency
+     * 
+     * @param unknown $key            
+     * @param unknown $clientIP            
+     * @param unknown $itemID            
+     * @param unknown $currency            
      * @throws Exception
      */
-    public static function addTransaction($key, $clientIP,$itemID, $currency, $price)
+    public static function addTransaction($key, $clientIP, $itemID, $currency, $price)
     {
-        //Verify inputs
+        // Verify inputs
         $key = CryptoSQL::trim_where($key);
         $clientIP = CryptoSQL::trim_where($clientIP);
         $itemID = intval($itemID);
         $currency = CryptoSQL::getCurrency(CryptoSQL::trim_where($currency));
-
+        
         $conn = CryptoSQL::getConn();
         $sql = "SELECT creditWalletAddress from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
@@ -491,11 +477,11 @@ class CryptoSQL
         }
         
         $row = mysqli_fetch_assoc($result);
-        if(mysqli_num_rows($result) > 0){
+        if (mysqli_num_rows($result) > 0) {
             return $row["creditWalletAddress"];
         }
         
-        //Get wallet ID via item ID
+        // Get wallet ID via item ID
         $sql = "select id from wallets where walletAPI in (\"{$key}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
@@ -505,30 +491,27 @@ class CryptoSQL
         $row = mysqli_fetch_assoc($result);
         $walletID = $row["id"];
         
-        //Generate wallet address
-        $creditWalletAccount = time().Bitcoin::RandomString();
+        // Generate wallet address
+        $creditWalletAccount = time() . Bitcoin::RandomString();
         $creditWalletAddress = Bitcoin::RPC()->getnewaddress($creditWalletAccount);
-        //Attempt to add the transaction to the database
+        // Attempt to add the transaction to the database
         $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
                 VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
         
-        if(!$result = $conn->query($sql))
-        {
-            echo $sql."<br />";
+        if (! $result = $conn->query($sql)) {
+            echo $sql . "<br />";
             throw new Exception("Could not insert a new transaction information.");
             exit();
         }
         
-        
         $conn->close();
         return $creditWalletAddress;
-        
     }
-    
+
     /**
      * Returns balance by a given account
      *
-     * @param unknown $account
+     * @param unknown $account            
      * @return number
      */
     public static function getWalletsByAccount($email)
@@ -539,7 +522,7 @@ class CryptoSQL
         $sql = "SELECT * FROM wallets where account=\"$email\"";
         if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />" . CryptoSQL::getConn()->error);
         }
         
         while ($row = mysqli_fetch_assoc($result)) {
@@ -547,23 +530,23 @@ class CryptoSQL
         }
         return $wallets;
     }
-    
+
     public static function getCurrency($currency)
     {
         $currency = CryptoSQL::trim_where($currency);
         $conn = CryptoSQL::getConn();
         $sql = "select id from currencies where currencyPair in (\"{$currency}\")";
-        if(!$result = $conn->query($sql))
-        {
-            throw new Exception("Could not query currencies - ".$conn->error);
+        if (! $result = $conn->query($sql)) {
+            throw new Exception("Could not query currencies - " . $conn->error);
             exit();
         }
         $row = mysqli_fetch_assoc($result);
         return $row["id"];
     }
+
     /**
      * Check if user submitted an action in the last 31 seconds
-     * 
+     *
      * @return boolean
      */
     public static function checkUserTimeout()
@@ -575,7 +558,7 @@ class CryptoSQL
             return;
         }
         $bypass = 1;
-        if($bypass == 1)
+        if ($bypass == 1)
             return;
         $waitTime = self::$timeout - (time() - $_SESSION['timeout']);
         
@@ -592,14 +575,14 @@ class CryptoSQL
         // Validate
         Bitcoin::isValidAddress($walletID);
         $walletID = self::trim_where($walletID);
-
+        
         $sql = "select * from wallets where id = {$walletID}";
-        if (!$result = CryptoSQL::getConn()->query($sql)) {
+        if (! $result = CryptoSQL::getConn()->query($sql)) {
             throw new Exception("Could not retreive wallet information.");
         }
         $row = mysqli_fetch_assoc($result);
-
-        if($row["account"] != $_SESSION['UserID']){
+        
+        if ($row["account"] != $_SESSION['UserID']) {
             throw new Exception("You tried to view a wallet that does not belong to you.");
         }
         
@@ -610,7 +593,7 @@ class CryptoSQL
         if ($result = CryptoSQL::getConn()->query($sql)) {
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
-               array_push($transactions, new Transaction($row));
+                array_push($transactions, new Transaction($row));
             }
         } else {
             throw new Exception("Could not retreive wallet information for address " . $walletID);
@@ -618,13 +601,14 @@ class CryptoSQL
         $wallet->transactions = $transactions;
         
         return $wallet;
-        
     }
-    
+
+    public static function convertCurrency($from, $to, $value)
+    {}
 
     /**
      * Returns an array with wallet IDs associated with an account
-     * 
+     *
      * @param unknown $account            
      * @return unknown
      */
@@ -634,7 +618,7 @@ class CryptoSQL
         $sql = "select * from wallets where account=\"$email\"";
         if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />" . CryptoSQL::getConn()->error);
         }
         
         $wallets = array();
@@ -662,7 +646,7 @@ class CryptoSQL
         $sql = "select count(*) as num_results from wallets where account in (\"{$email}\")";
         if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not query for account wallets.<br />".CryptoSQL::getConn()->error);
+            throw new Exception("Could not query for account wallets.<br />" . CryptoSQL::getConn()->error);
         }
         
         $result = @mysqli_fetch_assoc($result);
@@ -672,7 +656,7 @@ class CryptoSQL
 
     /**
      * Register user to database if he does not exists yet
-     * 
+     *
      * @param unknown $email            
      * @return string
      */
@@ -702,7 +686,7 @@ class CryptoSQL
 
     /**
      * Returns TRUE if the account sent is the owner of the wallet received
-     * 
+     *
      * @param unknown $account            
      * @param unknown $wallet            
      * @throws Exception
@@ -730,30 +714,29 @@ class CryptoSQL
 
     /**
      * This function will add a new wallet to the database
-     * 
+     *
      * @param unknown $email            
      * @param unknown $walletID            
      */
     public static function addWallet($email, $label = "Default Wallet", $domain = "domain")
     {
         if (! Bitcoin::validateStringNumber($label)) {
-            throw new Exception ("Invalid label provided.");
+            throw new Exception("Invalid label provided.");
         }
         
-        if(! Bitcoin::validateStringNumber($domain, true)) {
-            throw new Exception ("Invalid domain provided.");
+        if (! Bitcoin::validateStringNumber($domain, true)) {
+            throw new Exception("Invalid domain provided.");
         }
         
-        if(CryptoSQL::getAmountOfWalletsByUser($email) > 15){
-            throw new Exception ("You have maxed out your wallets!");
+        if (CryptoSQL::getAmountOfWalletsByUser($email) > 15) {
+            throw new Exception("You have maxed out your wallets!");
         }
         
         $_SESSION['UserID'] = isset($_SESSION['UserID']) == true ? $_SESSION['UserID'] : $email;
         
-        if(!self::verifyEmpty("select count(*) as num_rows from wallets where walletLabel in (\"{$label}\")
+        if (! self::verifyEmpty("select count(*) as num_rows from wallets where walletLabel in (\"{$label}\")
                                 AND account in (\"{$_SESSION['UserID']}\")"))
-            throw new Exception ("You already created a wallet with this label.");
-        
+            throw new Exception("You already created a wallet with this label.");
         
         $email = self::trim_insert($email);
         $label = self::trim_insert($label);
@@ -765,20 +748,20 @@ class CryptoSQL
         $sql = "INSERT INTO wallets (account, walletLabel, domain, walletAPI) VALUES (\"{$email}\",\"{$label}\",\"{$domain}\", \"{$walletAPI}\")";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
-            throw new Exception("Could not generate a new wallet.<br />".$sql);
+            throw new Exception("Could not generate a new wallet.<br />" . $sql);
         }
         
         return true;
     }
-    
+
     public static function verifyEmpty($sql)
     {
         $conn = CryptoSQL::getConn();
-        if (!$result = $conn->query($sql)){
-            throw new Exception("Could not query for empty verification " .$sql);
+        if (! $result = $conn->query($sql)) {
+            throw new Exception("Could not query for empty verification " . $sql);
         }
         $row = mysqli_fetch_row($result);
-        return $row[0]==0;
+        return $row[0] == 0;
     }
 
     public static function verify($email, $authKey)
@@ -828,7 +811,7 @@ class CryptoSQL
 
     /**
      * Occures when a user attempts to log in using his email
-     * 
+     *
      * @param unknown $email            
      * @throws Exception
      * @return true if the user was created, false otherwise (already exists)
@@ -883,16 +866,16 @@ class CryptoSQL
 
     /**
      * Returns an active MySQLI Connection
-     * 
+     *
      * @return mysqli
      */
     public static function getConn()
     {
         self::$server = GlobalParams::$SERVER_IP;
-        if (GlobalParams::$workLocal == TRUE){  
+        if (GlobalParams::$workLocal == TRUE) {
             self::$server = "localhost";
-            self::$user = "root";           
-            self::$pass = "";     
+            self::$user = "root";
+            self::$pass = "";
             self::$db = "linda";
         }
         
@@ -923,22 +906,20 @@ class CryptoSQL
         
         $_SESSION["last_action"] = time();
     }
-    
-    
 
-    public static function getTotalBalaceOfAccount($walletId = 0){
-        if (isset ($_SESSION["UserID"])){
+    public static function getTotalBalaceOfAccount($walletId = 0)
+    {
+        if (isset($_SESSION["UserID"])) {
             $userid = $_SESSION["UserID"];
         }
-    
+        
         $conn = CryptoSQL::getConn();
         $email = self::trim_where($userid);
-    
+        
         $sql = '';
-        if ($walletId > 0){
+        if ($walletId > 0) {
             $sql = "SELECT c.currencyName, t.currency as currencyID, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
-        }
-        else{
+        } else {
             $sql = "SELECT currencyID, SUM(balance) as sum FROM userbalances WHERE user = (\"$email\") GROUP BY currencyID";
         }
         
@@ -947,12 +928,12 @@ class CryptoSQL
             throw new Exception("Could not retreive account information.");
             exit();
         }
-
-        //read currencies exchance values
+        
+        // read currencies exchance values
         $walletFile = "info.wallet";
         $fp = file_get_contents($walletFile);
         
-        if (!CryptoSQL::isValidJsonFile($fp)) {
+        if (! CryptoSQL::isValidJsonFile($fp)) {
             throw new Exception("Could not read currency exchange from cyptopia");
             exit();
         }
@@ -960,45 +941,118 @@ class CryptoSQL
         $obj = json_decode($fp, true);
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
-            //$balance += $row["sum"];
-            if ($row["currencyID"] !=1){
+            // $balance += $row["sum"];
+            if ($row["currencyID"] != 1) {
                 $balance += $row["sum"] * $linda2Btc;
-            }
-            else{
+            } else {
                 $balance += $row["sum"];
             }
         }
-    
+        
         return $balance;
-    
     }
-    
-    
-    
-    public static function ConvertBitcoinOrUsdToCurrency($convertFrom ,$currency, $amount){
-        if (!$amount) $amount = 1;
-    
-        //read currencies exchance values
+
+    public static function ConvertBitcoinOrUsdToCurrency($convertFrom, $currency, $amount)
+    {
+        if (! $amount)
+            $amount = 1;
+            
+            // read currencies exchance values
         $walletFile = "info.wallet";
         $fp = file_get_contents($walletFile);
         $obj = json_decode($fp, true);
-    
-        $ratio = $obj[$currency][0]["price_".$convertFrom];
-        if (!$ratio){
+        
+        $ratio = $obj[$currency][0]["price_" . $convertFrom];
+        if (! $ratio) {
             return 0;
-//             throw new Exception("Currency conversion error");
-//             exit();
+            // throw new Exception("Currency conversion error");
+            // exit();
         }
         
         return $ratio * $amount;
     }
     
-    
-    //validate json file
-    public static function isValidJsonFile($string){
+    // validate json file
+    public static function isValidJsonFile($string)
+    {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
     }
-    
-    
+
+    /**
+     * Indents a flat JSON string to make it more human-readable.
+     *
+     * @param string $json
+     *            The original JSON string to process.
+     *            
+     * @return string Indented version of the original JSON string.
+     */
+    public static function indent($json)
+    {
+        $result = '';
+        $pos = 0;
+        $strLen = strlen($json);
+        $indentStr = '  ';
+        $newLine = "\n";
+        $prevChar = '';
+        $outOfQuotes = true;
+        
+        for ($i = 0; $i <= $strLen; $i ++) {
+            
+            // Grab the next character in the string.
+            $char = substr($json, $i, 1);
+            
+            // Are we inside a quoted string?
+            if ($char == '"' && $prevChar != '\\') {
+                $outOfQuotes = ! $outOfQuotes;
+                
+                // If this character is the end of an element,
+                // output a new line and indent the next line.
+            } else 
+                if (($char == '}' || $char == ']') && $outOfQuotes) {
+                    $result .= $newLine;
+                    $pos --;
+                    for ($j = 0; $j < $pos; $j ++) {
+                        $result .= $indentStr;
+                    }
+                }
+            
+            // Add the character to the result string.
+            $result .= $char;
+            
+            // If the last character was the beginning of an element,
+            // output a new line and indent the next line.
+            if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+                $result .= $newLine;
+                if ($char == '{' || $char == '[') {
+                    $pos ++;
+                }
+                
+                for ($j = 0; $j < $pos; $j ++) {
+                    $result .= $indentStr;
+                }
+            }
+            
+            $prevChar = $char;
+        }
+        
+        return $result;
+    }
+
+    public static function getCurrencies()
+    {
+        $conn = CryptoSQL::getConn();
+        
+        $sql = "select * from currencies";
+        if (! $result = $conn->query($sql)) {
+            throw new Exception("Could not retreive currencies information.");
+            exit();
+        }
+        $arr = array();
+        while ($row = mysqli_fetch_assoc($result)) {
+            array_push($arr, new Currency($row));
+        }
+        
+        return $arr;
+    }
 }
