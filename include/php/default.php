@@ -121,7 +121,7 @@ if(@$_POST['payment_do'])
 }
 
 $_ACCOUNT['Wallets'] = CryptoSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
-$balance = CryptoSQL::getTotalBalaceOfAccount();
+$balance = CryptoSQL::getTotalBalaceOfWallet();
 
 $include_footer.= '
 <script>

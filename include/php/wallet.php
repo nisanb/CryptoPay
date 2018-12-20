@@ -8,7 +8,7 @@ $content = "";
 $walletID = @$_GET['wid'];
 
 $wallet = CryptoSQL::getWalletInformation($walletID);
-$income = CryptoSQL::getTotalBalaceOfAccount($walletID);
+$income = CryptoSQL::getTotalBalaceOfWallet($walletID);
 $title = "View Wallet - " . $wallet->walletLabel;
 
 $lastDepDate = date("m/d/Y");
@@ -32,7 +32,6 @@ foreach ($transactions as $trans) {
         $tranStatus = 10;
     $tranDate = date('m/d/Y G:i:s', strtotime($trans->timeStarted));
     
-    $test = Bitcoin::RPC()->gettransaction("e6661ec176d221a6e415dcb2617989a8addcc50bbced6f65871115f9db27449f");
     $tableContent .= '<tr>
     <td>' . $tranCount ++ . '</td>
 <td>' . $trans->id . '</td>

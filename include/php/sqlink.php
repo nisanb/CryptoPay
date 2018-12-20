@@ -572,8 +572,6 @@ class CryptoSQL
 
     public static function getWalletInformation($walletID)
     {
-        // Validate
-        Bitcoin::isValidAddress($walletID);
         $walletID = self::trim_where($walletID);
         
         $sql = "select * from wallets where id = {$walletID}";
@@ -907,11 +905,9 @@ class CryptoSQL
         $_SESSION["last_action"] = time();
     }
 
-    public static function getTotalBalaceOfAccount($walletId = 0)
+    public static function getTotalBalaceOfWallet($walletId = 0)
     {
-        if (isset($_SESSION["UserID"])) {
-            $userid = $_SESSION["UserID"];
-        }
+        $userid = $_SESSION["UserID"];
         
         $conn = CryptoSQL::getConn();
         $email = self::trim_where($userid);
