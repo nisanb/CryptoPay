@@ -40,15 +40,7 @@ class GlobalParams
 class Bitcoin
 {
 
-    private static $rpcuser = "asdasd";
-
-    private static $rpcpass = "asdasdasd";
-
-    private static $rpcip = "127.0.0.1";
-
-    private static $rpcport = "33821";
-
-    private static $rpcconn;
+    private static $_CONN;
 
     /**
      * Will return the username by an email
@@ -66,20 +58,16 @@ class Bitcoin
      *
      * @return jsonRPCClient
      */
-    public static function RPC()
+    public static function RPC($currency = "Linda")
     {
-        if (! isset(self::$rpcconn) || self::$rpcconn == null) {
-            // self::$rpcconn = new jsonRPCClient('http://'.self::$rpcuser.':'.self::$rpcpass.'@'.self::$rpcip.':'.self::$rpcport.'/');
-            self::$rpcip = GlobalParams::$SERVER_IP;
-            if (GlobalParams::$workLocal == TRUE) {
-                self::$rpcuser = "asdasd";
-                self::$rpcpass = "asdasdasd";
-                self::$rpcip = "127.0.0.1";
-                self::$rpcport = "33821";
-            }
-            self::$rpcconn = new jsonRPCClient(self::$rpcuser, self::$rpcpass, self::$rpcip, self::$rpcport);
+        
+        $currency = CryptoSQL::getCurrency($currency);
+        $id = $currency["id"];
+
+        if (! isset(self::$_CONN[$id]) || self::$_CONN[$id] == null) {
+            self::$_CONN[$id] = new jsonRPCClient($currency["rpcUser"], $currency["rpcPass"], $currency["rpcIP"], $currency["rpcPort"]);
         }
-        return self::$rpcconn;
+        return self::$_CONN[$id];
     }
 
     /**
@@ -463,19 +451,20 @@ class CryptoSQL
         $key = CryptoSQL::trim_where($key);
         $clientIP = CryptoSQL::trim_where($clientIP);
         $itemID = intval($itemID);
-        $currency = CryptoSQL::getCurrency(CryptoSQL::trim_where($currency));
+        $currency = CryptoSQL::getCurrency(CryptoSQL::trim_where($currency))["id"];
         
         $conn = CryptoSQL::getConn();
         $sql = "SELECT creditWalletAddress from transactions where iStatus=0 AND 
                 clientIP in (\"{$clientIP}\") AND
                 itemID = {$itemID}
                 AND currency = {$currency}";
+
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive transaction information." + $conn->error);
             exit();
         }
-        
+ 
         $row = mysqli_fetch_assoc($result);
         if (mysqli_num_rows($result) > 0) {
             return $row["creditWalletAddress"];
@@ -488,21 +477,22 @@ class CryptoSQL
             throw new Exception("API Key is wrong");
             exit();
         }
+        
         $row = mysqli_fetch_assoc($result);
         $walletID = $row["id"];
         
         // Generate wallet address
-        $creditWalletAccount = time() . Bitcoin::RandomString();
-        $creditWalletAddress = Bitcoin::RPC()->getnewaddress($creditWalletAccount);
+        $creditWalletAccount = "V2_" . time() . Bitcoin::RandomString();
+        $creditWalletAddress = Bitcoin::RPC($currency)->getnewaddress($creditWalletAccount);
+
         // Attempt to add the transaction to the database
         $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
                 VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
-        
-        if (! $result = $conn->query($sql)) {
-            echo $sql . "<br />";
+
+         if (! $result = $conn->query($sql)) {
             throw new Exception("Could not insert a new transaction information.");
             exit();
-        }
+        } 
         
         $conn->close();
         return $creditWalletAddress;
@@ -535,13 +525,21 @@ class CryptoSQL
     {
         $currency = CryptoSQL::trim_where($currency);
         $conn = CryptoSQL::getConn();
-        $sql = "select id from currencies where currencyPair in (\"{$currency}\")";
+        
+        if(intval($currency) > 0)
+        {
+            $sql = "select * from currencies where id = " . $currency;
+        } else {
+            $sql = "select * from currencies where currencyPair in (\"{$currency}\") or currencyName in (\"{$currency}\")";
+        }
+        
+        
         if (! $result = $conn->query($sql)) {
             throw new Exception("Could not query currencies - " . $conn->error);
             exit();
         }
         $row = mysqli_fetch_assoc($result);
-        return $row["id"];
+        return $row;
     }
 
     /**

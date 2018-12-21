@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// echo "<a href='http://localhost/CryptoSell/api?key=-qPDzCsmEPF-3bjPwY04FV-KO&price=10&currency=linda&itemName=test&itemID=5&my_email=nisan@gmail.com'>click</a>";
 /**
  * API Class 
  * @var Ambiguous $_API

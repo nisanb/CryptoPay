@@ -118,8 +118,8 @@ echo "</pre>";
 		                                        	<label class="control-label">Select Cryptocurrency</label>
 	                                        		<select id="cryptoselect" name="currency" class="form-control" class="selectpicker" required="">
 														<option disabled="" selected=""></option>
-	                                                	<option value="btc" data-subtext="test"> Bitcoin </option>
-	                                                	<option value="linda"> Linda</option>
+	                                                	<option value="BTC" data-subtext="test"> Bitcoin </option>
+	                                                	<option value="Linda"> Linda</option>
 		                                        	</select>
 		                                        	<?php 
 		                                        	foreach($_API as $key=>$value){
@@ -150,57 +150,56 @@ echo "</pre>";
 		                                    	<script>
     (function($){
         function startWaiting(tx){
-        	setInterval(function() {checkReceived(tx); },3000);
+//         	setInterval(function() {checkReceived(tx); },3000);
 
 
         }
         function checkReceived(tx)
         {
+            try {
+                console.log("Checking received for transaction: " + tx)
+                
             var myKeyVals = {"address" : tx};
+
+            
+            
        	 $.ajax({
              url: 'cron.php',
              dataType: 'text',
              type: 'post',
              contentType: 'application/x-www-form-urlencoded',
-             dataType : 'json',
+             dataType : 'html',
              data: myKeyVals ,
              success: function( data, textStatus, jQxhr ){
+                 console.log("TX Update " + data);
+                 console.log(data);
              	$('#displayLoading').hide();
                  $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
              },
              error: function( jqXhr, textStatus, errorThrown ){
-                 console.log ("I hit an error!");
-             	$('#response2').html( "Erorr occured." );
+                 console.log("cron error");
                  console.log( errorThrown );
              }
          });
+            }
+            catch(err)
+            {
+				console.log("check received err: " + err);
+            }
         }
         function processForm( e ){
+            try{
+                console.log("Generating transactions ...");
         	$('#displayLoading').show();
             $.ajax({
                 url: 'cgi.php',
-                dataType: 'text',
+                dataType: 'json',
                 type: 'post',
                 contentType: 'application/x-www-form-urlencoded',
-                /*
                 dataType : 'json',
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
-                    text = "";
-					for(i in data)
-					{
-						text += i + "=>" + data[i] + "<br />";
-					}
-                    $('#response pre').html( text);
-                },
-                error: function( jqXhr, textStatus, errorThrown ){
-                	$('#response pre').html( errorThrown );
-                    console.log( errorThrown );
-                }
-                */
-                dataType : 'json',
-                data: $(this).serialize(),
-                success: function( data, textStatus, jQxhr ){
+                    console.log("Transaction generated successfully!");
                 	$('#displayLoading').hide();
                 	if(data.status == 0)
                 	{
@@ -210,17 +209,24 @@ echo "</pre>";
                 		console.log(data);
                 		return;
                 	}
-                	
+
+                	console.log(data);
                     $('#response').html("Please transfer " + data.itemPrice + " " + data.currency + " to " + data.body + "");
                     startWaiting(data.body);
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
-                	$('#response').html( errorThrown );
-                    console.log( errorThrown );
+                    console.log("Could not generate transaction");
+                    console.log( jqXhr.responseText );
                 }
             });
 
             e.preventDefault();
+        }
+            catch(err)
+            {
+                console.log("Caught!");
+				console.log(err);
+            }
         }
 
         $('#generateCrypto').submit( processForm );
