@@ -20,5 +20,4 @@ $toReturn["received"] = Bitcoin::getReceivedByAccount($accountAddress);
 $toReturn["required"] = $trans->requiredAmount;
 $toReturn["currency"] = CryptoSQL::getCurrency($trans->currency)["id"];
 $toReturn["status"] = $trans->iStatus;
-
 echo json_encode($toReturn);

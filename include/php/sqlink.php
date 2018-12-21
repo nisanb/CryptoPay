@@ -402,7 +402,7 @@ class CryptoSQL
          * 1 = Partly Received
          * 2 = Successfully accounted for
          */
-        $sql = "select * from transactions where creditWalletAddress in (\"{$address}\")";
+        $sql = "select * from transactions as T inner join currencies as C on T.currency=C.id where T.creditWalletAddress in (\"{$address}\")";
         if (! $result = $conn->query($sql)) {
             throw new Exception("Could not retreive transaction information.");
             exit();

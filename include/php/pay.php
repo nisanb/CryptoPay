@@ -149,10 +149,12 @@ echo "</pre>";
 		                                    	
 		                                    	<script>
     (function($){
+        var myInterval;
         function startWaiting(tx){
-//         	setInterval(function() {checkReceived(tx); },3000);
-
-
+			clearInterval(myInterval);
+        	checkReceived(tx);
+        	
+        	myInterval = setInterval(function() {checkReceived(tx); },3000);
         }
         function checkReceived(tx)
         {
@@ -160,19 +162,18 @@ echo "</pre>";
                 console.log("Checking received for transaction: " + tx)
                 
             var myKeyVals = {"address" : tx};
-
-            
             
        	 $.ajax({
              url: 'cron.php',
-             dataType: 'text',
+             dataType: 'json',
              type: 'post',
              contentType: 'application/x-www-form-urlencoded',
-             dataType : 'html',
+             dataType : 'json',
              data: myKeyVals ,
              success: function( data, textStatus, jQxhr ){
                  console.log("TX Update " + data);
                  console.log(data);
+                 console.log("\n\n");
              	$('#displayLoading').hide();
                  $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
              },

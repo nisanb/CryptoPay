@@ -29,7 +29,6 @@ class Transaction {
         $this->receivedAmount       = $row["receivedAmount"];
         $this->itemID               = $row["itemID"];
         $this->currency             = $row["currencyName"];
-        
     }
     
     public function __toString()
