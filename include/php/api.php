@@ -93,7 +93,7 @@ function getButtonCodeToColor($code){
 	<input type="hidden" name="itemID" value="<?=$_GET['iid']?>" />
 	<?=$hiddenFields;?>
 	<!-- frame id="CryptoSell" src="CryptoSell/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
-	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;"><?=$_GET['bt']?>
+	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;" onclick="redirectToPayment()" ><?=$_GET['bt']?>
 		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iw'] ?>; padding-right:10px">
 		<br />
 		

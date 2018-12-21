@@ -171,9 +171,9 @@ function buildIcon() {
 							'<img src="./include/img/iframeImages/' + icon + '" style="width:' + iconWidth  +'px; padding-right:10px" /></Button>');
 	//$("#code").empty();
     if (isValidItemDetails()){
-    	$("#code").val('<iframe id="CryptoSell" src="./CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
+    	$("#code").val('<iframe style="border: 0px;" id="CryptoSell" src="http://localhost/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
 				'&bw=' + buttonWidth + '&bc='+ buttonClass +'&bt='+ buttonText +'&key='+ key +'&iid='+ itemID +'&in=' +itemName+
-				'&prc=' + itemPrice + '&crnc='+ currency +'"/>');
+				'&prc=' + itemPrice + '&crnc='+ currency +'"><iframe>');
     }
     else{
     	$("#code").val("Error: Please insert valid item details");
@@ -242,7 +242,12 @@ function iconColorChanged(){
 		});
 	}
 
-
+function redirectToPayment(){
+	
+	
+	location.href = 'www.walla.co.il';
+	//window.open(document.URL, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+}
 
 function getButtonCodeToColor(code){
 	if (code == 1) return "btn btn-w-m btn-default";
