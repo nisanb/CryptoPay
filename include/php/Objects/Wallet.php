@@ -4,6 +4,7 @@ class Wallet {
     public $id;
     public $account;
     public $walletLabel;
+    public $walletAPI;
     public $domain;
     public $balances;
     public $transactions;
@@ -16,6 +17,7 @@ class Wallet {
     {
         $this->id                   = $row["id"];
         $this->walletLabel          = $row["walletLabel"];
+        $this->walletAPI          = $row["walletAPI"];
         $this->domain               = $row["domain"];
     }
     

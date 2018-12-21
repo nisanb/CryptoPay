@@ -47,6 +47,7 @@ if(!isset($_API['key']))
 
 if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
 {
+    echo $_API['key'] . " == " . $_API['domain'];
     die('Error #1512 - Could not verify domain ownership.');
 }
 

@@ -692,12 +692,10 @@ class CryptoSQL
     {
         $account = self::trim_where($account);
         $wallet = self::trim_where($wallet); 
-        $walletAPI = self::getWalletApi($wallet);
-        
         
         $conn = CryptoSQL::getConn();
         
-        $sql = 'SELECT account FROM wallets WHERE walletAPI = "'. $walletAPI.'"';
+        $sql = 'SELECT account FROM wallets WHERE id= '.$wallet;
         
         if (!$result = $conn->query($sql)) {
             //Oh no! The query failed.
@@ -709,20 +707,6 @@ class CryptoSQL
         return $account == $row["account"];
     }
     
-    private static function getWalletApi($walletID){
-        $conn = CryptoSQL::getConn();
-        $sql = "SELECT walletAPI FROM wallets WHERE id = ". $walletID;
-        
-        if (! $result = $conn->query($sql)){
-            throw new Exception("Could not retreive WalletAPI FROM walletID");
-            exit();
-        }
-        
-        $row = mysqli_fetch_assoc($result);
-        return $row['walletAPI'];
-    }
-    
-
     /**
      * This function will add a new wallet to the database
      *

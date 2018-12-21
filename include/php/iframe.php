@@ -13,8 +13,9 @@ if (!CryptoSQL::verifyOwner($userId, $walletID)){
     //new Exception("Wllet does not belong to user");
 }
 
-    
 
+$wallet = CryptoSQL::getWalletInformation($walletID);
+$title = "Generate iFrame Button for wallet " . $wallet->walletLabel;
 
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
                     <script scr="./include/js/SVGJS.js"> </script>';
@@ -27,7 +28,6 @@ $content = "";
 
 
 // $income = CryptoSQL::getTotalBalaceOfAccount($walletID);
-$title = "View Wallet - ".$wallet->walletLabel;
     
 // $lastDepDate = date("m/d/Y");
 // $lastDepValue = 0;
@@ -145,7 +145,7 @@ $content .='
         </div>
     
     
-    <input id="key" hidden="hidden" value="' . $walletID . '"/>
+    <input id="key" hidden="hidden" value="' . $wallet->walletAPI . '"/>
     <input id="userId" hidden="hidden" value="' .$userId. '" />
 ';
 
