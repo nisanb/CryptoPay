@@ -693,22 +693,37 @@ class CryptoSQL
     public static function verifyOwner($account, $wallet)
     {
         $account = self::trim_where($account);
-        $wallet = self::trim_where($wallet);
+        $wallet = self::trim_where($wallet); 
+        $walletAPI = self::getWalletApi($wallet);
+        
         
         $conn = CryptoSQL::getConn();
         
-        $sql = "SELECT account FROM wallets WHERE walletAddress in (\"{$wallet}\")";
+        $sql = 'SELECT account FROM wallets WHERE walletAPI = "'. $walletAPI.'"';
         
-        if (! $result = $conn->query($sql)) {
-            // Oh no! The query failed.
+        if (!$result = $conn->query($sql)) {
+            //Oh no! The query failed.
             throw new Exception("Could not retreive account information (" . $account . " - " . $wallet . ").");
             exit();
         }
         
         $row = mysqli_fetch_assoc($result);
-        
         return $account == $row["account"];
     }
+    
+    private static function getWalletApi($walletID){
+        $conn = CryptoSQL::getConn();
+        $sql = "SELECT walletAPI FROM wallets WHERE id = ". $walletID;
+        
+        if (! $result = $conn->query($sql)){
+            throw new Exception("Could not retreive WalletAPI FROM walletID");
+            exit();
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        return $row['walletAPI'];
+    }
+    
 
     /**
      * This function will add a new wallet to the database

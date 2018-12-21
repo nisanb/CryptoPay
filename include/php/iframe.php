@@ -9,8 +9,8 @@ if (isset($_GET['wid'])){
     $walletID = $_GET['wid'];
 }
 
-if (!CryptoSQL::verifyOwner($userId, $walledId)){
-    new Exception("Wllet does not belong to user");
+if (!CryptoSQL::verifyOwner($userId, $walletID)){
+    //new Exception("Wllet does not belong to user");
 }
 
     
