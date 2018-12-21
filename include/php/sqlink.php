@@ -352,7 +352,7 @@ class CryptoSQL
         $conn = CryptoSQL::getConn();
         
         if ($trans->requiredAmount <= $received) {
-            $sql = "UPDATE transactions set istatus = 2 where id = {$trans->id}";
+            $sql = "UPDATE transactions set istatus = 1 where id = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);
@@ -367,31 +367,53 @@ class CryptoSQL
             return;
         }
         
+        if(intval($trans->currency) == 0)
+        {
+            $trans->currency = CryptoSQL::getCurrency($trans->currency)["id"];
+        }
+        
+        
         $sql = "SELECT count(*) as num_results from userbalances where walletID in (\"{$trans->creditWallet}\") AND currencyID = {$trans->currency}";
         if (! $result = $conn->query($sql)) {
-            throw new Exception("Could not query userbalances for wallet " . $trans->creditWallet);
+            throw new Exception("Could not query userbalances for wallet " . $trans->creditWallet . " - " . $sql);
         }
         
         $row = mysqli_fetch_assoc($result);
         
+        $userID = CryptoSQL::getUserByWallet($trans->creditWallet);
+        
         // Transaction was already added -> do attempt to add again
         if ($row["num_results"] == 0) {
-            $sql = "INSERT INTO userbalances values (\"{$_SESSION['UserID']}\",\"{$trans->creditWallet}\", {$trans->currency}, 0)";
+            $sql = "INSERT INTO userbalances values (\"{$userID}\", {$trans->creditWallet}, {$trans->currency}, 0)";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not insert new row to userbalances " . $trans->creditWallet . " " . $trans->currency);
             }
         }
-        
+
         $sql = "UPDATE userbalances set balance=balance + {$trans->requiredAmount} where walletID = {$trans->creditWallet} AND currencyID = {$trans->currency}";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not update userbalances " . $trans->creditWallet . " " . $trans->currency . " " . $trans->requiredAmount);
         }
-        
         $conn->close();
     }
 
+    public static function getUserByWallet($walletID)
+    {
+        $walletID = CryptoSQL::trim_where($walletID);
+        $conn = CryptoSQL::getConn();
+        
+        $sql = "select account from wallets where id = {$walletID}";
+        if (! $result = $conn->query($sql)) {
+            throw new Exception("Could not retreive transaction information.");
+            exit();
+        }
+        $row = mysqli_fetch_assoc($result);
+        $conn->close();
+        return $row["account"];
+    }
+    
     public static function getTransactionByAddress($address)
     {
         $address = CryptoSQL::trim_where($address);
@@ -402,7 +424,7 @@ class CryptoSQL
          * 1 = Partly Received
          * 2 = Successfully accounted for
          */
-        $sql = "select * from transactions as T inner join currencies as C on T.currency=C.id where T.creditWalletAddress in (\"{$address}\")";
+        $sql = "select T.*, C.currencyName from transactions as T inner join currencies as C on T.currency=C.id where T.creditWalletAddress in (\"{$address}\")";
         if (! $result = $conn->query($sql)) {
             throw new Exception("Could not retreive transaction information.");
             exit();
@@ -454,7 +476,7 @@ class CryptoSQL
         $currency = CryptoSQL::getCurrency(CryptoSQL::trim_where($currency))["id"];
         
         $conn = CryptoSQL::getConn();
-        $sql = "SELECT creditWalletAddress from transactions where iStatus=0 AND 
+        $sql = "SELECT creditWalletAddress from transactions where iStatus!=2 AND 
                 clientIP in (\"{$clientIP}\") AND
                 itemID = {$itemID}
                 AND currency = {$currency}";

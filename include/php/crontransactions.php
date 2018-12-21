@@ -8,7 +8,6 @@
 require "sqlink.php";
 
 $trans = CryptoSQL::getTransactionByAddress($_POST['address']);
-
 $accountAddress = $trans->creditWalletAccount;
 $received = Bitcoin::getReceivedByAccount($accountAddress);
 $txid = $trans->id;
