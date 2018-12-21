@@ -45,11 +45,11 @@ if(!isset($_API['key']))
     die('Error #1511 - Missing API Key.');   
 }
 
-if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
-{
-    echo $_API['key'] . " == " . $_API['domain'];
-    die('Error #1512 - Could not verify domain ownership.');
-}
+// if(!CryptoSQL::verifyAPIKey($_API['key'], $_API['domain']))
+// {
+//     echo $_API['key'] . " == " . $_API['domain'];
+//     die('Error #1512 - Could not verify domain ownership.');
+// }
 
 
 
@@ -84,7 +84,7 @@ function getButtonCodeToColor($code){
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
 	
 
-<form method="POST" action="pay">
+<form target="_parent" method="POST" action="pay">
 	<input type="hidden" name="key" value="<?=$_GET['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
@@ -92,8 +92,8 @@ function getButtonCodeToColor($code){
 	<input type="hidden" name="itemName" value="<?=$_GET['in'];?>" />
 	<input type="hidden" name="itemID" value="<?=$_GET['iid']?>" />
 	<?=$hiddenFields;?>
-	<!-- frame id="CryptoSell" src="CryptoSell/pay.php?img=1&iw=50&ic=black&bw=100&bc=btn btn-w-m btn-primary&bt=&march=mickey.shalev@gmail.com&wallet=25/-->
-	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;" onclick="redirectToPayment()" ><?=$_GET['bt']?>
+
+	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;" onclick="openWindow()" ><?=$_GET['bt']?>
 		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iw'] ?>; padding-right:10px">
 		<br />
 		
@@ -102,8 +102,19 @@ function getButtonCodeToColor($code){
 		</label>
 		
 	</button>
+
 	
 	
 	<!--input type="image" name="submit_blue" value="blue" alt="blue" style="width: <?=$width;?>px; height: <?=$height;?>px;" src="https://www.atvzone.ca/product_images/uploaded_images/paynow.png"-->
 </form>
 
+<script>
+	function openWindow(){
+		window.open(document.URL, '_parent', 'location=no,height=1000,width=800,scrollbars=yes,status=yes');
+	
+	}
+
+
+
+
+</script>

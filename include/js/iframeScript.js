@@ -171,9 +171,9 @@ function buildIcon() {
 							'<img src="./include/img/iframeImages/' + icon + '" style="width:' + iconWidth  +'px; padding-right:10px" /></Button>');
 	//$("#code").empty();
     if (isValidItemDetails()){
-    	$("#code").val('<iframe style="border: 0px;" id="CryptoSell" src="http://localhost/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
+    	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="http://localhost/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
 				'&bw=' + buttonWidth + '&bc='+ buttonClass +'&bt='+ buttonText +'&key='+ key +'&iid='+ itemID +'&in=' +itemName+
-				'&prc=' + itemPrice + '&crnc='+ currency +'"><iframe>');
+				'&prc=' + itemPrice + '&crnc='+ currency +'"></iframe>');
     }
     else{
     	$("#code").val("Error: Please insert valid item details");
