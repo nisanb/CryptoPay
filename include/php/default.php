@@ -270,16 +270,16 @@ if(@$swalCreationSuccess)
                         <tbody>
                    <tr>
                             <td>
-<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($walletInformation["BTC"]["price_btc"] * $balance, 8).'</a>
+<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($balance, 8).'</a>
                             </td>
             <td>
-<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format($walletInformation["BTC"]["price_usd"] * $balance, 8).'</a>
+<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", $balance), 8).'</a>
                             </td>
 </tr>
 <tr>
                                
                             <td colspan="2" align="center">
-<a href="#" class="btn btn-sm btn-info">BTC/USD: <span class="fa fa-usd"></span>'.number_format($walletInformation["BTC"]["price_usd"], 8).'</button>
+<a href="#" class="btn btn-sm btn-info">BTC/USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", 1), 8).'</button>
                             </td>
 </tr>
                

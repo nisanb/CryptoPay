@@ -229,7 +229,7 @@ class Bitcoin
     {
         $walletFile = "info.wallet";
         
-        $timeout = 60 * 5; // 5 minutes
+        $timeout = 0;//60 * 5; // 5 minutes
         
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
@@ -243,9 +243,9 @@ class Bitcoin
             
             foreach ($currencies as $curr) {
                 // Get price
-                $fp2 = file_get_contents($curr->cmc);
-                $jsonObject = json_decode($fp2)[0];
-                $data[$curr->currencyPair] = ($jsonObject);
+                $fp2 = strtolower(file_get_contents($curr->cmc));
+                $jsonObject = json_decode($fp2)->data->quote;
+                $data[strtolower($curr->currencyPair)] = (($jsonObject));
             }
             $jsonData = (json_encode($data));
             fwrite($fp, CryptoSQL::indent($jsonData));
@@ -260,17 +260,6 @@ class Bitcoin
     {
         $fp = file_get_contents("./info.wallet");
         $jsonDecode = json_decode($fp, true);
-    }
-    
-    // TODO - Convert
-    public static function getPriceInBTC($price)
-    {
-        return "10";
-        $fp = file_get_contents("./info.wallet");
-        $jsonDecode = json_decode($fp, true);
-        $btcPrice = $jsonDecode[1][0]["price_usd"];
-        $price = $price / $btcPrice;
-        echo "Price: " . $price;
     }
 
     public static function bd_nice_number($n)
@@ -934,9 +923,9 @@ class CryptoSQL
         
         $sql = '';
         if ($walletId > 0) {
-            $sql = "SELECT c.currencyName, t.currency as currencyID, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
+            $sql = "SELECT c.currencyName, t.currencyPair as currencyID, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
         } else {
-            $sql = "SELECT currencyID, SUM(balance) as sum FROM userbalances WHERE user = (\"$email\") GROUP BY currencyID";
+            $sql = "SELECT C.currencyPair, currencyID, SUM(balance) as sum FROM userbalances as UB inner join currencies as C on UB.currencyID=C.id WHERE user = (\"{$email}\") GROUP BY currencyID";
         }
         
         if (! $result = $conn->query($sql)) {
@@ -957,42 +946,27 @@ class CryptoSQL
         $obj = json_decode($fp, true);
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
-            // $balance += $row["sum"];
-            if ($row["currencyID"] != 1) {
-                $balance += CryptoSQL::convert("Linda", "BTC", $row["sum"]);
-            } else {
-                $balance += $row["sum"];
-            }
+            $balance += CryptoSQL::convert($row["currencyPair"], "BTC", $row["sum"]);
         }
         
         return $balance;
     }
     
-    public static function convert($curFrom, $curTo, $amt)
-    {
-        if($curFrom == "Linda")
-        {
-            $amt = $amt * 0.1;
-        }
-        
-        return $curFrom;
-    }
-
-    public static function ConvertBitcoinOrUsdToCurrency($convertFrom, $currency, $amount)
+    public static function convert($convertFrom, $currency, $amount)
     {
         if (! $amount)
             $amount = 1;
+        
+        $currency = strtolower($currency);
+        $convertFrom = strtolower($convertFrom);
             
             // read currencies exchance values
         $walletFile = "info.wallet";
         $fp = file_get_contents($walletFile);
         $obj = json_decode($fp, true);
-        
-        $ratio = $obj[$currency][0]["price_" . $convertFrom];
+        $ratio = $obj[$convertFrom][$currency]["price"];
         if (! $ratio) {
             return 0;
-            // throw new Exception("Currency conversion error");
-            // exit();
         }
         
         return $ratio * $amount;
