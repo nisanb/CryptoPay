@@ -37,8 +37,8 @@ echo "</pre>";
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="./include/css/select.css" rel="stylesheet" id="bootstrap-select">
     <link href="./include/css/pay.css" rel="stylesheet" />
-  <script src="include/js/jquery-3.3.1.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  	<script src="include/js/jquery-3.3.1.min.js"></script>
+    <script src="./include/js/bootstrap3_3_download.js"></script>
    
 </head>
 <body>

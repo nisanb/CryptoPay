@@ -1055,4 +1055,24 @@ class CryptoSQL
         
         return $arr;
     }
+    
+    
+    
+    public static function getCurrenciesAsJson()
+    {
+        $conn = CryptoSQL::getConn();
+    
+        $sql = "SELECT `id`, `currencyName`, `currencyPair` FROM `currencies";
+        if (! $result = $conn->query($sql)) {
+            throw new Exception("Could not retreive currencies information.");
+            exit();
+        }
+        
+        $rows = array();
+        while($r = mysqli_fetch_assoc($result)) {
+            $rows[] = $r;
+        }
+
+        return json_encode($rows);
+    }
 }

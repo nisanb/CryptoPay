@@ -13,6 +13,7 @@ if (!CryptoSQL::verifyOwner($userId, $walletID)){
     //new Exception("Wllet does not belong to user");
 }
 
+$currenciesJson = CryptoSQL::getCurrenciesAsJson();
 
 $wallet = CryptoSQL::getWalletInformation($walletID);
 $title = "Generate iFrame Button for wallet " . $wallet->walletLabel;
@@ -80,9 +81,6 @@ $content .='
                         <input id="itemPrice" type="number" class="form-control" value="" onfocusout="itemIPriceChanged()"/>
                         Curreny
                         <select id="coinType" class="form-control" onchange="currenyChanged()">
-                            <option value="">- Select Currency - </option>
-                            <option value="BTC">Bitcoin</option>
-                            <option value="Linda">Linda</option>
                         </select>
                     </div>    
 			
@@ -147,6 +145,7 @@ $content .='
     
     <input id="key" hidden="hidden" value="' . $wallet->walletAPI . '"/>
     <input id="userId" hidden="hidden" value="' .$userId. '" />
+    <input id="currenciesJson" hidden="hidden" value=\''.$currenciesJson.'\' />
 ';
 
 

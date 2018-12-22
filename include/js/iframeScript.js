@@ -14,6 +14,7 @@ var buttonClass = "btn btn-w-m btn-default";
 var buttonWidth = 100;
 var buttonHight = 50;
 var buttonText = "";
+var currenciesJson = "";
 
 var currenciesArray = ["BTC", "Linda"];
 
@@ -190,6 +191,24 @@ function copy(){
 }
 
 $(document).ready(function (){
+	//dycmically add options to select
+	currenciesJson = JSON.parse($("#currenciesJson").val());
+	var option;
+    var select = document.getElementById("coinType");
+    for (i = 0; i < currenciesJson.length; i++) {
+    	console.log(currenciesJson[i]);
+        option = document.createElement('option');
+        option.text = option.value = currenciesJson[i].currencyPair;
+        select.add(option, currenciesJson[i].currencyName);
+    }
+    option = document.createElement('option');
+    option.text = option.value = '- Select Currency -';
+    select.add(option, '0');
+    select.selectedIndex = '0';
+	
+	
+	
+	//add icons
 	var toAppend = '';
 	for (var i=1; i <= 28; i++){
         toAppend += '<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon('+i+')"><img src="./include/img/iframeImages/'+i+'.svg"/> </div></div>';
