@@ -229,7 +229,7 @@ class Bitcoin
     {
         $walletFile = "info.wallet";
         
-        $timeout = 0;//60 * 5; // 5 minutes
+        $timeout = 60 * 5; // 5 minutes
         
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
