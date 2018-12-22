@@ -959,13 +959,23 @@ class CryptoSQL
         while ($row = mysqli_fetch_assoc($result)) {
             // $balance += $row["sum"];
             if ($row["currencyID"] != 1) {
-                $balance += $row["sum"] * $linda2Btc;
+                $balance += CryptoSQL::convert("Linda", "BTC", $row["sum"]);
             } else {
                 $balance += $row["sum"];
             }
         }
         
         return $balance;
+    }
+    
+    public static function convert($curFrom, $curTo, $amt)
+    {
+        if($curFrom == "Linda")
+        {
+            $amt = $amt * 0.1;
+        }
+        
+        return $curFrom;
     }
 
     public static function ConvertBitcoinOrUsdToCurrency($convertFrom, $currency, $amount)
