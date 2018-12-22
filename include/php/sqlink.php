@@ -352,7 +352,8 @@ class CryptoSQL
         $conn = CryptoSQL::getConn();
         
         if ($trans->requiredAmount <= $received) {
-            $sql = "UPDATE transactions set istatus = 1 where id = {$trans->id}";
+            // Transaction fully received
+            $sql = "UPDATE transactions set istatus = 2 where id = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);

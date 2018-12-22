@@ -175,12 +175,10 @@ echo "</pre>";
                  console.log(data);
                  console.log("\n\n");
              	$('#displayLoading').hide();
-             	if(data.status == 1)
+             	if(data.status == 2)
              	{
 					//Transaction received fully!
 					clearInterval(myInterval);
-					document.location.href = "#description";
-					
              	}
                  $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
              },
