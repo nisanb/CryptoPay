@@ -189,12 +189,15 @@ $tableContent .=
 
     <a href="./wallet/'.$tmpWallet->id.'" id="w'.$count.'">'.$tmpWallet->walletLabel.'</a>
     </td>
-<td>'.$tmpWallet->domain.'</td>
+    <td>'.$tmpWallet->domain.'</td>
     <!--<a data-toggle="modal" class="btn btn-primary pull-right" onclick="select_all_and_copy(document.getElementById(\'w'.$count.'\'))">Copy</a>-->
     </td>
     <td>'.$walletBalance.' BTC</td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->walletLabel.'\',\''.$tmpWallet->id.'\', \''.$walletBalance.'\')">withdraw</a>
+    </td>
+    <td>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="location.href =\'./iframe/'.$tmpWallet->id.' \'">Create API</a>      
     </td>
     </tr>';
 }
@@ -266,24 +269,24 @@ if(@$swalCreationSuccess)
                         <h5>Wallet Information</h5>
                     </div>
                     <div class="ibox-content">
-<table class="table">
-                        <tbody>
-                   <tr>
+                    <table class="table">
+                    <tbody>
+                        <tr>
                             <td>
-<a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($balance, 8).'</a>
+                        <a href="#" class="btn btn-sm btn-info">Total BTC: <span class="fa fa-btc"></span>'.number_format($balance, 8).'</a>
                             </td>
-            <td>
-<a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", $balance), 8).'</a>
+                            <td>
+                        <a href="#" class="btn btn-sm btn-info">Total USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", $balance), 8).'</a>
                             </td>
-</tr>
-<tr>
-                               
-                            <td colspan="2" align="center">
-<a href="#" class="btn btn-sm btn-info">BTC/USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", 1), 8).'</button>
+                        </tr>
+                            
+                        <tr>                                                     
+                           <td colspan="2" align="center">
+                                 <a href="#" class="btn btn-sm btn-info">BTC/USD: <span class="fa fa-usd"></span>'.number_format(CryptoSQL::convert("BTC", "USD", 1), 8).'</button>
                             </td>
-</tr>
+                        </tr>
                
-                        </tbody>
+                    </tbody>
                     </table>
 
                     </div>
@@ -331,6 +334,7 @@ if(@$swalCreationSuccess)
                         <th>Domain </th>
                         <th>Balance</th>
                         <th>Action </th>
+                        <th>API </th>
 
                     </tr>
                     </thead>
