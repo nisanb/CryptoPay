@@ -1,3 +1,4 @@
+var root = window.location.origin;
 var marchantId = $("userId").val(); 
 var key = $("#key").val(); 
 var itemID = "";
@@ -172,7 +173,7 @@ function buildIcon() {
 							'<img src="./include/img/iframeImages/' + icon + '" style="width:' + iconWidth  +'px; padding-right:10px" /></Button>');
 	//$("#code").empty();
     if (isValidItemDetails()){
-    	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="http://localhost/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
+    	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="' +root+ '/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
 				'&bw=' + buttonWidth + '&bc='+ buttonClass +'&bt='+ buttonText +'&key='+ key +'&iid='+ itemID +'&in=' +itemName+
 				'&prc=' + itemPrice + '&crnc='+ currency +'"></iframe>');
     }
@@ -191,6 +192,7 @@ function copy(){
 }
 
 $(document).ready(function (){
+	console.log(root);
 	//dycmically add options to select
 	currenciesJson = JSON.parse($("#currenciesJson").val());
 	var option;
