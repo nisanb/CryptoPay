@@ -11,8 +11,8 @@ $_API['key'] = @isset($_POST['key']) ? $_POST['key'] : @$_GET['key'];
 $_API['price'] = @$_GET['price'];
 $_API['itemID'] = @$_GET['itemID'];
 $_API['itemName'] = @$_GET['itemName'];
-$_API['currency'] = @$_GET['currency']; //BTC, LTC, Linda, USD
-echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
+$_API['currency'] = @$_GET['crnc']; //BTC, LTC, Linda, USD
+// echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
 
 
@@ -23,22 +23,24 @@ $_API['domain'] = $_SERVER['HTTP_HOST'];
  * Analyze hidden user fields
  * 
  **/
-$getArray = explode('&',$_SERVER["QUERY_STRING"]);
-$hiddenFields = "";
-$my_params = $_GET['prm'];
-$params = explode(",", $my_params);
-$my_params = array();
-foreach ($params as $prm){
-    $prm = explode(":", $prm);
-    $my_params[$prm[0]] = $prm[1];
-    $my_params[$prm[0]];
+
+if (isset($_GET['prm'])){
+    $getArray = explode('&',$_SERVER["QUERY_STRING"]);
+    $hiddenFields = "";
+    $my_params = $_GET['prm'];
+    $params = explode(",", $my_params);
+    $my_params = array();
+    foreach ($params as $prm){
+        $prm = explode(":", $prm);
+        $my_params[$prm[0]] = $prm[1];
+        $my_params[$prm[0]];
+        
+        $key = $prm[0];
+        $value = $prm[1];
+        $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
     
-    $key = $prm[0];
-    $value = $prm[1];
-    $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
-
+    }
 }
-
 // foreach (preg_grep("/^my\_.*/", $getArray) as $tmpValue)
 // {
 //     $vars = explode('=',$tmpValue);

@@ -19,7 +19,7 @@ var currenciesJson = "";
 var thankYouPage = "";
 var prm = "";
 
-var currenciesArray = ["BTC", "Linda"];
+var currenciesArray = ["USD"];
 
 function getSelectedIcon(num) {
     selectedIconName = num;
@@ -154,15 +154,6 @@ function currenyChanged(){
 	}
 	buildIcon();
 	
-    
-	//dycmically add options to select
-//	var option;  
-//    var select1 = document.getElementById("coinType");
-//    for (i = maxYear; i > 1991; i--) {
-//        option = document.createElement('option');
-//        option.text = option.value = i;
-//        select1.add(option, i);
-//    }
 }
 
 function userDefinedChanged(){
@@ -207,11 +198,16 @@ $(document).ready(function (){
 	var option;
     var select = document.getElementById("coinType");
     for (i = 0; i < currenciesJson.length; i++) {
-    	console.log(currenciesJson[i]);
         option = document.createElement('option');
         option.text = option.value = currenciesJson[i].currencyPair;
         select.add(option, currenciesJson[i].currencyName);
+        currenciesArray.push(currenciesJson[i].currencyPair);
     }
+    //add static options
+    option = document.createElement('option');
+    option.text = option.value = 'USD';
+    select.add(option, currenciesJson.length + 1);
+    
     option = document.createElement('option');
     option.text = option.value = '- Select Currency -';
     select.add(option, '0');
