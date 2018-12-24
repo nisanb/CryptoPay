@@ -12,13 +12,29 @@ class Transaction {
     public $receivedAmount;
     public $itemID;
     public $currency;
+    
+    function __construct()
+    {
+        $a = func_get_args();
+        $i = func_num_args();
+        if($i > 0)
+        {
+            if (method_exists($this,$f='__construct'.$i)) {
+                call_user_func_array(array($this,$f),$a);
+            }
+        }
+        else {
+            $this->id                   = "invalid";
+        }
+    }
+
     /**
     * Basic constructor
     * $row = mysql_row (tbl -> transactions)
     **/
-    function __construct($row)
+    function __construct1($row)
     {
-        $this->id                   = $row["id"];
+        $this->id                   = $row["txid"];
         $this->iStatus              = $row["istatus"];
         $this->timeStarted          = $row["timeStarted"];
         $this->creditWallet         = $row["creditWallet"];
@@ -30,6 +46,7 @@ class Transaction {
         $this->itemID               = $row["itemID"];
         $this->currency             = $row["currencyName"];
     }
+
     
     public function __toString()
     {

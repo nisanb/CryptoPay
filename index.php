@@ -35,7 +35,6 @@ switch(@$_GET['act']){
       $includeTemplate = true;
   break; 
       
-      
   case "logout":
     session_destroy();
     header("Location: ./");

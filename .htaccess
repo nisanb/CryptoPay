@@ -13,3 +13,4 @@ RewriteRule ^api include/php/api.php
 RewriteRule ^pay include/php/pay.php
 RewriteRule ^cgi include/php/cgi.php
 RewriteRule ^cron include/php/crontransactions.php
+RewriteRule ^verify/(.*)$ include/php/verifypayment.php?txid=$1

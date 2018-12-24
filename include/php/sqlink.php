@@ -344,14 +344,14 @@ class CryptoSQL
         
         if ($trans->requiredAmount <= $received) {
             // Transaction fully received
-            $sql = "UPDATE transactions set istatus = 2 where id = {$trans->id}";
+            $sql = "UPDATE transactions set istatus = 2 where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);
             }
         } else {
             // Partial Payment
-            $sql = "UPDATE transactions set receivedAmount = {$received} where id = {$trans->id}";
+            $sql = "UPDATE transactions set receivedAmount = {$received} where txid = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);
@@ -406,6 +406,29 @@ class CryptoSQL
         return $row["account"];
     }
     
+    public static function getTransactionByTXID($txid)
+    {
+        $txid = CryptoSQL::trim_where($txid);
+        $conn = CryptoSQL::getConn();
+        
+        $sql = "select T.*, C.currencyName from transactions as T inner join currencies as C on T.currency=C.id where txid in (\"{$txid}\")";
+        if (! $result = $conn->query($sql))
+        {
+            throw new Exception("Could not retreive transaction information (txid: ".$txid.").");
+            exit();
+        }
+        
+        $row = mysqli_fetch_assoc($result);
+        if(@count($row) == 0)
+        {
+           // No rows returned - tx doesn't exist
+           return false;
+        }
+        $conn->close();
+        return new Transaction($row);
+    }
+    
+    
     public static function getTransactionByAddress($address)
     {
         $address = CryptoSQL::trim_where($address);
@@ -449,6 +472,17 @@ class CryptoSQL
         return $arr;
     }
 
+    public static function generateTXID()
+    {
+        do
+        {
+            $tx = Bitcoin::RandomString(35);
+            $verify = CryptoSQL::getTransactionByTXID($tx);
+        } while ($verify);
+        
+        return $tx;
+        
+    }
     /**
      * Attempts to add a transaction to the database
      * Also generates a new wallet receive address
@@ -462,6 +496,7 @@ class CryptoSQL
     public static function addTransaction($key, $clientIP, $itemID, $currency, $price)
     {
         // Verify inputs
+        $txid = CryptoSQL::generateTXID();
         $key = CryptoSQL::trim_where($key);
         $clientIP = CryptoSQL::trim_where($clientIP);
         $itemID = intval($itemID);
@@ -500,8 +535,8 @@ class CryptoSQL
         $creditWalletAddress = Bitcoin::RPC($currency)->getnewaddress($creditWalletAccount);
 
         // Attempt to add the transaction to the database
-        $sql = "insert into transactions (istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
-                VALUES (0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
+        $sql = "insert into transactions (txid, istatus, creditWallet, creditWalletAccount, creditWalletAddress, clientIP, requiredAmount, itemID, currency)
+                VALUES (\"{$txid}\", 0, {$walletID}, \"{$creditWalletAccount}\", \"{$creditWalletAddress}\", \"{$clientIP}\", {$price}, {$itemID}, {$currency})";
 
          if (! $result = $conn->query($sql)) {
             throw new Exception("Could not insert a new transaction information.");
@@ -881,6 +916,11 @@ class CryptoSQL
     public static function getConn()
     {
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);
+        ini_set('display_errors',1);
+        error_reporting(E_ALL);
+        
+        /*** THIS! ***/
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         
         // In case SQL Connection did not work
         if ($mysqli->connect_errno) {

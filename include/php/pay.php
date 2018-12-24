@@ -179,6 +179,8 @@ echo "</pre>";
              	{
 					//Transaction received fully!
 					clearInterval(myInterval);
+					// transfer back to thank you page in POST
+					//all fields + user written fields
              	}
                  $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
              },
