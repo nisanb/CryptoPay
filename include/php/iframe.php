@@ -47,11 +47,9 @@ $content = "";
 $content .='
             <div id="ifarmeGeneratorContent" class="wrapper wrapper-content animated fadeInRight">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-8">
                     <div class="ibox float-e-margins">
                         <h2>Icon</h2>
-                        Please pick the color of your icon
-                        <input id="cp" type="color" class="form-control input-lg" value=""/>
 						Please select the size of your icon (20 - 200)
                         <input id="iconWidth" maxlength="3" class="form-control" value="50" onchange="changeIconWidth()"/>
                     </div>
@@ -74,20 +72,46 @@ $content .='
                     <div class="ibox float-e-margins">
                         <h2>Item</h2>
                         Item ID
-                        <input id="itemId" maxlength="40" class="form-control" value="" onfocusout="itemIdChanged()"/>
+                        <input id="itemId" maxlength="40" class="form-control" value="1" onfocusout="itemIdChanged()"/>
 						Item name
-                        <input id="itemName" maxlength="20" class="form-control" value="" onfocusout="itemNameChanged()"/>
+                        <input id="itemName" maxlength="20" class="form-control" value="1" onfocusout="itemNameChanged()"/>
                         Item Price
-                        <input id="itemPrice" type="number" class="form-control" value="" onfocusout="itemIPriceChanged()"/>
+                        <input id="itemPrice" type="number" class="form-control" value="1" onfocusout="itemIPriceChanged()"/>
                         Curreny
                         <select id="coinType" class="form-control" onchange="currenyChanged()">
                         </select>
+                    </div>
+    
+                        <div class="ibox float-e-margins">
+                        <h2>User difeined parameters</h2>
+                        Thank you page
+                        <input id="thankYouPage" maxlength="100" class="form-control" value="" onchange="userDefinedChanged()"/>
+                        Define your own parameter (use "my_" perfix for parameter name)
+                        <input id="prm" maxlength="200" class="form-control" value="" onchange="userDefinedChanged()" placeholder="Example: my_name : John , my_email : john@google.com"/>
                     </div>    
-			
+    
+                    <div>
+                    <div>
+                        <h3>Icon Preview</h3>
+                        <div id="preview"
+
+						</div>
+
+                    </div>
+                    <h3>Get your iframe code</h3>
+                    <button id="copy" class="btn btn-white" onclick="copy()"><i class="fa fa-copy"></i> Copy</button>
+
+                    <div class="m-t">
+                        <strong>HTML iframe code</strong>
+                    </div>
+                    <textarea id="code" class="form-control"></textarea>
+                        
                 </div>
+            </div>
+		</div>
 			
 
-                <div class="col-lg-9">
+                <div class="col-lg-4">
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <h5>All icons <small class="m-l-sm">All icons in collection - <a target="_blank" href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a> </small></h5>
@@ -99,7 +123,6 @@ $content .='
                         </div>
 
                         <div class="ibox-content icons-box">
-
 
 
                             <div id="imageContainer">
@@ -121,25 +144,6 @@ $content .='
                     </div>
 
                 </div>
-                <div>
-                    <div>
-                        <h3>Icon Preview</h3>
-                        <div id="preview"
-
-						</div>
-
-                    </div>
-                    <h3>Get your iframe code</h3>
-                    <button id="copy" class="btn btn-white" onclick="copy()"><i class="fa fa-copy"></i> Copy</button>
-
-                    <div class="m-t">
-                        <strong>HTML iframe code</strong>
-                    </div>
-                    <input id="code" class="form-control">
-                        
-                    </pre>
-                </div>
-            </div>
         </div>
     
     

@@ -16,20 +16,36 @@ echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
 
 
+
+
+
 /**
  * Analyze hidden user fields
  * 
  **/
 $getArray = explode('&',$_SERVER["QUERY_STRING"]);
 $hiddenFields = "";
-
-foreach (preg_grep("/^my\_.*/", $getArray) as $tmpValue)
-{
-    $vars = explode('=',$tmpValue);
-    $key = $vars[0];
-    $value = $vars[1];
+$my_params = $_GET['prm'];
+$params = explode(",", $my_params);
+$my_params = array();
+foreach ($params as $prm){
+    $prm = explode(":", $prm);
+    $my_params[$prm[0]] = $prm[1];
+    $my_params[$prm[0]];
+    
+    $key = $prm[0];
+    $value = $prm[1];
     $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
+
 }
+
+// foreach (preg_grep("/^my\_.*/", $getArray) as $tmpValue)
+// {
+//     $vars = explode('=',$tmpValue);
+//     $key = $vars[0];
+//     $value = $vars[1];
+//     $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
+// }
 $_SESSION['fields'] = $hiddenFields;
 if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $_API['clientIP'] = $_SERVER['HTTP_CLIENT_IP'];
@@ -50,7 +66,6 @@ if(!isset($_API['key']))
 //     echo $_API['key'] . " == " . $_API['domain'];
 //     die('Error #1512 - Could not verify domain ownership.');
 // }
-
 
 
 $width = @isset($_GET['width']) ? $_GET['width'] : "128";

@@ -16,6 +16,8 @@ var buttonWidth = 100;
 var buttonHight = 50;
 var buttonText = "";
 var currenciesJson = "";
+var thankYouPage = "";
+var prm = "";
 
 var currenciesArray = ["BTC", "Linda"];
 
@@ -163,6 +165,12 @@ function currenyChanged(){
 //    }
 }
 
+function userDefinedChanged(){
+    thankYouPage = $("#thankYouPage").val();
+    prm = $("#prm").val();
+    
+    buildIcon();
+}
 
 
 
@@ -171,11 +179,12 @@ function buildIcon() {
     $("#preview").empty();
     $("#preview").append('<button type="button" class="' + getButtonCodeToColor(buttonClass) + '" style="font-size: 2em; width:' + buttonWidth +'px;" >' + buttonText + 
 							'<img src="./include/img/iframeImages/' + icon + '" style="width:' + iconWidth  +'px; padding-right:10px" /></Button>');
-	//$("#code").empty();
+	//$("#code").empty();    
+    
     if (isValidItemDetails()){
     	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="' +root+ '/CryptoSell/api.php?img='+selectedIconName+'&iw='+iconWidth+'&ic='+iconColor+
 				'&bw=' + buttonWidth + '&bc='+ buttonClass +'&bt='+ buttonText +'&key='+ key +'&iid='+ itemID +'&in=' +itemName+
-				'&prc=' + itemPrice + '&crnc='+ currency +'"></iframe>');
+				'&prc=' + itemPrice + '&crnc='+ currency +'&tup=' + thankYouPage + '&prm=' + prm +'"></iframe>');
     }
     else{
     	$("#code").val("Error: Please insert valid item details");
@@ -214,10 +223,7 @@ $(document).ready(function (){
 	var toAppend = '';
 	for (var i=1; i <= 28; i++){
         toAppend += '<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon('+i+')"><img src="./include/img/iframeImages/'+i+'.svg"/> </div></div>';
-    }
-	for (var i=1; i <= 28; i++){
-        toAppend += '<div class="infont col-md-3 col-sm-4" ><div style="pointer: cursor;" onclick="getSelectedIcon('+i+')"><img src="./include/img/iframeImages/'+i+'.svg"/> </div></div>';
-    }                
+    }              
 	toAppend += '<div class="clearfix"></div>';
 	$("#imageContainer").append(toAppend);
 });
