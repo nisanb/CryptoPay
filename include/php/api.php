@@ -11,8 +11,8 @@ $_API['key'] = @isset($_POST['key']) ? $_POST['key'] : @$_GET['key'];
 $_API['price'] = @$_GET['price'];
 $_API['itemID'] = @$_GET['itemID'];
 $_API['itemName'] = @$_GET['itemName'];
-$_API['currency'] = @$_GET['currency']; //BTC, LTC, Linda
-Bitcoin::getPriceInBTC($_API['price']);
+$_API['currency'] = @$_GET['currency']; //BTC, LTC, Linda, USD
+echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
 
 

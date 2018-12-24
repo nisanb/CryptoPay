@@ -13,16 +13,7 @@ require_once '_jsonrpc2.php';
 class GlobalParams
 {
 
-    public static $workLocal = TRUE;
-    
-    // remote rpc params
-    public static $rpcuser = "asdasd";
-
-    public static $rpcpass = "asdasdasd";
-
-    public static $rpcip = "127.0.0.1";
-
-    public static $rpcport = "33821";
+    public static $walletInfoFile = "info.wallet";
     
     // local sql parms
     public static $server = "localhost";
@@ -227,38 +218,49 @@ class Bitcoin
      */
     public static function getWalletInformation()
     {
-        $walletFile = "info.wallet";
         
-        $timeout = 60 * 5; // 5 minutes
+        $timeout = 0; // 5 minutes
         
-        $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
+        $fileUpdatedTime = (time() - @filemtime(GlobalParams::$walletInfoFile)) . "seconds ago";
         
         // JSON already created
         if ($fileUpdatedTime > $timeout) {
-            
             // Create new JSON
-            $fp = fopen($walletFile, 'w');
+            $fp = fopen(GlobalParams::$walletInfoFile, 'w');
             
             $currencies = CryptoSQL::getCurrencies();
-            
+            $currArray = "";
             foreach ($currencies as $curr) {
                 // Get price
                 $fp2 = strtolower(file_get_contents($curr->cmc));
+                $currArray .= strtoupper($curr->currencyPair) . ",";
                 $jsonObject = json_decode($fp2)->data->quote;
                 $data[strtolower($curr->currencyPair)] = (($jsonObject));
             }
+            
+            $currArray .= "USD";
+            
+            // One more for USD
+            $url = "https://sandbox-api.coinmarketcap.com/v1/tools/price-conversion?CMC_PRO_API_KEY=6b5e103d-6f52-4b0f-a887-58c4c3a39f7b&amount=1&symbol=USD&convert=".$currArray;
+            $fp2 = strtolower(file_get_contents($url));
+            $jsonObject = json_decode($fp2)->data->quote;
+            $data["usd"] = $jsonObject;
+            
+            
+            
             $jsonData = (json_encode($data));
             fwrite($fp, CryptoSQL::indent($jsonData));
             fclose($fp);
         }
-        $fp = file_get_contents($walletFile);
+        
+        $fp = file_get_contents(GlobalParams::$walletInfoFile);
         $arr = json_decode($fp, true);
         return $arr;
     }
 
     public static function getWalletData()
     {
-        $fp = file_get_contents("./info.wallet");
+        $fp = file_get_contents(GlobalParams::$walletInfoFile);
         $jsonDecode = json_decode($fp, true);
     }
 
@@ -878,14 +880,6 @@ class CryptoSQL
      */
     public static function getConn()
     {
-        self::$server = GlobalParams::$SERVER_IP;
-        if (GlobalParams::$workLocal == TRUE) {
-            self::$server = "localhost";
-            self::$user = "root";
-            self::$pass = "";
-            self::$db = "CryptoSell";
-        }
-        
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);
         
         // In case SQL Connection did not work
@@ -935,8 +929,7 @@ class CryptoSQL
         }
         
         // read currencies exchance values
-        $walletFile = "info.wallet";
-        $fp = file_get_contents($walletFile);
+        $fp = file_get_contents(GlobalParams::$walletInfoFile);
         
         if (! CryptoSQL::isValidJsonFile($fp)) {
             //throw new Exception("Could not read currency exchange from cyptopia");
@@ -961,8 +954,8 @@ class CryptoSQL
         $convertFrom = strtolower($convertFrom);
             
             // read currencies exchance values
-        $walletFile = "info.wallet";
-        $fp = file_get_contents($walletFile);
+
+        $fp = file_get_contents(GlobalParams::$walletInfoFile, FILE_USE_INCLUDE_PATH);
         $obj = json_decode($fp, true);
         $ratio = $obj[$convertFrom][$currency]["price"];
         if (! $ratio) {
