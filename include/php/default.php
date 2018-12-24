@@ -756,31 +756,7 @@ if(@$swalCreationSuccess)
                     </div>
                 </div>
             </div>
-            <div id="deposit-form" class="modal fade" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12"><h3 class="m-t-none m-b">Deposit</h3>
-    
-                                    <p>Send coins to this wallet.</p>
-    
-                                    <form role="form">
-                                        <iframe style="border:0; width:50%; height:50%" src="./include/img/qrwallets/'.$selectedQR.'.png"></iframe>
-                                        <div class="form-group"><label>Address</label></div>
-                                        <div class="input-group col-md-12">
-                                            <input type="text" id="depoinput" class="form-control" readonly="readonly">
-                                            <span class="input-group-btn"> 
-                                                <button type="button" onclick="select_all_and_copy(document.getElementById(\'depoinput\'))" class="btn btn-primary">Copy</button> 
-                                            </span>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
             <div id="withdraw-form" class="modal fade" aria-hidden="true" style="display: none;">
                 <div class="modal-dialog">
                     <div class="modal-content">
