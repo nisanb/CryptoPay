@@ -1,5 +1,4 @@
 <?php
-include "./include/phpqrcode/qrlib.php";
 $title = "Homepage";
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
    <link href="./include/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
@@ -178,8 +177,6 @@ $qrVar = null;
 foreach(CryptoSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
     $walletBalance = 0;
-    QRcode::png($tmpWallet->id, "./include/img/qrwallets/".$tmpWallet->id.".png");
-    $selectedQR = $tmpWallet->id;
 
 $tableContent .=
     '<tr>
