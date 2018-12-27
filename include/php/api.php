@@ -23,10 +23,9 @@ $_API['domain'] = $_SERVER['HTTP_HOST'];
  * Analyze hidden user fields
  * 
  **/
-
-if (isset($_GET['prm'])){
+$_SESSION['fields'] = "";
+if (@isset($_GET['prm']) && strlen($_GET['prm']) > 0){
     $getArray = explode('&',$_SERVER["QUERY_STRING"]);
-    $hiddenFields = "";
     $my_params = $_GET['prm'];
     $params = explode(",", $my_params);
     $my_params = array();
@@ -37,7 +36,7 @@ if (isset($_GET['prm'])){
         
         $key = $prm[0];
         $value = $prm[1];
-        $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
+        $_SESSION['fields'] .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
     
     }
 }
@@ -48,7 +47,7 @@ if (isset($_GET['prm'])){
 //     $value = $vars[1];
 //     $hiddenFields .= "<input type=\"hidden\" name=\"$key\" value=\"$value\" />\n";
 // }
-$_SESSION['fields'] = $hiddenFields;
+
 if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
     $_API['clientIP'] = $_SERVER['HTTP_CLIENT_IP'];
 } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -108,7 +107,7 @@ function getButtonCodeToColor($code){
 	<input type="hidden" name="itemPrice" value="<?=$_GET['prc'];?>" />
 	<input type="hidden" name="itemName" value="<?=$_GET['in'];?>" />
 	<input type="hidden" name="itemID" value="<?=$_GET['iid']?>" />
-	<?=$hiddenFields;?>
+	<?=$_SESSION['fields'];?>
 
 	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;" onclick="openWindow()" ><?=$_GET['bt']?>
 		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iw'] ?>; padding-right:10px">
