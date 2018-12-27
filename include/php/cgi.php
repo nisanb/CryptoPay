@@ -1,5 +1,6 @@
 <?php
 require_once ("sqlink.php");
+define('APP_DIR', "../../");
 /* decide what the content should be up here .... */
 /* AJAX check */
 
@@ -9,11 +10,12 @@ if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQU
 }
 
 $toReturn["status"] = "0";
-
+Logger::log("defined APP_DIR: " . APP_DIR);
 try {
     if (! isset($_POST['itemCurrency']) || ! isset($_POST['currency']) || ! isset($_POST['itemPrice']) || ! isset($_POST['itemName']) || ! isset($_POST['itemPrice']) || ! isset($_POST['key'])) {
         $toReturn["status"] = "0";
         $toReturn["body"] = "Something went wrong!";
+        Logger::log("CGI -> one of the fields are missing!");
         throw new Exception();
     }
     foreach ($_POST as $key => $value) {
@@ -55,12 +57,13 @@ try {
     $toReturn["status"] = "1";
     $toReturn["body"] = $address;
 } catch (Exception $e) {
-    
+    Logger::log($e->getMessage());
     if (! @isset($toReturn["status"])) {
         $toReturn["status"] = "0";
         $toReturn["body"] = "Could not connect to wallet. - " . $e->getMessage();
     }
 }
+Logger::log("Returning json: " . json_encode($toReturn));
 echo json_encode($toReturn);
 die();
 ?>

@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+define('APP_DIR', __DIR__."\\");
 require_once './include/php/sqlink.php';
 require_once './include/php/CryptoException.php';
 require_once './auth/GoogleAuthenticator.php';

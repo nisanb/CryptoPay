@@ -16,7 +16,8 @@ class Logger
     public static function log($message = "")
     {
         $date = date("d/m/Y H:i:s");
-        file_put_contents(GlobalParams::$logger, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
+        $filePath = APP_DIR;
+        @file_put_contents(APP_DIR . GlobalParams::$logger, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
     }
 }
 
@@ -54,7 +55,6 @@ class Bitcoin
     public static function getEmailPrefix($email)
     {
         $toReturn = substr($email, 0, strpos($email, "@"));
-        Logger::log('Returning email prefix, from "'.$email.'" to "'.$toReturn.'"');
         return $toReturn;
     }
 
@@ -351,9 +351,10 @@ class CryptoSQL
     public static function updateReceivedTransaction($trans, $received)
     {
         $conn = CryptoSQL::getConn();
-        
+        Logger::log("");
         if ($trans->requiredAmount <= $received) {
             // Transaction fully received
+            Logger::log("Updating transaction " . $trans ." - Fully received!");
             $sql = "UPDATE transactions set istatus = 2 where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
@@ -361,6 +362,7 @@ class CryptoSQL
             }
         } else {
             // Partial Payment
+            Logger::log("Updating transaction " . $trans . " - Partially received!");
             $sql = "UPDATE transactions set receivedAmount = {$received} where txid = {$trans->id}";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
@@ -392,7 +394,7 @@ class CryptoSQL
                 throw new Exception("Could not insert new row to userbalances " . $trans->creditWallet . " " . $trans->currency);
             }
         }
-
+        Logger::log("Updating wallet " . $trans->creditWallet . " with + " . $trans->requiredAmount);
         $sql = "UPDATE userbalances set balance=balance + {$trans->requiredAmount} where walletID = {$trans->creditWallet} AND currencyID = {$trans->currency}";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
@@ -584,7 +586,7 @@ class CryptoSQL
     {
         $currency = CryptoSQL::trim_where($currency);
         $conn = CryptoSQL::getConn();
-        
+        Logger::log("Getting currency: " . $currency);
         if(intval($currency) > 0)
         {
             $sql = "select * from currencies where id = " . $currency;
@@ -925,7 +927,6 @@ class CryptoSQL
      */
     public static function getConn()
     {
-        Logger::log("testing");
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);
         ini_set('display_errors',1);
         error_reporting(E_ALL);
@@ -969,7 +970,7 @@ class CryptoSQL
         
         $sql = '';
         if ($walletId > 0) {
-            $sql = "SELECT c.currencyName, t.currencyPair as currencyID, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
+            $sql = "SELECT c.currencyName, t.currency as currencyID, c.currencyPair, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
         } else {
             $sql = "SELECT C.currencyPair, currencyID, SUM(balance) as sum FROM userbalances as UB inner join currencies as C on UB.currencyID=C.id WHERE user = (\"{$email}\") GROUP BY currencyID";
         }
