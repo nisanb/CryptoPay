@@ -5,3 +5,4 @@ CMS/
 UI_Project/
 info.wallet
 include/img/qrwallets/*
+*.log
