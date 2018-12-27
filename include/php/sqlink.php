@@ -10,9 +10,21 @@ require_once '_jsonrpc2.php';
  * @sk8r
  * (c) CryptoSell 2018
  */
+
+class Logger
+{
+    public static function log($message = "")
+    {
+        $date = date("d/m/Y H:i:s");
+        file_put_contents(GlobalParams::$logger, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
+    }
+}
+
 class GlobalParams
 {
 
+    public static $logger = "debug.log";
+    
     public static $walletInfoFile = "info.wallet";
     
     // local sql parms
@@ -41,7 +53,9 @@ class Bitcoin
      */
     public static function getEmailPrefix($email)
     {
-        return substr($email, 0, strpos($email, "@"));
+        $toReturn = substr($email, 0, strpos($email, "@"));
+        Logger::log('Returning email prefix, from "'.$email.'" to "'.$toReturn.'"');
+        return $toReturn;
     }
 
     /**
@@ -62,15 +76,6 @@ class Bitcoin
     }
 
     /**
-     * TODO
-     *
-     * @param unknown $account            
-     * @param unknown $trans            
-     */
-    public static function getTransactionDetails($account, $trans)
-    {}
-
-    /**
      * Returns transactions associated by an account
      *
      * @param unknown $account            
@@ -79,6 +84,7 @@ class Bitcoin
     public static function getTransactionsByAccount($account)
     {
         $toReturn = array();
+        Logger::log("Returning transactions by account ".$account);
         
         foreach (self::RPC()->listtransactions($account, 99999999999) as $trans) {
             if (self::isValidAddress($trans["address"])) {
@@ -97,6 +103,7 @@ class Bitcoin
      */
     public static function isValidWalletID($id)
     {
+        Logger::log("Checking if ".$id." is a valid wallet");
         /**
          * Temporary fix
          */
@@ -129,6 +136,7 @@ class Bitcoin
                 $randstring .= "-";
             $randstring .= $characters[rand(0, strlen($characters) - 1)];
         }
+        Logger::log("Randomized random string: ".$randstring);
         return $randstring;
     }
 
@@ -196,6 +204,7 @@ class Bitcoin
      */
     public static function isValidAddress($addr = NULL)
     {
+        Logger::log("Checking if given address " . $addr . " is valid");
         if (is_null($addr) || ! Bitcoin::isValidWalletID($addr))
             return false;
         
@@ -210,6 +219,7 @@ class Bitcoin
      */
     public static function getReceivedByAccount($account)
     {
+        Logger::log("");
         return self::RPC()->getreceivedbyaccount($account);
     }
 
@@ -915,6 +925,7 @@ class CryptoSQL
      */
     public static function getConn()
     {
+        Logger::log("testing");
         $mysqli = new mysqli(self::$server, self::$user, self::$pass, self::$db);
         ini_set('display_errors',1);
         error_reporting(E_ALL);
@@ -941,6 +952,7 @@ class CryptoSQL
         
         $timepassed = time() - $_SESSION["last_action"];
         if ($timepassed > $timeout) {
+            Logger::log("User timed out. Moving to lock screen");
             $_SESSION["lock"] = 1;
             header("Location ./lock");
         }
@@ -1109,3 +1121,5 @@ class CryptoSQL
         return json_encode($rows);
     }
 }
+
+

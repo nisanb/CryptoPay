@@ -11,7 +11,7 @@ if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQU
 $toReturn["status"] = "0";
 
 try {
-    if (! isset($_POST['currency']) || ! isset($_POST['itemPrice']) || ! isset($_POST['itemName']) || ! isset($_POST['itemPrice']) || ! isset($_POST['key'])) {
+    if (! isset($_POST['itemCurrency']) || ! isset($_POST['currency']) || ! isset($_POST['itemPrice']) || ! isset($_POST['itemName']) || ! isset($_POST['itemPrice']) || ! isset($_POST['key'])) {
         $toReturn["status"] = "0";
         $toReturn["body"] = "Something went wrong!";
         throw new Exception();
@@ -34,7 +34,10 @@ try {
         throw new Exception();
     }
     
-    $_ITEM['price'] = floatval($_POST['itemPrice']);
+    $originalCurrency = $_POST['itemCurrency'];
+    
+    
+    $_ITEM['price'] = CryptoSQL::convert($originalCurrency, $_POST['currency'], $_POST['itemPrice']);
     if ($_ITEM['price'] == 0) {
         $toReturn["status"] = "0";
         $toReturn["body"] = "Item price is invalid!";
