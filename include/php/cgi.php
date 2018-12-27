@@ -40,6 +40,7 @@ try {
         $toReturn["body"] = "Item price is invalid!";
         throw new Exception();
     }
+    
     try {
         $address = CryptoSQL::addTransaction($_POST['key'], $_POST['clientIP'], $_POST['itemID'], $_POST['currency'], $_POST['itemPrice']);
     } catch (Exception $e) {

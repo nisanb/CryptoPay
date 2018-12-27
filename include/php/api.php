@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 /**
  * API Class 
  * @var Ambiguous $_API
@@ -8,15 +7,12 @@ session_start();
 require_once "sqlink.php";
 $_API['key'] = @isset($_POST['key']) ? $_POST['key'] : @$_GET['key'];
 
-$_API['price'] = @$_GET['price'];
+$_API['itemPrice'] = @$_GET['itemPrice'];
 $_API['itemID'] = @$_GET['itemID'];
 $_API['itemName'] = @$_GET['itemName'];
-$_API['currency'] = @$_GET['crnc']; //BTC, LTC, Linda, USD
+$_API['itemCurrency'] = @$_GET['itemCurrency']; //BTC, LTC, Linda, USD
 // echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
-
-
-
 
 
 /**
@@ -101,16 +97,17 @@ function getButtonCodeToColor($code){
 	
 
 <form target="_parent" method="POST" action="pay">
-	<input type="hidden" name="key" value="<?=$_GET['key'];?>" />
+	<input type="hidden" name="key" value="<?=$_API['key'];?>" />
 	<input type="hidden" name="domain" value="<?=$_API['domain'];?>" />
 	<input type="hidden" name="ipClient" value="<?=$_API['clientIP'];?>" />
-	<input type="hidden" name="itemPrice" value="<?=$_GET['prc'];?>" />
-	<input type="hidden" name="itemName" value="<?=$_GET['in'];?>" />
-	<input type="hidden" name="itemID" value="<?=$_GET['iid']?>" />
+	<input type="hidden" name="itemPrice" value="<?=$_API['itemPrice'];?>" />
+	<input type="hidden" name="itemName" value="<?=$_API['itemName'];?>" />
+	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
+	<input type="hidden" name="itemCurrency" value="<?=$_API['itemCurrency']?>" />
 	<?=$_SESSION['fields'];?>
 
-	<button class="<?=getButtonCodeToColor($_GET['bc'])?>" style="font-size: 2em; width:<?=$_GET['bw']?>;" onclick="openWindow()" ><?=$_GET['bt']?>
-		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iw'] ?>; padding-right:10px">
+	<button class="<?=getButtonCodeToColor($_GET['btnClass'])?>" style="font-size: 2em; width:<?=$_GET['btnWidth']?>;" onclick="openWindow()" ><?=$_GET['btnText']?>
+		<img src="./include/img/iframeImages/<?=$_GET['img'] ?>.svg" style="width:<?=$_GET['iconWidth'] ?>; padding-right:10px">
 		<br />
 		
 		<label style="font-size: 0.3em; padding-top:2px; font-weight: normal;">Powered by CryptoSell

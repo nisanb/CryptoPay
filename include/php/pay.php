@@ -17,7 +17,8 @@ $_API['ipClient']  = $_POST['ipClient'];
 $_API['itemID']    = $_POST['itemID'];
 $_API['itemName']  = $_POST['itemName'];
 $_API['itemPrice'] = $_POST['itemPrice'];
-
+$_API['itemCurrency'] = $_POST['itemCurrency'];
+$_API['priceText']  =   $_API['itemCurrency'] == "USD" ? "$".$_API['itemPrice'] : $_API['itemPrice'] . " " . $_API['itemCurrency'];
 echo "<pre>";
 print_r($_POST);
 echo "<br />";
@@ -105,7 +106,7 @@ echo "</pre>";
 				
 			                                        <div class="alert alert-warning">
   <strong><h5><?=@$_API['itemName'];?></h5></strong><br />
-  <small>Item Price: $<?=@$_API['itemPrice'];?></small>
+  <small>Item Price: <?=@$_API['priceText'];?></small>
 </div>
 
 		                                	</div>
