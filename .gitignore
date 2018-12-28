@@ -3,6 +3,7 @@ web_hw2/
 *.tar
 CMS/
 UI_Project/
+btn.html
 info.wallet
 include/img/qrwallets/*
 *.log
