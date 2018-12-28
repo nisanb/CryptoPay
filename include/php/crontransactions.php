@@ -20,7 +20,7 @@ if($trans->iStatus != 2 && $received > 0)
 }
 $toReturn["received"] = Bitcoin::getReceivedByAccount($accountAddress);
 $toReturn["required"] = $trans->requiredAmount;
-$toReturn["currency"] = CryptoSQL::getCurrency($trans->currency)["id"];
+$toReturn["currency"] = $trans->currency;
 $toReturn["status"] = $trans->iStatus;
 Logger::log("Returning JSON: " . json_encode($toReturn));
 echo json_encode($toReturn);

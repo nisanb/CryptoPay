@@ -159,52 +159,47 @@ class Bitcoin
      * @param unknown $amount            
      * @param real $fee            
      */
-    public static function sendCash($from, $to, $amount, $fee = 0.0001)
+    public static function sendCash($currency, $from, $to, $amount, $fee = 0.0001)
     {
-        
         // Validate wallet addresses
         if (! self::isValidAddress($to)) {
             throw new Exception("Invalid address given -> " . $to);
         }
-        
-        if (! self::isValidAddress($from)) {
-            throw new Exception("Invalid address given -> " . $from);
+      
+        if(!CryptoSQL::verifyOwner($_SESSION['UserID'], $from))
+        {
+           throw new Exception("Don't steal! :(");
         }
         
         if ($amount <= 0 || $fee <= 0) {
             throw new Exception("Transaction amounts cannot be negative.");
         }
+
+        $balance = CryptoSQL::getBalanceByWallet($from, $currency);
+        $totalAmount = $amount + $fee;
+      
+        if($balance < $totalAmount)
+        {
+            throw new Exception("Insufficient balance!");
+        }
+    
+
+        if(intval($currency) == 0)
+        {
+            $currency = CryptoSQL::getCurrency($currency)["id"];
+        }
+        $conn = CryptoSQL::getConn();
+        $sql = "update userbalances set balance=balance-".$totalAmount." where walletID=".$from." and currencyID=".$currency;
+        echo $sql;
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not update user balance.");
+        }
         
-        $walletData = CryptoSQL::getWalletData($from);
-        $walletHash = $walletData["walletHash"];
+        // Send the real transaction
+        $result = Bitcoin::RPC()->sendtoaddress($to, $amount);
+     
         
-        // Check balance with fees
-        $total = $amount + $fee;
-        
-        $diff = Bitcoin::RPC()->getbalance($walletHash) - $total;
-        
-        if ($diff < 0)
-            throw new Exception("Transaction could not be commited due to insufficient amount (missing " . $diff . ")");
-            
-            // All input is verified
-            
-        // 1. move funds to stealth account
-            // 2. sendfrom stealthaccount to address - amount without fees with min conf 5
-            // 3. done
-        
-        $stealth = $walletHash . "-stealth";
-        
-        // Transfer funds to stealth wallet
-        if (! Bitcoin::RPC()->move($walletHash, $stealth, $total, 3))
-            throw new Exception("Could not transfer funds to stealth wallet.");
-            
-            // Send the real transaction
-        $result = Bitcoin::RPC()->sendfrom($stealth, $to, $amount, 3);
-        
-        $newStealthBalance = abs(Bitcoin::RPC()->getbalance($stealth));
-        
-        if (! Bitcoin::RPC()->move("", $stealth, $newStealthBalance))
-            throw new Exception("Could not transfer funds back to stealth wallet.");
     }
 
     /**
@@ -362,7 +357,7 @@ class CryptoSQL
         if ($trans->requiredAmount <= $received) {
             // Transaction fully received
             Logger::log("Updating transaction " . $trans ." - Fully received!");
-            if($trans->istatus == 2)
+            if($trans->iStatus == 2)
                 return;
             $sql = "UPDATE transactions set istatus = 2, receivedamount=requiredamount where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
@@ -988,6 +983,29 @@ class CryptoSQL
         $_SESSION["last_action"] = time();
     }
 
+    public static function getBalanceByWallet($wallet, $currency)
+    {
+       
+        $conn = CryptoSQL::getConn();
+        if(intval($currency) == 0)
+        {
+            $currency = CryptoSQL::getCurrency($currency)["id"];
+        }
+        
+        $sql = "select balance from userbalances where walletID=".$wallet." and currencyID=".$currency;
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+           
+            throw new Exception("Could not retreive account information.");
+            exit();
+        }
+   
+        $balance = 0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            return $row["balance"];
+        }
+    }
+    
     public static function getTotalBalaceOfWallet($walletId = 0)
     {
         $conn = CryptoSQL::getConn();

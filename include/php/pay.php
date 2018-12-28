@@ -92,7 +92,7 @@ echo "</pre>";
 									<ul>
 			                            <li><a href="#details" data-toggle="tab">REVIEW</a></li>
 			                            <li><a href="#captain" data-toggle="tab">Send Payment</a></li>
-			                            <li><a href="#description" data-toggle="tab">FINISH</a></li>
+			                            <li id ="finishtab"><a href="#description" data-toggle="tab">FINISH</a></li>
 			                        </ul>
 								</div>
 
@@ -150,6 +150,8 @@ echo "</pre>";
 		                                    	
 		                                    	<script>
     (function($){
+        $("#finishtab").html('<a>Pending payment..</a>');
+        
         var myInterval;
         function startWaiting(tx){
 			clearInterval(myInterval);
@@ -160,8 +162,9 @@ echo "</pre>";
         function checkReceived(tx)
         {
             try {
+            	$('#displayLoading').show();
                 console.log("Checking received for transaction: " + tx)
-                
+                $("#nextbtn").val("Querying transaction..");
             var myKeyVals = {"address" : tx};
             
        	 $.ajax({
@@ -176,16 +179,23 @@ echo "</pre>";
                  console.log(data);
                  console.log("\n\n");
              	$('#displayLoading').hide();
+            	 $("#nextbtn").val("Pending transaction..");
              	if(data.status == 2)
              	{
 					//Transaction received fully!
+                    $("#nextbtn").val("FINISH");
+                    $("captain").html("<img src='./includes/img/success.png' />");
+                    $("#finishtab").html('<a href="#description" data-toggle="tab">FINISH</a>');
 					clearInterval(myInterval);
 					// transfer back to thank you page in POST
 					//all fields + user written fields
              	}
-                 $('#response2').html("Status: " + data.status + " Received " + data.received + " out of " + data.required + " " + data.currency);
+               
+             	console.log($('#distatus').html());
+                 $('#distatus').html("Received " + data.received + " / " + data.required + " " + data.currency);
              },
              error: function( jqXhr, textStatus, errorThrown ){
+                 
                  console.log("cron error");
                  console.log( jqXhr );
              }
@@ -198,8 +208,12 @@ echo "</pre>";
         }
         function processForm( e ){
             try{
-                console.log("Generating transactions ...");
+                $("#nextbtn").val("Generating address..");
+
+
+                
         	$('#displayLoading').show();
+        	$('#captain').html("Generating new address");
             $.ajax({
                 url: 'cgi.php',
                 dataType: 'json',
@@ -208,6 +222,10 @@ echo "</pre>";
                 dataType : 'json',
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
+                    $("#nextbtn").val("Wallet generated!");
+                	$('#captain').html("Address generated successfully!");
+                	
+                    
                     console.log("Transaction generated successfully!");
                 	$('#displayLoading').hide();
                 	if(data.status == 0)
@@ -220,8 +238,9 @@ echo "</pre>";
                 	}
 
                 	console.log(data);
-                    $('#response').html("Please transfer " + data.itemPrice + " " + data.currency + " to " + data.body + "");
+                    $('#captain').html("<big>Please transfer " + data.itemPrice + " " + data.currency + " to <strong>" + data.body + "</strong></big><br /><br /><br /><div valign='middle' align='center' id='distatus'></div>");
                     startWaiting(data.body);
+                    
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
                     console.log("Could not generate transaction");
@@ -265,8 +284,8 @@ echo "</pre>";
 		                        </div>
 	                        	<div class="wizard-footer">
 	                            	<div class="pull-right">
-	                                    <input type='button' class='btn btn-next btn-fill btn-danger btn-wd' name='next' value='Next' />
-	                                    <input type='button' class='btn btn-finish btn-fill btn-danger btn-wd' name='finish' value='Finish' />
+	                                    <input type='button' class='btn btn-next btn-fill btn-danger btn-wd' id="nextbtn" name='next' value='Next' />
+	                                    <input type='button' class='btn btn-finish btn-fill btn-danger btn-wd' name='finish' value='Finish' disabled />
 	                                </div>
 	                                <div class="pull-left">
 	                                    <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />

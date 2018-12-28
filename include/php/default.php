@@ -41,9 +41,9 @@ function buildSendForm(a, b, c)
     
     $("#walletSendLabel").val(a);
     $("#walletSendAddress").val(b);
-    $("#walletSendAmount").val(c);
+    $("#walletSendAmount").val(5);
 
-    $("#payment_amount").attr("max", c);
+    $("#payment_amount").attr("max", 5);
     $("#payment_amount").attr("min", 0.0001);
 }
 
@@ -95,7 +95,7 @@ if(@$_POST['payment_do'])
         if(!CryptoSQL::verifyOwner($_SESSION['UserID'], $payment_from))
             throw new Exception("You attempted to send cash from a wallet which is not owned by you.");
         
-        Bitcoin::sendCash($payment_from, $payment_to, $payment_amount, $payment_fee);
+        Bitcoin::sendCash("Linda", $payment_from, $payment_to, $payment_amount, $payment_fee);
         
         
     }
