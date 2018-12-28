@@ -65,8 +65,14 @@ if(@$_POST['payment_do'])
             throw new Exception("You attempted to send cash from a wallet which is not owned by you.");
         
         Bitcoin::sendCash("Linda", $payment_from, $payment_to, $payment_amount, $payment_fee);
+        //     header( "refresh:3;url=./" );
+        $message = "You have successfully transferred ".$payment_total." to address ".$payment_to;
+        $include_footer .= "
+        <script>
+        notify('success', $message);
+        </script>
         
-        
+        ";
     }
     catch(Exception $e)
     {
@@ -79,14 +85,7 @@ if(@$_POST['payment_do'])
        
     }
     
-    //done
-    $message = "You have successfully transferred ".$payment_total." to address ".$payment_to;
-    $include_footer .= "
-        <script>
-                notify('success', $message);
-            </script>
-";
-    header( "refresh:3;url=./" );
+
     
 }
 
@@ -210,7 +209,8 @@ $colors = ["Orange", "Green", "Red"];
 $i=1;
 foreach ($balances as $key=>$value)
 {
-    $content .= '<span class="label label-info pull-left" style="background-color: '.$colors[$i-1].';">'.$value.' '.$key.'</span>';
+    $amount = number_format($value, 8);
+    $content .= '<span class="label label-info pull-left" style="background-color: '.$colors[$i-1].';">'.$amount.'  '.$key.'</span>';
     if($i++ < $size)
     {
         $content .= '    <span class="label label-info pull-left" style="background-color: white; color: black;">+</span>';

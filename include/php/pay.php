@@ -150,7 +150,7 @@ echo "</pre>";
 		                                    	
 		                                    	<script>
     (function($){
-        $("#finishtab").html('<a>Pending payment..</a>');
+        $("#finishtab").html('<a href="#description">Pending payment..</a>');
         
         var myInterval;
         function startWaiting(tx){
@@ -184,7 +184,7 @@ echo "</pre>";
              	{
 					//Transaction received fully!
                     $("#nextbtn").val("FINISH");
-                    $("captain").html("<img src='./includes/img/success.png' />");
+                    $("#captain").html("<img src='./include/img/success.png' />");
                     $("#finishtab").html('<a href="#description" data-toggle="tab">FINISH</a>');
 					clearInterval(myInterval);
 					// transfer back to thank you page in POST

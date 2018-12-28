@@ -13,9 +13,11 @@ require_once '_jsonrpc2.php';
 
 class Logger
 {
-    public static function log($message = "")
+    public static function log($message = "", $wrap = false)
     {
-        
+        if($wrap){
+            $message = "\n=================\n" . $message . "\n================\n";
+        }
         $date = date("d/m/Y H:i:s");
         $file = Logger::getLogFile(GlobalParams::$logger);
         @file_put_contents($file, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
@@ -162,6 +164,9 @@ class Bitcoin
     public static function sendCash($currency, $from, $to, $amount, $fee = 0.0001)
     {
         // Validate wallet addresses
+        Logger::log("Send cash received!", true);
+        
+        try {
         if (! self::isValidAddress($to)) {
             throw new Exception("Invalid address given -> " . $to);
         }
@@ -195,9 +200,30 @@ class Bitcoin
             throw new Exception("Could not update user balance.");
         }
         
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        
+        $txid = CryptoSQL::generateTXID();
+        // Add the transaction to sql
+        $sql = "insert into transactions values (\"{$txid}\", 2, 2, now(), ".$from.", \"\", \"{$to}\", \"{$ip}\", ".$totalAmount.", 0, ".$currency.", ".$totalAmount.")";
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not insert new transaction - ".$sql);
+        }
+        
         // Send the real transaction
         $result = Bitcoin::RPC()->sendtoaddress($to, $amount);
-     
+        }
+        catch(Exception $exception)
+        {
+            Logger::log("Failed: " . $exception);
+            throw $exception;
+        }
         
     }
 
@@ -1008,7 +1034,6 @@ class CryptoSQL
     {
         $conn = CryptoSQL::getConn();
         $email = self::trim_where($_SESSION["UserID"]);
-        Logger::log("???");
         $sql = '';
         if ($walletId > 0) {
             
@@ -1038,7 +1063,6 @@ class CryptoSQL
     {
         $conn = CryptoSQL::getConn();
         $email = self::trim_where($_SESSION["UserID"]);
-        Logger::log("???");
         $sql = "select c.currencyPair, sum(requiredAmount) as sum from transactions as t inner join wallets as w on t.creditWallet = w.id inner join currencies as c on c.id = t.currency where w.account in (\"{$_SESSION['UserID']}\") and istatus != 2 group by currency";
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.

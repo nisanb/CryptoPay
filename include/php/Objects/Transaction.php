@@ -2,6 +2,7 @@
 
 class Transaction {
     public $id;
+    public $type;
     public $iStatus;
     public $timeStarted;
     public $creditWallet;
@@ -35,6 +36,7 @@ class Transaction {
     function __construct1($row)
     {
         $this->id                   = $row["txid"];
+        $this->type                 = $row["type"];
         $this->iStatus              = $row["istatus"];
         $this->timeStarted          = $row["timeStarted"];
         $this->creditWallet         = $row["creditWallet"];

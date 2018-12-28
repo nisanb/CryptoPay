@@ -43,6 +43,13 @@ foreach ($transactions as $trans) {
         $color = "black";
         $received = "Pending";
     }
+    
+    if($trans->type == 2)
+    {
+        $color = "red";
+        $received = "Withdraw";
+        $trans->requiredAmount*=(-1);
+    }
 
     $tableContent .= '<tr>
     <td>' . $tranCount ++ . '</td>
