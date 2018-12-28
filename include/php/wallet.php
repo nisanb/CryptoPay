@@ -10,9 +10,6 @@ $walletID = @$_GET['wid'];
 $wallet = CryptoSQL::getWalletInformation($walletID);
 $income = CryptoSQL::getTotalBalaceOfWallet($walletID);
 Logger::log("UPDATING Wallet.php");
-echo "<pre>";
-print_r($wallet);
-echo "</pre>";
 $title = "View Wallet - " . $wallet->walletLabel;
 
 $lastDepDate = date("m/d/Y");
@@ -56,7 +53,7 @@ foreach ($transactions as $trans) {
     <td>' . $tranDate . '</td>
     
     <td aling="center"><span style="color: ' . $color . '">'.$received.'</span></td>
-    <td><span style="color: ' . $color . '">' . $trans->requiredAmount . '</span> ' . $trans->currency . '</td>
+    <td><span style="color: ' . $color . '">' . number_format($trans->requiredAmount, 8) . '</span> ' . $trans->currency . '</td>
     </tr>';
 }
 $content .= '

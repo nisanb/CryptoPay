@@ -1018,6 +1018,29 @@ class CryptoSQL
         return number_format($balance, 8);
     }
     
+    public static function getTotalPending($walletId = 0)
+    {
+        $conn = CryptoSQL::getConn();
+        $email = self::trim_where($_SESSION["UserID"]);
+        Logger::log("???");
+        $sql = "select c.currencyPair, sum(requiredAmount) as sum from transactions as t inner join wallets as w on t.creditWallet = w.id inner join currencies as c on c.id = t.currency where w.account in (\"{$_SESSION['UserID']}\") and istatus != 2 group by currency";
+        if (! $result = $conn->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not retreive account information.");
+            exit();
+        }
+    
+        // read currencies exchance values
+        $obj = Bitcoin::getCurrencyInformation();
+    
+        $balance = 0;
+        while ($row = mysqli_fetch_assoc($result)) {
+            $balance += CryptoSQL::convert($row["currencyPair"], "BTC", $row["sum"]);
+        }
+    
+        return number_format($balance, 8);
+    }
+    
     public static function convert($convertFrom, $currency, $amount, $format=false)
     {
         if (! $amount)

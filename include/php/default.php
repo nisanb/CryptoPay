@@ -121,7 +121,7 @@ if(@$_POST['payment_do'])
 
 $_ACCOUNT['Wallets'] = CryptoSQL::getWalletInfoTableByAccount($_SESSION['UserID']);
 $balance = CryptoSQL::getTotalBalaceOfWallet();
-
+$pending = CryptoSQL::getTotalPending();
 $include_footer.= '
 <script>
 $(function() {
@@ -130,7 +130,7 @@ $(function() {
     Morris.Donut({
         element: \'morris-donut-chart\',
         data: [{ label: "Available BTC", value: '.$balance.' },
-            { label: "Pending Coins", value: 0 },
+            { label: "Pending Coins", value: '.$pending.' },
             ],
         resize: true,
         colors: [\'green\', \'orange\'],
