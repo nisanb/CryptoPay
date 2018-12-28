@@ -51,7 +51,7 @@ function buildSendForm(a, b, c)
 </script>
 ';
 
-$walletInformation = Bitcoin::getWalletInformation();
+$walletInformation = Bitcoin::getCurrencyInformation();
 
 $content = '';
 /**

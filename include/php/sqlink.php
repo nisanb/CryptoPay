@@ -147,7 +147,6 @@ class Bitcoin
                 $randstring .= "-";
             $randstring .= $characters[rand(0, strlen($characters) - 1)];
         }
-        Logger::log("Randomized random string: ".$randstring);
         return $randstring;
     }
 
@@ -230,7 +229,6 @@ class Bitcoin
      */
     public static function getReceivedByAccount($account)
     {
-        Logger::log("");
         return self::RPC()->getreceivedbyaccount($account);
     }
 
@@ -591,7 +589,6 @@ class CryptoSQL
     {
         $currency = CryptoSQL::trim_where($currency);
         $conn = CryptoSQL::getConn();
-        Logger::log("Getting currency: " . $currency);
         if(intval($currency) > 0)
         {
             $sql = "select * from currencies where id = " . $currency;

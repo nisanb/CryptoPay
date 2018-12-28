@@ -155,7 +155,7 @@ echo "</pre>";
 			clearInterval(myInterval);
         	checkReceived(tx);
         	
-        	myInterval = setInterval(function() {checkReceived(tx); },30000);
+        	myInterval = setInterval(function() {checkReceived(tx); },3000);
         }
         function checkReceived(tx)
         {

@@ -46,6 +46,7 @@ try {
     }
     
     try {
+        Logger::log("Attempting to add a new transaction: " . $_POST['itemPrice'] ." " .$_POST['currency']);
         $address = CryptoSQL::addTransaction($_POST['key'], $_POST['clientIP'], $_POST['itemID'], $_POST['currency'], $_POST['itemPrice']);
     } catch (Exception $e) {
         $toReturn["status"] = "0";
