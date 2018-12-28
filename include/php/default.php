@@ -45,9 +45,17 @@ function buildSendForm(a, b, c)
 
     $("#payment_amount").attr("max", 5);
     $("#payment_amount").attr("min", 0.0001);
+    
+    $("#withrawForm").hide();
+    $("#chooseCoin").show();
 }
 
-
+function showWithdraw(){
+    $("#withrawForm").show();
+    $("#chooseCoin").hide();
+    
+}
+    
 </script>
 ';
 
@@ -771,10 +779,18 @@ $content.= '
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-md-12"><h3 class="m-t-none m-b">Withdrawal</h3>
-                                    <p>You may send coins to other Linda Wallets using the form below.<br />
+                                    <p>You may send coins to other wallets using the form below.<br />
                                     * Please make sure all input is correct before submitting!</p>
                                     <hr />
-                                    <form role="form" method="POST">
+                                    <div id="chooseCoin">
+                                        <center>                                        
+                                        <Button id="chooseLinda" class="btn btn-sm btn-warning" onclick="showWithdraw(\'chooseLinda\')">Linda</Button>
+                                        <Button id="chooseBtc" class="btn btn-sm btn-success" onclick="showWithdraw(\'chooseBtc\')">Bitcoin</Button>
+                                        </center>
+                                    </div>                   
+                        
+                                    </br>
+                                    <form id="withrawForm" role="form" method="POST" hidden="hidden">
                                         <center><label>Send From</label></center> 
                                         <div class="row">
                                              <div class="col-md-4">
