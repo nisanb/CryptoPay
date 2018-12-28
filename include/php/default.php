@@ -8,55 +8,16 @@ $include_footer = '  <!-- FooTable -->
 <!-- Morris -->
     <script src="./include/js/plugins/morris/raphael-2.1.0.min.js"></script>
     <script src="./include/js/plugins/morris/morris.js"></script>
-<script type="text/javascript" src="./include/js/copy2clipboard.js"></script>
+    <script type="text/javascript" src="./include/js/copy2clipboard.js"></script>
     <!-- <script src="./include/js/demo/morris-demo.js"></script> -->
+    <script src="./include/js/withdrawfrom.js"></script>
 <style>
         #payment_auth::-webkit-inner-spin-button, 
         #payment_auth::-webkit-outer-spin-button { 
           -webkit-appearance: none; 
           margin: 0; 
         }
-    </style>
-
-<script>
-function buildREF(a, b)
-{
-    $("#depoinput").val(a);
-
-
-    if (b == "copy") {
-        var copyText = document.getElementById("depoinput");
-      
-        notify("success", "Copied the text: " + copyText.value);
-        notify("warning", "Copied the text: " + copyText.value);
-        notify("error", "Copied the text: " + copyText.value);
-
-    }
-
-
-}
-
-function buildSendForm(a, b, c)
-{
-    
-    $("#walletSendLabel").val(a);
-    $("#walletSendAddress").val(b);
-    $("#walletSendAmount").val(5);
-
-    $("#payment_amount").attr("max", 5);
-    $("#payment_amount").attr("min", 0.0001);
-    
-    $("#withrawForm").hide();
-    $("#chooseCoin").show();
-}
-
-function showWithdraw(){
-    $("#withrawForm").show();
-    $("#chooseCoin").hide();
-    
-}
-    
-</script>
+</style>
 ';
 
 $walletInformation = Bitcoin::getCurrencyInformation();
@@ -790,7 +751,7 @@ $content.= '
                                     </div>                   
                         
                                     </br>
-                                    <form id="withrawForm" role="form" method="POST" hidden="hidden">
+                                    <form id="withrawForm" action="./index.php" method="POST" onsubmit="alert(handleForm())" hidden="hidden">
                                         <center><label>Send From</label></center> 
                                         <div class="row">
                                              <div class="col-md-4">
@@ -824,7 +785,6 @@ if(!@isset($_POST['payment_do']))
 }
 
 
-
 $content .= '
 
                                         
@@ -852,7 +812,7 @@ $content .= '
                                         <div>
                                             <input type="hidden" name="payment_do" value="1" />
                                             <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->id.'\',\''.$tmpWallet->walletLabel.'\', \''.$balance.'\')">Cancel</a>
-                                            <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
+                                            <button id="btnWithdraw" class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>
                                 </div>
