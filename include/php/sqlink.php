@@ -15,8 +15,10 @@ class Logger
 {
     public static function log($message = "")
     {
+        
         $date = date("d/m/Y H:i:s");
         $file = Logger::getLogFile(GlobalParams::$logger);
+        echo "My Path: ". __FILE__ ."<br />Log File: " . $file."<br />Message: ".$message."<hr />";
         @file_put_contents($file, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
     }
     
@@ -354,13 +356,16 @@ class CryptoSQL
     public static function updateReceivedTransaction($trans, $received)
     {
         $conn = CryptoSQL::getConn();
+        
+        // Update transaction object
+        $trans = CryptoSQL::getTransactionByTXID($trans->id);
         Logger::log("Checking transaction " . $trans->id . " received " . $received);
         if ($trans->requiredAmount <= $received) {
             // Transaction fully received
             Logger::log("Updating transaction " . $trans ." - Fully received!");
             if($trans->istatus == 2)
                 return;
-            $sql = "UPDATE transactions set istatus = 2 where txid in (\"{$trans->id}\")";
+            $sql = "UPDATE transactions set istatus = 2, receivedamount=requiredamount where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);
@@ -650,7 +655,7 @@ class CryptoSQL
         $wallet = new Wallet($row);
         
         $transactions = array();
-        $sql = "SELECT c.currencyName, t.* FROM transactions t JOIN currencies c ON (t.currency = c.id) where creditWallet = {$walletID}";
+        $sql = "SELECT c.currencyName, t.* FROM transactions t JOIN currencies c ON (t.currency = c.id) where creditWallet = {$walletID} order by t.timeStarted";
         if ($result = CryptoSQL::getConn()->query($sql)) {
             /* fetch associative array */
             while ($row = mysqli_fetch_assoc($result)) {
@@ -971,14 +976,16 @@ class CryptoSQL
         
         $conn = CryptoSQL::getConn();
         $email = self::trim_where($userid);
-        
+        Logger::log("???");
         $sql = '';
         if ($walletId > 0) {
+            
             $sql = "SELECT c.currencyName, t.currency as currencyID, c.currencyPair, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
+            
         } else {
             $sql = "SELECT C.currencyPair, currencyID, SUM(balance) as sum FROM userbalances as UB inner join currencies as C on UB.currencyID=C.id WHERE user = (\"{$email}\") GROUP BY currencyID";
         }
-        
+        Logger::log($sql);
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");

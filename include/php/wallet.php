@@ -9,6 +9,7 @@ $walletID = @$_GET['wid'];
 
 $wallet = CryptoSQL::getWalletInformation($walletID);
 $income = CryptoSQL::getTotalBalaceOfWallet($walletID);
+Logger::log("UPDATING Wallet.php");
 echo "<pre>";
 print_r($wallet);
 echo "</pre>";
@@ -30,11 +31,22 @@ $transactions = array_reverse($wallet->transactions);
 
 foreach ($transactions as $trans) {
     $color = "green";
-    $tranStatus = $trans->iStatus;
-    if ($tranStatus > 10)
-        $tranStatus = 10;
+    $tranStatus = ($trans->receivedAmount / $trans->requiredAmount) * 10;
     $tranDate = date('m/d/Y G:i:s', strtotime($trans->timeStarted));
-    
+    if($tranStatus == 10)
+    {
+        $color = "green";
+        $received = "Received";
+    } else if($tranStatus > 0)
+    {
+        $color = "orange";
+        $received = "Partially Received";
+    }
+    else {
+        $color = "black";
+        $received = "Pending";
+    }
+
     $tableContent .= '<tr>
     <td>' . $tranCount ++ . '</td>
 <td>' . $trans->id . '</td>
@@ -43,8 +55,8 @@ foreach ($transactions as $trans) {
     </td>
     <td>' . $tranDate . '</td>
     
-    <td aling="center"><span style="color: ' . $color . '">Received</span></td>
-    <td><span style="color: ' . $color . '">' . $trans->receivedAmount . '</span> ' . $trans->currency . '</td>
+    <td aling="center"><span style="color: ' . $color . '">'.$received.'</span></td>
+    <td><span style="color: ' . $color . '">' . $trans->requiredAmount . '</span> ' . $trans->currency . '</td>
     </tr>';
 }
 $content .= '
