@@ -751,7 +751,7 @@ $content.= '
                                     </div>                   
                         
                                     </br>
-                                    <form id="withrawForm" action="./index.php" method="POST" onsubmit="alert(handleForm())" hidden="hidden">
+                                    <form id="withrawForm" method="POST" onsubmit="handleForm();" hidden="hidden">
                                         <center><label>Send From</label></center> 
                                         <div class="row">
                                              <div class="col-md-4">
