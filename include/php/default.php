@@ -86,6 +86,8 @@ if(@$_POST['payment_do'])
                 notify('success', $message);
             </script>
 ";
+    header( "refresh:3;url=./" );
+    
 }
 
 $_ACCOUNT['Wallets'] = CryptoSQL::getWalletInfoTableByAccount($_SESSION['UserID']);

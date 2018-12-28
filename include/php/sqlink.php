@@ -190,7 +190,6 @@ class Bitcoin
         }
         $conn = CryptoSQL::getConn();
         $sql = "update userbalances set balance=balance-".$totalAmount." where walletID=".$from." and currencyID=".$currency;
-        echo $sql;
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not update user balance.");
