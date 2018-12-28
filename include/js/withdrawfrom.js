@@ -43,19 +43,19 @@ function showWithdraw(currenyName){
     $("#withrawForm").show();
     $("#chooseCoin").hide();
     
-    //rebuild the form (Linda or Bitcoin)
+    //rebuild the form (Linda or B
     //buildSendForm();
 }
 
 
 
 function handleForm(){
-	if (allowSubmit){
-		allowSubmit = false;
-		return true;
-	}
-	
-	return false;
-	
+//	if (allowSubmit){
+//		allowSubmit = false;
+//		return true;
+//	}
+//	
+//	return false;
+//	
 	
 }
