@@ -12,7 +12,8 @@ Logger::log("Checking transaction $trans->id");
 $accountAddress = $trans->creditWalletAccount;
 $received = Bitcoin::getReceivedByAccount($accountAddress);
 $txid = $trans->id;
-if($received > 0)
+if($trans->iStatus != 2 && $received > 0)
+
 {
     Logger::log("I received ". $received);
     CryptoSQL::updateReceivedTransaction($trans, $received);

@@ -18,7 +18,6 @@ class Logger
         
         $date = date("d/m/Y H:i:s");
         $file = Logger::getLogFile(GlobalParams::$logger);
-        echo "My Path: ". __FILE__ ."<br />Log File: " . $file."<br />Message: ".$message."<hr />";
         @file_put_contents($file, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
     }
     
@@ -30,7 +29,7 @@ class Logger
             $fileName = "../../".$fileName;
         } 
         
-        return $fileName;
+        return realpath($fileName);
     }
 }
 
@@ -240,7 +239,7 @@ class Bitcoin
     public static function getCurrencyInformation()
     {
         
-        $timeout = 0; // 5 minutes
+        $timeout = 60 * 5; // 5 minutes
         $walletFile = Logger::getLogFile(GlobalParams::$walletInfoFile);
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
@@ -569,6 +568,25 @@ class CryptoSQL
         return $creditWalletAddress;
     }
 
+    public static function getUserBalancesByAccount($email)
+    {
+        $balances["BTC"] = 0;
+        $balances["Linda"] = 0;
+        
+        $email = self::trim_where($email);
+        
+        $sql = "SELECT c.currencyPair as currency, sum(ub.balance) as sum FROM userbalances as ub inner join currencies as c on ub.currencyID = c.id where ub.user in (\"{$email}\")";
+        if (! $result = CryptoSQL::getConn()->query($sql)) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account balances.<br />" . CryptoSQL::getConn()->error);
+        }
+        
+        while ($row = mysqli_fetch_assoc($result)) {
+            $balances[$row["currency"]] = $row["sum"];
+        }
+        return $balances;
+    }
+    
     /**
      * Returns balance by a given account
      *
@@ -972,20 +990,17 @@ class CryptoSQL
 
     public static function getTotalBalaceOfWallet($walletId = 0)
     {
-        $userid = $_SESSION["UserID"];
-        
         $conn = CryptoSQL::getConn();
-        $email = self::trim_where($userid);
+        $email = self::trim_where($_SESSION["UserID"]);
         Logger::log("???");
         $sql = '';
         if ($walletId > 0) {
             
-            $sql = "SELECT c.currencyName, t.currency as currencyID, c.currencyPair, sum(t.receivedAmount) as sum FROM transactions t JOIN currencies c ON (t.currency = c.id) WHERE t.creditWallet  = (\"$walletId\") GROUP BY t.currency";
+            $sql = "select ub.*, c.currencyPair, sum(ub.balance) as sum from userbalances as ub inner join currencies c on ub.currencyID = c.id where walletID=".$walletId." group by currencyID";
             
         } else {
-            $sql = "SELECT C.currencyPair, currencyID, SUM(balance) as sum FROM userbalances as UB inner join currencies as C on UB.currencyID=C.id WHERE user = (\"{$email}\") GROUP BY currencyID";
+            $sql = "select ub.*, c.currencyPair, sum(ub.balance) as sum from userbalances as ub inner join currencies c on ub.currencyID = c.id where user in (\"{$email}\") group by currencyID";
         }
-        Logger::log($sql);
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not retreive account information.");
@@ -1003,7 +1018,7 @@ class CryptoSQL
         return number_format($balance, 8);
     }
     
-    public static function convert($convertFrom, $currency, $amount)
+    public static function convert($convertFrom, $currency, $amount, $format=false)
     {
         if (! $amount)
             $amount = 1;
@@ -1019,6 +1034,10 @@ class CryptoSQL
             return 0;
         }
         
+        if($format)
+        {
+            return number_format($ratio*$amount, 8);
+        }
         return $ratio * $amount;
     }
     

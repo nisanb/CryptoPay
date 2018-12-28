@@ -176,8 +176,7 @@ $count = 1;
 $qrVar = null;
 foreach(CryptoSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
-    $walletBalance = 0;
-
+    $walletBalance = CryptoSQL::getTotalBalaceOfWallet($tmpWallet->id);
 $tableContent .=
     '<tr>
     <td>'.$count++.'</td>
@@ -233,10 +232,22 @@ if(@$swalCreationSuccess)
                     <div class="ibox-content">
                         <h1 class="no-margins">'.$balance.' BTC</h1>
 <hr />
-<span class="label label-info pull-left" style="background-color: green;">BTC</span>
+';
+$balances = CryptoSQL::getUserBalancesByAccount($_SESSION['UserID']);
+$size = sizeof($balances);
+$colors = ["Orange", "Green"];
+$i=1;
+foreach ($balances as $key=>$value)
+{
+    $content .= '<span class="label label-info pull-left" style="background-color: '.$colors[$i-1].';">'.$value.' '.$key.'</span>';
+    if($i++ < $size)
+    {
+        $content .= '    <span class="label label-info pull-left" style="background-color: white; color: black;">+</span>';
+    }
+}
+$content.= '
 
-<span class="label label-info pull-left" style="background-color: white; color: black;">+</span> 
-<span class="label label-info pull-left" style="background-color: orange;">LINDA</span> 
+
 
              
 <br />
