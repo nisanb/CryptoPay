@@ -236,6 +236,7 @@ class Bitcoin
         
         $timeout = 60 * 5; // 5 minutes
         $walletFile = Logger::getLogFile(GlobalParams::$walletInfoFile);
+        echo $walletFile;
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
         // JSON already created
