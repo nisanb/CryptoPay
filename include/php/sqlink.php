@@ -354,10 +354,12 @@ class CryptoSQL
     public static function updateReceivedTransaction($trans, $received)
     {
         $conn = CryptoSQL::getConn();
-        Logger::log("");
+        Logger::log("Checking transaction " . $trans->id . " received " . $received);
         if ($trans->requiredAmount <= $received) {
             // Transaction fully received
             Logger::log("Updating transaction " . $trans ." - Fully received!");
+            if($trans->istatus == 2)
+                return;
             $sql = "UPDATE transactions set istatus = 2 where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
@@ -366,7 +368,7 @@ class CryptoSQL
         } else {
             // Partial Payment
             Logger::log("Updating transaction " . $trans . " - Partially received!");
-            $sql = "UPDATE transactions set receivedAmount = {$received} where txid = {$trans->id}";
+            $sql = "UPDATE transactions set iStatus = 1, receivedAmount = {$received} where txid in (\"{$trans->id}\")";
             if (! $result = $conn->query($sql)) {
                 // Oh no! The query failed.
                 throw new Exception("Could not update transaction " . $trans->id);
@@ -991,7 +993,7 @@ class CryptoSQL
             $balance += CryptoSQL::convert($row["currencyPair"], "BTC", $row["sum"]);
         }
         
-        return $balance;
+        return number_format($balance, 8);
     }
     
     public static function convert($convertFrom, $currency, $amount)

@@ -9,6 +9,9 @@ $walletID = @$_GET['wid'];
 
 $wallet = CryptoSQL::getWalletInformation($walletID);
 $income = CryptoSQL::getTotalBalaceOfWallet($walletID);
+echo "<pre>";
+print_r($wallet);
+echo "</pre>";
 $title = "View Wallet - " . $wallet->walletLabel;
 
 $lastDepDate = date("m/d/Y");
