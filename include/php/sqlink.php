@@ -1015,7 +1015,7 @@ class CryptoSQL
             return 0;
         }
         
-        return $ratio * $amount + 50000;
+        return $ratio * $amount;
     }
     
     // validate json file
