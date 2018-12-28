@@ -29,7 +29,7 @@ class Logger
             $fileName = "../../".$fileName;
         } 
         
-        return realpath($fileName);
+        return $fileName;
     }
 }
 
@@ -236,7 +236,6 @@ class Bitcoin
         
         $timeout = 60 * 5; // 5 minutes
         $walletFile = Logger::getLogFile(GlobalParams::$walletInfoFile);
-        echo $walletFile;
         $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
         // JSON already created
@@ -335,7 +334,6 @@ class CryptoSQL
     {
         $key = CryptoSQL::trim_where($key);
         $domain = CryptoSQL::trim_where($domain);
-        
         $conn = CryptoSQL::getConn();
         $sql = "SELECT count(*) as num_results FROM wallets WHERE walletAPI in (\"{$key}\") AND domain like (\"%{$domain}%\")";
         if (! $result = $conn->query($sql)) {

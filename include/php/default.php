@@ -204,7 +204,7 @@ if(@$swalCreationSuccess)
 ';
 $balances = CryptoSQL::getUserBalancesByAccount($_SESSION['UserID']);
 $size = sizeof($balances);
-$colors = ["Orange", "Green"];
+$colors = ["Orange", "Green", "Red"];
 $i=1;
 foreach ($balances as $key=>$value)
 {
