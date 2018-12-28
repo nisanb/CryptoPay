@@ -1,6 +1,5 @@
 <?php
 require_once ("sqlink.php");
-define('APP_DIR', "../../");
 /* decide what the content should be up here .... */
 /* AJAX check */
 
@@ -10,7 +9,6 @@ if (empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQU
 }
 
 $toReturn["status"] = "0";
-Logger::log("defined APP_DIR: " . APP_DIR);
 try {
     if (! isset($_POST['itemCurrency']) || ! isset($_POST['currency']) || ! isset($_POST['itemPrice']) || ! isset($_POST['itemName']) || ! isset($_POST['itemPrice']) || ! isset($_POST['key'])) {
         $toReturn["status"] = "0";
@@ -40,6 +38,7 @@ try {
     
     
     $_ITEM['price'] = CryptoSQL::convert($originalCurrency, $_POST['currency'], $_POST['itemPrice']);
+    Logger::log("CGI: " . $_POST['itemPrice'] . " " . $originalCurrency . " -> " . $_ITEM['price'] . " " .$_POST['currency']);
     if ($_ITEM['price'] == 0) {
         $toReturn["status"] = "0";
         $toReturn["body"] = "Item price is invalid!";

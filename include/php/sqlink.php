@@ -16,8 +16,19 @@ class Logger
     public static function log($message = "")
     {
         $date = date("d/m/Y H:i:s");
-        $filePath = APP_DIR;
-        @file_put_contents(APP_DIR . GlobalParams::$logger, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
+        $file = Logger::getLogFile(GlobalParams::$logger);
+        @file_put_contents($file, $date."\t".debug_backtrace()[2]['function']."->".debug_backtrace()[1]['function']."\t:\t".$message."\n", FILE_APPEND | LOCK_EX);
+    }
+    
+    public static function getLogFile($fileName)
+    {
+        $containing_dir = basename(dirname(__FILE__));
+        if($containing_dir == "php")
+        {
+            $fileName = "../../".$fileName;
+        } 
+        
+        return $fileName;
     }
 }
 
@@ -226,17 +237,17 @@ class Bitcoin
     /**
      * Retreive general wallet information
      */
-    public static function getWalletInformation()
+    public static function getCurrencyInformation()
     {
         
         $timeout = 0; // 5 minutes
-        
-        $fileUpdatedTime = (time() - @filemtime(GlobalParams::$walletInfoFile)) . "seconds ago";
+        $walletFile = Logger::getLogFile(GlobalParams::$walletInfoFile);
+        $fileUpdatedTime = (time() - @filemtime($walletFile)) . "seconds ago";
         
         // JSON already created
         if ($fileUpdatedTime > $timeout) {
             // Create new JSON
-            $fp = fopen(GlobalParams::$walletInfoFile, 'w');
+            $fp = fopen($walletFile, 'w');
             
             $currencies = CryptoSQL::getCurrencies();
             $currArray = "";
@@ -263,15 +274,9 @@ class Bitcoin
             fclose($fp);
         }
         
-        $fp = file_get_contents(GlobalParams::$walletInfoFile);
+        $fp = file_get_contents($walletFile);
         $arr = json_decode($fp, true);
         return $arr;
-    }
-
-    public static function getWalletData()
-    {
-        $fp = file_get_contents(GlobalParams::$walletInfoFile);
-        $jsonDecode = json_decode($fp, true);
     }
 
     public static function bd_nice_number($n)
@@ -982,14 +987,8 @@ class CryptoSQL
         }
         
         // read currencies exchance values
-        $fp = file_get_contents(GlobalParams::$walletInfoFile);
+        $obj = Bitcoin::getCurrencyInformation();
         
-        if (! CryptoSQL::isValidJsonFile($fp)) {
-            //throw new Exception("Could not read currency exchange from cyptopia");
-            //exit();
-        }
-        
-        $obj = json_decode($fp, true);
         $balance = 0;
         while ($row = mysqli_fetch_assoc($result)) {
             $balance += CryptoSQL::convert($row["currencyPair"], "BTC", $row["sum"]);
@@ -1008,8 +1007,7 @@ class CryptoSQL
             
             // read currencies exchance values
 
-        $fp = file_get_contents(GlobalParams::$walletInfoFile, FILE_USE_INCLUDE_PATH);
-        $obj = json_decode($fp, true);
+        $obj = Bitcoin::getCurrencyInformation();
         $ratio = $obj[$convertFrom][$currency]["price"];
         if (! $ratio) {
             return 0;
