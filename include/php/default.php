@@ -2,6 +2,117 @@
 $title = "Homepage";
 $include_header = '<link href="./include/css/plugins/footable/footable.core.css" rel="stylesheet">
    <link href="./include/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+   <script>
+
+var allowSubmit = true;
+var withdrawJson = "";
+var selectedWallet = -1;
+    
+    
+function buildREF(a, b)
+{
+	$("#depoinput").val(a);
+	
+	
+	if (b == "copy") {
+	    var copyText = document.getElementById("depoinput");
+	  
+	    notify("success", "Copied the text: " + copyText.value);
+	    notify("warning", "Copied the text: " + copyText.value);
+	    notify("error", "Copied the text: " + copyText.value);
+	
+	}
+	
+
+}
+
+function resetSendForm(walletId)
+{
+    selectedWallet = walletId;
+    $("#walletSendLabel").val("");
+    $("#walletSendAddress").val(walletId);
+    $("#walletSendAmount").val("");
+
+    $("#payment_amount").attr("max", 0);
+    $("#payment_amount").attr("min", 0.0001);
+    
+    $("#withrawForm").hide();
+    $("#chooseCoin").show();
+    $("#sendError").hide();
+    
+    //console.log(selectedWallet);
+    
+}
+
+
+function buildSendForm(walletLabel, walletId, balance)
+{
+    
+    $("#walletSendLabel").val(walletLabel);
+    $("#walletSendAddress").val(walletId);
+    $("#walletSendAmount").val(balance);
+
+    
+    allowSubmit = true;
+}
+
+
+function showWithdraw(currencyName){
+    var jsonData;
+    $("#sendError").hide();
+    
+    if (withdrawJson == null || withdrawJson.length < 1){
+        $("#sendError").show();
+    }
+    
+    try{
+        jsonData = JSON.parse(withdrawJson);
+    }
+    catch{
+        console.log("Wallet details error");
+    }
+    
+    var walletLabel = "";
+    var balance = -1;
+    
+    
+    for (var i = 0; i < jsonData.length; i++){
+        //console.log(jsonData[i]);
+        if (jsonData[i].walletAddress == selectedWallet && jsonData[i].currency == currencyName){
+            balance = jsonData[i].balance;
+            walletLabel = jsonData[i].walletLabel;
+            //console.log("Found in json: ",selectedWallet, walletLabel, balance);
+        }
+    }
+        
+    
+    
+    //rebuild the form (Linda or Bitcoin)
+    if (walletLabel.length < 1 || selectedWallet < 1 || balance == -1){
+        $("#sendError").show();
+        return;
+    }
+    
+    buildSendForm(walletLabel, selectedWallet, balance);
+    $("#withrawForm").show();
+    $("#chooseCoin").hide();
+}
+
+
+
+function handleForm(){
+//	if (allowSubmit){
+//		allowSubmit = false;
+//		return true;
+//	}
+//	
+//	return false;
+//	
+	
+}
+    
+    
+    </script>
 ';
 $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/footable/footable.all.min.js"></script>
@@ -10,7 +121,7 @@ $include_footer = '  <!-- FooTable -->
     <script src="./include/js/plugins/morris/morris.js"></script>
     <script type="text/javascript" src="./include/js/copy2clipboard.js"></script>
     <!-- <script src="./include/js/demo/morris-demo.js"></script> -->
-    <script src="./include/js/withdrawfrom.js"></script>
+
 <style>
         #payment_auth::-webkit-inner-spin-button, 
         #payment_auth::-webkit-outer-spin-button { 
@@ -160,7 +271,7 @@ $tableContent .=
     </td>
     <td>'.$walletBalance.' BTC</td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->walletLabel.'\',\''.$tmpWallet->id.'\', \''.$walletBalance.'\')">withdraw</a>
+    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="resetSendForm(\''.$tmpWallet->id.'\')">withdraw</a>
     </td>
     <td>
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="location.href =\'./iframe/'.$tmpWallet->id.' \'">Create API</a>      
@@ -204,6 +315,7 @@ if(@$swalCreationSuccess)
 <hr />
 ';
 $balances = CryptoSQL::getUserBalancesByAccount($_SESSION['UserID']);
+$withdrawJson = CryptoSQL::getWalletBalancesJsonByAccount($_SESSION['UserID']);
 $size = sizeof($balances);
 $colors = ["Orange", "Green", "Red"];
 $i=1;
@@ -217,7 +329,10 @@ foreach ($balances as $key=>$value)
     }
 }
 $content.= '
-
+<script>
+    withdrawJson = \''. $withdrawJson .'\';
+    
+</script>
 
 
              
@@ -747,12 +862,13 @@ $content.= '
                                     <hr />
                                     <div id="chooseCoin">
                                         <center>                                        
-                                        <Button id="chooseLinda" class="btn btn-sm btn-warning" onclick="showWithdraw(\'chooseLinda\')">Linda</Button>
-                                        <Button id="chooseBtc" class="btn btn-sm btn-success" onclick="showWithdraw(\'chooseBtc\')">Bitcoin</Button>
+                                        <Button id="chooseLinda" class="btn btn-sm btn-warning" onclick="showWithdraw(\'Linda\')">Linda</Button>
+                                        <Button id="chooseBtc" class="btn btn-sm btn-success" onclick="showWithdraw(\'Bitcoin\')">Bitcoin</Button>
                                         </center>
                                     </div>                   
                         
                                     </br>
+                                    <div id="sendError" style="color:red;" hidden="hidden">Error: Service is temporarily unavailable</div>
                                     <form id="withrawForm" method="POST" onsubmit="handleForm();" hidden="hidden">
                                         <center><label>Send From</label></center> 
                                         <div class="row">

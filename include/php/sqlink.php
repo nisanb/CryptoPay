@@ -705,6 +705,33 @@ class CryptoSQL
         
         return $wallet;
     }
+    
+    
+    public static function getWalletBalancesJsonByAccount($email){
+    
+        $email = self::trim_where($email);
+    
+        $sql = "SELECT ub.user, ub.walletID, c.currencyPair, w.walletLabel, ub.balance FROM userbalances ub INNER join wallets w on ub.walletID = w.id INNER JOIN currencies c on ub.currencyID = c.id WHERE user = \"$email\"";
+        $queryResult = CryptoSQL::getConn()->query($sql);
+        if (!$queryResult) {
+            // Oh no! The query failed.
+            throw new Exception("Could not query for account wallets.<br />" . CryptoSQL::getConn()->error);
+        }
+    
+    
+        $array = array();
+        foreach ($queryResult as $row){
+            $myObj = new stdClass();
+            $myObj->currency = $row["currencyPair"];
+            $myObj->walletLabel = $row["walletLabel"];
+            $myObj->walletAddress = $row["walletID"];
+            $myObj->balance = $row["balance"];
+            array_push($array, $myObj);
+        }
+        print_r(json_encode($array));
+        return json_encode($array);
+    }
+    
 
     public static function convertCurrency($from, $to, $value)
     {}
