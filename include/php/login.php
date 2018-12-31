@@ -81,7 +81,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CryptoSell | Login</title>
-    <link rel="icon" href="./include/img/linda_icon.png" />
+    <link rel="icon" href="./include/img/logo.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="./include/css/animate.css" rel="stylesheet">
@@ -106,11 +106,17 @@ else{
         <div>
             <div>
                 <h1 class="logo-name">
-                <img src="./include/img/linda_logo.png" style="width: 120px; height: 120px;" />
+                <img src="./include/img/logo.png" style="width: 100%;"/>
+               
                 </h1>
-
+ <br />
+                <br />
+                <br />
+                <br />
+                <br />
+       
+               
             </div>
-            <h3>Welcome to CryptoSell</h3>
             
             <?php
                 if(isset($error)){
@@ -119,6 +125,7 @@ else{
                 
                 if(@$displayLogin)
                 {
+                    @session_destroy();
                     echo '
 <p>Log-In to see it in action!</p>
                         <form class="m-t" role="form" action="./login" method="POST">
@@ -147,12 +154,13 @@ else{
                 {
                     $arr = CryptoSQL::getAuth($email);
                     echo '
-<strong>Stronger security for your CryptoSell Wallet!</strong><br />
+<strong style="font-size: 25px;">Stronger security for your CryptoSell Wallet!</strong><br /><br /><br />
 <small>We provide Google 2 Factor Authentication protocol in order to secure your account.<br />
 Please download Google Authenticator 
 (<a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en">Android</a> / 
 <a target="_blank" href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>) and scan the barcode below:
 </small>
+     <br /><br />
 <br />
 <img src="'.$arr["img"].'" />
 <br >
@@ -181,6 +189,7 @@ Please download Google Authenticator
               else if(@$displayAuth)
               {
                   echo '
+    Please use your Google Authenticator application in order to retreive your temporary secret password.
                         <form class="m-t" role="form" action="./login" method="POST">
                             <div class="form-group">
                                 <input type="number" class="form-control" placeholder="Google Auth key" name="authKey" required>

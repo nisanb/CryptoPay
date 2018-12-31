@@ -11,7 +11,7 @@
     <title>CryptoSell | <?=$title;?></title>
     <head>
 </head>
-	<link rel="icon" href="./include/img/linda_icon.png" />
+	<link rel="icon" href="./include/img/logo.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -36,7 +36,7 @@
                     <li class="nav-header">
                         <div class="dropdown profile-element"> <span>
                         <a href="./">
-                            <img alt="image" class="img-circle" style="width: 50px;" src="./include/img/linda_icon.png" />
+                            <img alt="image" class="img-circle" style="width: 60px;" src="./include/img/logo_icon.png" />
                             </a>
                              </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -132,7 +132,7 @@
            <li>
                               <div class="dropdown-messages-box">
                                   <a href="#" class="pull-left">
-                                      <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
+                                      <img alt="image" class="img-circle" src="./include/img/logo_icon.png">
                                   </a>
                                   <div class="media-body">
                                       <small class="pull-right" style="color: blue;">New</small>
@@ -145,7 +145,7 @@
                       <li>
                               <div class="dropdown-messages-box">
                                   <a href="#" class="pull-left">
-                                      <img alt="image" class="img-circle" src="./include/img/linda_icon.png">
+                                      <img alt="image" class="img-circle" src="./include/img/logo_icon.png">
                                   </a>
                                   <div class="media-body">
                                       <small class="pull-right" style="color: blue;">New</small>
@@ -183,7 +183,7 @@
               <div class="wrapper wrapper-content">
                 <div class="row wrapper border-bottom white-bg page-heading">
                 <div class="col-lg-10">
-                    <h2><img src="./include/img/linda_icon.png" style="height: 25px; width: 25px;" />&nbsp;&nbsp;CryptoSell - <?=$title;?></h2>
+                    <h2><img src="./include/img/logo_icon.png" style="height: 25px; width: 25px;" />&nbsp;&nbsp;CryptoSell - <?=$title;?></h2>
                     <ol class="breadcrumb">
                         <li>
                             <a href="./">Home</a>

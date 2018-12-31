@@ -18,13 +18,14 @@ $_API['itemID']    = $_POST['itemID'];
 $_API['itemName']  = $_POST['itemName'];
 $_API['itemPrice'] = $_POST['itemPrice'];
 $_API['itemCurrency'] = $_POST['itemCurrency'];
+$_API['referTo']        =   $_POST['referTo'];
 $_API['priceText']  =   $_API['itemCurrency'] == "USD" ? "$".$_API['itemPrice'] : $_API['itemPrice'] . " " . $_API['itemCurrency'];
 echo "<pre>";
 print_r($_POST);
 echo "<br />";
 echo "<textarea>".$_SESSION['fields']."</textarea>";
 echo "</pre>";
-?>
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,12 +63,8 @@ echo "</pre>";
 	    <!--   Creative Tim Branding   -->
 	    <a href="http://creative-tim.com" target="_blank">
 	         <div class="logo-container">
-	            <div class="logo">
-	                <img src="https://imgf.downloadapk.net/f/34/43dc2d_0.png">
-	            </div>
-	            
-	            <div class="brand">
-	                ePayments Online
+	            <div class="brand" style="width: 500px;">
+	                <img src="./include/img/logo.png" style="width: 50%;"/>
 	            </div>
 	        </div>
 	    </a>
@@ -147,11 +144,23 @@ echo "</pre>";
   </div></div>
   <div id="response2"></div>
 
-		                                    	
 		                                    	<script>
+    function transfer() {
+        alert("Transferring..");
+
+    	var url = "<?=$_API['referTo'];?>";
+    	
+    	var inputs = `<?php  
+        	foreach ($_API as $key=>$value) {
+              echo '<input type="text" name="'.$key.'" value="'.$value.'" />';
+          } ?>`;
+    	var form = $('<form action="' + url + '" method="post">' +
+    	  inputs +
+    	  '</form>');
+    	$('body').append(form);
+    	form.submit();
+    }
     (function($){
-        $("#finishtab").html('<a href="#description">Pending payment..</a>');
-        
         var myInterval;
         function startWaiting(tx){
 			clearInterval(myInterval);
@@ -180,18 +189,27 @@ echo "</pre>";
                  console.log("\n\n");
              	$('#displayLoading').hide();
             	 $("#nextbtn").val("Pending transaction..");
-             	if(data.status == 2)
+             	if(data.status != 2)
              	{
+                 	$('.btn-previous').show();
+                 	$('.btn-next').trigger('click');
 					//Transaction received fully!
-                    $("#nextbtn").val("FINISH");
-                    $("#captain").html("<img src='./include/img/success.png' />");
+                    var html = `
+                        <div align="center"><strong style="font-size: 25px;">Successfully Purchased!</strong></div>
+                        <br /><br /><br />
+                        <table><tr><td>
+                        <img src="./include/img/success.png" style="width: 80px;" />
+                            </td><td>
+                            You have successfully paid the full amount required!<br />
+                            Click on \"Finish\" button in order to return to merchants' website<br /> in order to complete your purchase.
+                            </td></tr></table>
+                            <br /><br />
+                         
+                        `;
+                        $("#captain").html(html);
                     $("#finishtab").html('<a href="#description" data-toggle="tab">FINISH</a>');
 					clearInterval(myInterval);
-					// transfer back to thank you page in POST
-					//all fields + user written fields
              	}
-               
-             	console.log($('#distatus').html());
                  $('#distatus').html("Received " + data.received + " / " + data.required + " " + data.currency);
              },
              error: function( jqXhr, textStatus, errorThrown ){
@@ -208,7 +226,7 @@ echo "</pre>";
         }
         function processForm( e ){
             try{
-                $("#nextbtn").val("Generating address..");
+//                 $("#nextbtn").val("Generating address..");
 
 
                 
@@ -222,7 +240,7 @@ echo "</pre>";
                 dataType : 'json',
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
-                    $("#nextbtn").val("Wallet generated!");
+//                     $("#nextbtn").val("Wallet generated!");
                 	$('#captain').html("Address generated successfully!");
                 	
                     
@@ -231,6 +249,7 @@ echo "</pre>";
                 	if(data.status == 0)
                 	{
                     	//Error occured
+                    	
                 		$('#response').html( data.body );
                 		console.log("Error Details below");
                 		console.log(data);
@@ -262,30 +281,28 @@ echo "</pre>";
             $("form").submit();
         });
     })(jQuery);
+
+
+    
 </script>
 		                            </div>
 		                            <div class="tab-pane" id="description">
 		                                <div class="row">
-		                                    <h4 class="info-text"> Drop us a small description.</h4>
-		                                    <div class="col-sm-6 col-sm-offset-1">
-	                                    		<div class="form-group">
-		                                            <label>Room description</label>
-		                                            <textarea class="form-control" placeholder="" rows="6"></textarea>
-		                                        </div>
-		                                    </div>
-		                                    <div class="col-sm-4">
-		                                    	<div class="form-group">
-		                                            <label class="control-label">Example</label>
-		                                            <p class="description">"The room really nice name is recognized as being a really awesome room. We use it every sunday when we go fishing and we catch a lot. It has some kind of magic shield around it."</p>
-		                                        </div>
-		                                    </div>
+		                                    <h4 class="info-text">Successfully Purchased!</h4>
+                        <table><tr><td>
+                        <img src="./include/img/success.png" style="width: 80px;" />
+                            </td><td>
+                            You have successfully paid the full amount required!<br />
+                            Click on \"Finish\" button in order to return to merchants' website<br /> in order to complete your purchase.
+                            </td></tr></table>
+                            <br /><br />
 		                                </div>
 		                            </div>
 		                        </div>
 	                        	<div class="wizard-footer">
 	                            	<div class="pull-right">
 	                                    <input type='button' class='btn btn-next btn-fill btn-danger btn-wd' id="nextbtn" name='next' value='Next' />
-	                                    <input type='button' class='btn btn-finish btn-fill btn-danger btn-wd' name='finish' value='Finish' disabled />
+	                                    <input type='button' onClick='transfer()' class='btn btn-finish btn-fill btn-danger btn-wd' name='finish' id="finishbtn" value='Finish'  />
 	                                </div>
 	                                <div class="pull-left">
 	                                    <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
@@ -575,6 +592,8 @@ $.fn.bootstrapWizard = function(options) {
 	});
 };
 
+
+
 // expose options
 $.fn.bootstrapWizard.defaults = {
 	tabClass:         'nav nav-pills',
@@ -582,6 +601,7 @@ $.fn.bootstrapWizard.defaults = {
 	previousSelector: '.wizard li.previous',
 	firstSelector:    '.wizard li.first',
 	lastSelector:     '.wizard li.last',
+	finishSelector:	  '.wizard li.finish',
 	onShow:           null,
 	onInit:           null,
 	onNext:           null,
@@ -645,6 +665,7 @@ searchVisible = 0;
 transparent = true;
 
 $(document).ready(function(){
+
 	$('#displayLoading').hide();
     $.material.init();
 
@@ -677,18 +698,17 @@ $(document).ready(function(){
   	$('.wizard-card').bootstrapWizard({
         'tabClass': 'nav nav-pills',
         'nextSelector': '.btn-next',
+        'finishSelector': '.btn-finish',
         'previousSelector': '.btn-previous',
-
         onNext: function(tab, navigation, index) {
-        	var $valid = $('.wizard-card form').valid();
+        	/* var $valid = $('.wizard-card form').valid();
         	if(!$valid) {
         		$validator.focusInvalid();
         		return false;
-        	}
+        	} */
         },
 
         onInit : function(tab, navigation, index){
-
           //check number of tabs and fill the entire row
           var $total = navigation.find('li').length;
           $width = 100/$total;

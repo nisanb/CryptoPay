@@ -10,7 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CryptoSell | Error Occured</title>
-<link rel="icon" href="./include/img/linda_icon.png" />
+<link rel="icon" href="./include/img/logo.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
 

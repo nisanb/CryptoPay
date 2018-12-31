@@ -13,7 +13,7 @@ $_API['itemName'] = @$_GET['itemName'];
 $_API['itemCurrency'] = @$_GET['itemCurrency']; //BTC, LTC, Linda, USD
 // echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
 $_API['domain'] = $_SERVER['HTTP_HOST'];
-
+$_API['referTo'] = @isset($_GET['referTo']) ? $_GET['referTo'] : $_SERVER['HTTP_REFERER'];
 
 /**
  * Analyze hidden user fields
@@ -92,7 +92,7 @@ function getButtonCodeToColor($code){
 
 
 <!-- crnc=Linda	-> currency -->
-	<link rel="icon" href="./include/img/linda_icon.png" />
+	<link rel="icon" href="./include/img/logo.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
 	
 
@@ -103,7 +103,8 @@ function getButtonCodeToColor($code){
 	<input type="hidden" name="itemPrice" value="<?=$_API['itemPrice'];?>" />
 	<input type="hidden" name="itemName" value="<?=$_API['itemName'];?>" />
 	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
-	<input type="hidden" name="itemCurrency" value="<?=$_API['itemCurrency']?>" />
+	<input type="hidden" name="itemCurrency" value="<?=$_API['itemCurrency'];?>" />
+	<input type="hidden" name="referTo" value="<?=$_API['referTo'];?>" />
 	<?=$_SESSION['fields'];?>
 
 	<button class="<?=getButtonCodeToColor($_GET['btnClass'])?>" style="font-size: 2em; width:<?=$_GET['btnWidth']?>;" onclick="openWindow()" ><?=$_GET['btnText']?>

@@ -47,7 +47,7 @@ if(isset($_POST['user'])){
         <div>
             <div>
                 <h1 class="logo-name">
-                <img src="./include/img/linda_logo.png" />
+                <img src="./include/img/logo.png" />
                 </h1>
 
             </div>

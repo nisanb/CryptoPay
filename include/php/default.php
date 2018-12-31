@@ -477,7 +477,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -495,7 +495,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
                                     </div>
                                     <div class="media-body">
                                         The point of using Lorem Ipsum is that it has a more-or-less normal.
@@ -507,7 +507,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -525,7 +525,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
                                     </div>
 
                                     <div class="media-body">
@@ -538,7 +538,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
                                     </div>
                                     <div class="media-body">
 
@@ -551,7 +551,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
                                     </div>
                                     <div class="media-body">
                                         Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -563,7 +563,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
 
                                         <div class="m-t-xs">
                                             <i class="fa fa-star text-warning"></i>
@@ -581,7 +581,7 @@ $content.= '
                             <div class="sidebar-message">
                                 <a href="#">
                                     <div class="pull-left text-center">
-                                        <img alt="image" class="img-circle message-avatar" src="./include/img/linda_icon.png">
+                                        <img alt="image" class="img-circle message-avatar" src="./include/img/logo.png">
                                     </div>
                                     <div class="media-body">
                                         Uncover many web sites still in their infancy. Various versions have.

@@ -35,7 +35,7 @@ if(@$_POST["lockScreenPass"])
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CryptoSell | Locked</title>
-	<link rel="icon" href="./include/img/linda_icon.png" />
+	<link rel="icon" href="./include/img/logo.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/font-awesome/css/font-awesome.css" rel="stylesheet">
 
@@ -52,7 +52,7 @@ if(@$_POST["lockScreenPass"])
     <div class="middle-box text-center lockscreen animated fadeInDown" style="width: 400px;">
         <div>
             <div class="m-b-md">
-            <img alt="image" class="img-circle circle-border" src="./include/img/linda_logo.png" style="width: 40%" />
+            <img alt="image" class="img-circle circle-border" src="./include/img/logo_icon.png" style="width: 40%" />
             </div>
             <h3>WALLET LOCKED</h3>
             <h7><strong><?php echo @$_SESSION['UserID']; ?></strong></h7>
