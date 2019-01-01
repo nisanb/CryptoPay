@@ -1,0 +1,24 @@
+CryptoSell LTD
+Crypto Payment Gateway
+
+Why ?
+- Crypto enables cheap and borderless near-instantaneous transactions
+- Increase your sales by accepting multiple CryptoCurrencies
+- Automate your customers' experience using our automatic payments API gateway
+
+What are the features ?
+CryptoSell LTD enable any store or online shop by a quick API reference to receive payments via Bitcoin and Linda Blockchain!
+More supported cryptocurrencies are on their way!
+
+- Website is secured by ComodoSSL
+- 24/7 Live Support
+- Instant transactions support
+- Security relying on blockchains' security
+- Privacy from anonymous attackers!
+- Full API Documentations
+- API Implementation team support
+
+Future:
+- Support more cryptocurrencies on-demand
+- Issue CryptoSell Credit Cards - Directly use BTC!
+- Android & iOS Applications incoming!
