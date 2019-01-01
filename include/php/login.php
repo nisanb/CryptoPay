@@ -86,6 +86,11 @@ else{
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="./include/css/animate.css" rel="stylesheet">
     <link href="./include/css/style.css" rel="stylesheet">
+    <script type="text/javascript"> //<![CDATA[ 
+var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
+document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+//]]>
+</script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <style>
         input[type=number]::-webkit-inner-spin-button, 
@@ -107,6 +112,9 @@ else{
             <div>
                 <h1 class="logo-name">
                 <img src="./include/img/logo.png" style="width: 100%;"/>
+                <script language="JavaScript" type="text/javascript">
+TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
+</script>
                
                 </h1>
  <br />

@@ -594,7 +594,7 @@ class CryptoSQL
         
         $email = self::trim_where($email);
         
-        $sql = "SELECT c.currencyPair as currency, sum(ub.balance) as sum FROM userbalances as ub inner join currencies as c on ub.currencyID = c.id where ub.user in (\"{$email}\")";
+        $sql = "SELECT c.currencyPair as currency, sum(ub.balance) as sum FROM userbalances as ub inner join currencies as c on ub.currencyID = c.id where ub.user in (\"{$email}\") group by ub.currencyID";
         if (! $result = CryptoSQL::getConn()->query($sql)) {
             // Oh no! The query failed.
             throw new Exception("Could not query for account balances.<br />" . CryptoSQL::getConn()->error);
@@ -728,7 +728,7 @@ class CryptoSQL
             $myObj->balance = $row["balance"];
             array_push($array, $myObj);
         }
-        print_r(json_encode($array));
+//         print_r(json_encode($array));
         return json_encode($array);
     }
     

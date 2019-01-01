@@ -187,7 +187,6 @@ if(@$_POST['payment_do'])
     }
     catch(Exception $e)
     {
-        //echo $e->getMessage();
         $include_footer .= "
             <script>
                 notify('error', '".$e->getMessage()."');
@@ -204,6 +203,7 @@ $_ACCOUNT['Wallets'] = CryptoSQL::getWalletInfoTableByAccount($_SESSION['UserID'
 $balance = CryptoSQL::getTotalBalaceOfWallet();
 $pending = CryptoSQL::getTotalPending();
 $include_footer.= '
+    
 <script>
 $(function() {
 
@@ -255,8 +255,10 @@ $lastWitValue = 0;
 $tableContent = null;
 $count = 1;
 $qrVar = null;
+
 foreach(CryptoSQL::getWalletsByAccount($_SESSION['UserID']) as $tmpWallet)
 {
+    
     $walletBalance = CryptoSQL::getTotalBalaceOfWallet($tmpWallet->id);
 $tableContent .=
     '<tr>
@@ -278,6 +280,7 @@ $tableContent .=
     </td>
     </tr>';
 }
+
 $content .= '
 
 <input type="text" hidden="true" value="Hello World" name="address" id="address">
@@ -292,10 +295,13 @@ $content .= '
     else
         swal("Error!", "Could not create wallet using the label provided ('.@$_POST['walletLabel'].').", "error");
     }';
+
 if(@$swalCreationSuccess)
     {
+       
         $include_footer .= '<script>createWallet('.$swalCreationSuccess.')</script>'; 
     }
+    
     $content .= '
 </script>
   <div class="row">
@@ -314,20 +320,29 @@ if(@$swalCreationSuccess)
                         <h1 class="no-margins">'.$balance.' BTC</h1>
 <hr />
 ';
+                        
 $balances = CryptoSQL::getUserBalancesByAccount($_SESSION['UserID']);
+
 $withdrawJson = CryptoSQL::getWalletBalancesJsonByAccount($_SESSION['UserID']);
+
 $size = sizeof($balances);
+
 $colors = ["Orange", "Green", "Red"];
 $i=1;
+
 foreach ($balances as $key=>$value)
 {
+    if(empty($key)){
+        break;
+    }
     $amount = number_format($value, 8);
     $content .= '<span class="label label-info pull-left" style="background-color: '.$colors[$i-1].';">'.$amount.'  '.$key.'</span>';
     if($i++ < $size)
     {
-        $content .= '    <span class="label label-info pull-left" style="background-color: white; color: black;">+</span>';
+        $content .= '    <span class="label label-info pull-left" style="background-color: white; color: black;">&nbsp;</span>';
     }
 }
+
 $content.= '
 <script>
     withdrawJson = \''. $withdrawJson .'\';
@@ -929,7 +944,7 @@ $content .= '
                                         </br>                                    
                                         <div>
                                             <input type="hidden" name="payment_do" value="1" />
-                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.$tmpWallet->id.'\',\''.$tmpWallet->walletLabel.'\', \''.$balance.'\')">Cancel</a>
+                                            <a data-toggle="modal" class="btn btn-sm btn-danger pull-left m-t-n-xs" href="#withdraw-form" onclick="buildSendForm(\''.@$tmpWallet->id.'\',\''.@$tmpWallet->walletLabel.'\', \''.$balance.'\')">Cancel</a>
                                             <button id="btnWithdraw" class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Withdraw</strong></button>
                                         </div>
                                     </form>

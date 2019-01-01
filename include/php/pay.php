@@ -123,7 +123,7 @@ echo "</pre>";
 		                                        	foreach($_API as $key=>$value){
 		                                        	    echo "<input type=\"hidden\" name=\"".$key."\" value=\"".$value."\" />";
 		                                        	}
-		                                        	echo $_SESSION['fields'];
+		                                        	echo @$_SESSION['fields'];
 		                                        	?>
 		                                    	</div>
 		                                    	</form>
@@ -201,7 +201,7 @@ echo "</pre>";
                         <img src="./include/img/success.png" style="width: 80px;" />
                             </td><td>
                             You have successfully paid the full amount required!<br />
-                            Click on \"Finish\" button in order to return to merchants' website<br /> in order to complete your purchase.
+                            Click on <b>Finish</b> button in order to return to merchants' website<br /> in order to complete your purchase.
                             </td></tr></table>
                             <br /><br />
                          
@@ -293,7 +293,7 @@ echo "</pre>";
                         <img src="./include/img/success.png" style="width: 80px;" />
                             </td><td>
                             You have successfully paid the full amount required!<br />
-                            Click on \"Finish\" button in order to return to merchants' website<br /> in order to complete your purchase.
+                            Click on "Finish" button in order to return to merchants' website<br /> in order to complete your purchase.
                             </td></tr></table>
                             <br /><br />
 		                                </div>

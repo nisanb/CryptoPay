@@ -84,7 +84,7 @@ $content .= '
                     <div class="ibox-content">
                         <h1 class="no-margins">' . $income . ' BTC</h1>
                         <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
-                        <small>Total views</small>
+                        <small>Total Income</small>
                     </div>
                 </div>
             </div>
@@ -95,9 +95,11 @@ $content .= '
                         <h5>Wallet Information</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">
-                            Display information..</h1>
-                    </div>
+                           <img src="./include/img/rollup/graph.png" style="height: 12em; width: 16em;"/>
+                            <span class="pull-right">
+                            <img src="./include/img/rollup/circle.png" />
+                            </span>
+                            </div>
                 </div>
             </div>
             <div class="col-lg-4">
