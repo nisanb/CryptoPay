@@ -41,7 +41,11 @@ echo "</pre>";
     <link href="./include/css/pay.css" rel="stylesheet" />
   	<script src="include/js/jquery-3.3.1.min.js"></script>
     <script src="./include/js/bootstrap3_3_download.js"></script>
-   
+   <script type="text/javascript"> //<![CDATA[ 
+var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
+document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+//]]>
+</script>
 </head>
 <body>
     <!doctype html>
@@ -83,6 +87,10 @@ echo "</pre>";
 		                        	<h3 class="wizard-title">
 		                        		Automatic Cryptocurrency Payments 
 		                        	</h3>
+		                        	<script language="JavaScript" type="text/javascript">
+TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
+</script>
+
 									<h5>You have been redirected from <?=@$_API['domain'];?></h5>
 		                    	</div>
 								<div class="wizard-navigation">
