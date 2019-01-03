@@ -546,7 +546,8 @@ class CryptoSQL
         $sql = "SELECT creditWalletAddress from transactions where iStatus!=2 AND 
                 clientIP in (\"{$clientIP}\") AND
                 itemID = {$itemID}
-                AND currency = {$currency}";
+                AND currency = {$currency}
+		AND requiredAmount = {$price}";
 
         if (! $result = $conn->query($sql)) {
             // Oh no! The query failed.

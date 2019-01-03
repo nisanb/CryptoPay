@@ -1,7 +1,6 @@
 Options -Indexes
 RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteBase /riteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^wallet/(.*)$ index.php?act=wallet&wid=$1
 RewriteRule ^iframe/(.*)$ index.php?act=iframe&wid=$1

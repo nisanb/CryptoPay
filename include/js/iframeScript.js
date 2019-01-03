@@ -173,7 +173,7 @@ function buildIcon() {
 	//$("#code").empty();    
     
     if (isValidItemDetails()){
-    	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="' +root+ '/CryptoSell/api.php?img='+selectedIconName+'&iconWidth='+iconWidth+'&iconColor='+iconColor+
+    	$("#code").val('<iframe target="parent" style="border: 0px;" id="CryptoSell" src="' +root+ '/api?img='+selectedIconName+'&iconWidth='+iconWidth+'&iconColor='+iconColor+
 				'&btnWidth=' + buttonWidth + '&btnClass='+ buttonClass +'&btnText='+ buttonText +'&key='+ key +'&itemID='+ itemID +'&itemName=' +itemName+
 				'&itemPrice=' + itemPrice + '&itemCurrency='+ currency +'&referTo=' + thankYouPage + '&userParameters=' + prm +'"></iframe>');
     }

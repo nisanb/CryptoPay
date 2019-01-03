@@ -12,8 +12,9 @@ $_API['itemID'] = @$_GET['itemID'];
 $_API['itemName'] = @$_GET['itemName'];
 $_API['itemCurrency'] = @$_GET['itemCurrency']; //BTC, LTC, Linda, USD
 // echo CryptoSQL::convert($_API['currency'], "BTC", $_API['price']);
-$_API['domain'] = $_SERVER['HTTP_HOST'];
+// $_API['domain'] = $_SERVER['HTTP_HOST'];
 $_API['referTo'] = @isset($_GET['referTo']) ? $_GET['referTo'] : $_SERVER['HTTP_REFERER'];
+$_API['domain'] = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
 
 /**
  * Analyze hidden user fields

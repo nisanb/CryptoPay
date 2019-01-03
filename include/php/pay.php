@@ -197,7 +197,7 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                  console.log("\n\n");
              	$('#displayLoading').hide();
             	 $("#nextbtn").val("Pending transaction..");
-             	if(data.status != 2)
+             	if(data.status == 2)
              	{
                  	$('.btn-previous').show();
                  	$('.btn-next').trigger('click');

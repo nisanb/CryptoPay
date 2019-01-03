@@ -51,7 +51,7 @@ function buildSendForm(walletLabel, walletId, balance)
     $("#walletSendLabel").val(walletLabel);
     $("#walletSendAddress").val(walletId);
     $("#walletSendAmount").val(balance);
-
+    $("#payment_amount").attr("max", balance);
     
     allowSubmit = true;
 }
@@ -276,7 +276,7 @@ $tableContent .=
     <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="resetSendForm(\''.$tmpWallet->id.'\')">withdraw</a>
     </td>
     <td>
-    <a data-toggle="modal" class="btn btn-primary" href="#withdraw-form" onclick="location.href =\'./iframe/'.$tmpWallet->id.' \'">Create API</a>      
+    <a data-toggle="modal" class="btn btn-primary" href="./iframe/'.$tmpWallet->id.'" >Create API</a>      
     </td>
     </tr>';
 }
