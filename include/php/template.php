@@ -11,7 +11,7 @@
     <title>CryptoSell | <?=$title;?></title>
     <head>
 </head>
-	<link rel="icon" href="./include/img/logo.png" />
+    <link rel="icon" href="./include/img/logo_icon.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
 

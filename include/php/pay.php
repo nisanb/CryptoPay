@@ -20,11 +20,13 @@ $_API['itemPrice'] = $_POST['itemPrice'];
 $_API['itemCurrency'] = $_POST['itemCurrency'];
 $_API['referTo']        =   $_POST['referTo'];
 $_API['priceText']  =   $_API['itemCurrency'] == "USD" ? "$".$_API['itemPrice'] : $_API['itemPrice'] . " " . $_API['itemCurrency'];
+/*
 echo "<pre>";
 print_r($_POST);
 echo "<br />";
 echo "<textarea>".$_SESSION['fields']."</textarea>";
 echo "</pre>";
+*/
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,10 +34,11 @@ echo "</pre>";
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
 
-    <title>ePayments - Online Cryptocurrency Payment System</title>
+    <title>CryptoSell - Online Cryptocurrency Payment System</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./include/css/materialize.css" rel="stylesheet" id="bootstrap-select">
         
+  <link rel="icon" href="./include/img/logo_icon.png" />
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="./include/css/select.css" rel="stylesheet" id="bootstrap-select">
     <link href="./include/css/pay.css" rel="stylesheet" />

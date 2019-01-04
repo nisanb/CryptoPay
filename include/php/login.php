@@ -81,7 +81,7 @@ else{
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>CryptoSell | Login</title>
-    <link rel="icon" href="./include/img/logo.png" />
+    <link rel="icon" href="./include/img/logo_icon.png" />
     <link href="./include/css/bootstrap.min.css" rel="stylesheet">
     <link href="./include/css/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link href="./include/css/animate.css" rel="stylesheet">
