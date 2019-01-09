@@ -38,7 +38,7 @@ echo "</pre>";
     <title>CryptoSell - Online Cryptocurrency Payment System</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./include/css/materialize.css" rel="stylesheet" id="bootstrap-select">
-        
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="icon" href="./include/img/logo_icon.png" />
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <link href="./include/css/select.css" rel="stylesheet" id="bootstrap-select">
@@ -222,7 +222,10 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                     $("#finishtab").html('<a href="#description" data-toggle="tab">FINISH</a>');
 					clearInterval(myInterval);
              	}
-                 $('#distatus').html("Received " + data.received + " / " + data.required + " " + data.currency);
+             	var perCent = (data.received / data.required * 100).toFixed(0);
+             	console.log("Data Received: " + data.received + " : Data Required: " + data.required + " Percent: " + perCent);
+             	var myProgressBar = data.received+" out of " + data.required + " " + data.currency + "</center><div  class=\"w3-border\"><div class=\"w3-green\" style=\"color: black; height:24px;width:"+perCent+"%\">"+perCent+"%</div></div>";
+                 $('#distatus').html(myProgressBar);
              },
              error: function( jqXhr, textStatus, errorThrown ){
                  
@@ -271,7 +274,7 @@ $('#captain').html(data.body + ".<br />Click <a href='"+data.referFrom+"'>Here</
                 		return;
                 	}
                
-                    $('#captain').html("<big>Please transfer to wallet address:<br /><br /><center><strong>" + data.body + "</center></strong></big><br /><br /><br /><div valign='middle' align='center' id='distatus'></div>");
+                    $('#captain').html("<big>Please transfer to wallet address:<br /><br /><center><strong>" + data.body + "</center></strong></big><br /><br /><br /><div valign='middle' id='distatus'></div>");
                     startWaiting(data.body);
                     
                 },
