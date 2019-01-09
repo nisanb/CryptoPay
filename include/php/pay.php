@@ -20,6 +20,7 @@ $_API['itemPrice'] = $_POST['itemPrice'];
 $_API['itemCurrency'] = $_POST['itemCurrency'];
 $_API['referTo']        =   $_POST['referTo'];
 $_API['priceText']  =   $_API['itemCurrency'] == "USD" ? "$".$_API['itemPrice'] : $_API['itemPrice'] . " " . $_API['itemCurrency'];
+$_API['referFrom']	=	$_POST['referFrom'];
 /*
 echo "<pre>";
 print_r($_POST);
@@ -266,7 +267,7 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                 		$('#response').html( data.body );
                 		console.log("Error Details below");
                 		console.log(data);
-                		$('#captain').html(data);
+$('#captain').html(data.body + ".<br />Click <a href='"+data.referFrom+"'>Here</a> to return to merchant's website.");
                 		return;
                 	}
                

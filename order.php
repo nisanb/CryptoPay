@@ -550,7 +550,7 @@ for (var attr in meta) {
               <!-- <button type="submit" name="add" id="AddToCart" class="btn">
                 <span id="AddToCartText">Add to Cart</span>
               </button> -->
-              <iframe target="parent" style="border: 0px;" id="CryptoSell" src="http://localhost/cryptosell/api?img=12&iconWidth=50&iconColor=black&btnWidth=300&btnClass=1&btnText=Buy Now&key=-EtWNleRmVr-VPPF22KVvW-ZG&itemID=1&itemName=iMac&itemPrice=1.15&itemCurrency=USD&referTo=http://localhost/CryptoSell/thanks.php&userParameters="></iframe>
+<iframe target="parent" style="border: 0px;" id="CryptoSell" src="https://cryptosell.ltd/api?img=11&iconWidth=50&iconColor=black&btnWidth=300&btnClass=1&btnText=Buy Now&key=-EtWNleRmVr-VPPF22KVvW-ZG&itemID=1&itemName=iMac&itemPrice=1.15&itemCurrency=USD&referTo=https://www.CryptoSell.ltd/thanks&userParameters="></iframe>
             </div>
             
           </form>

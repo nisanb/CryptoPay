@@ -15,6 +15,7 @@ $_API['itemCurrency'] = @$_GET['itemCurrency']; //BTC, LTC, Linda, USD
 // $_API['domain'] = $_SERVER['HTTP_HOST'];
 $_API['referTo'] = @isset($_GET['referTo']) ? $_GET['referTo'] : $_SERVER['HTTP_REFERER'];
 $_API['domain'] = parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST);
+$_API['referFrom'] = $_SERVER['HTTP_REFERER'];
 
 /**
  * Analyze hidden user fields
@@ -106,6 +107,7 @@ function getButtonCodeToColor($code){
 	<input type="hidden" name="itemID" value="<?=$_API['itemID']?>" />
 	<input type="hidden" name="itemCurrency" value="<?=$_API['itemCurrency'];?>" />
 	<input type="hidden" name="referTo" value="<?=$_API['referTo'];?>" />
+	<input type="hidden" name="referFrom" value="<?=$_API['referFrom'];?>" />
 	<?=$_SESSION['fields'];?>
 
 	<button class="<?=getButtonCodeToColor($_GET['btnClass'])?>" style="font-size: 2em; width:<?=$_GET['btnWidth']?>;" onclick="openWindow()" ><?=$_GET['btnText']?>
