@@ -1,9 +1,4 @@
-<?php
-if(!$_POST)
-{
-    die("You cannot enter this page directly.");
-}
-?>
+
 <!doctype html>
 <!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
 <!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
@@ -34,9 +29,11 @@ if(!$_POST)
 
   <!-- Title and description ================================================== -->
   <title>
-  Your Shopping Cart &ndash; One Page Checkout for Shopify
+  One page checkout shopify - iMac &ndash; One Page Checkout for Shopify
   </title>
 
+  
+  <meta name="description" content="The best one-page checkout for your Shopify store!">
   
 
   <!-- Helpers ================================================== -->
@@ -45,11 +42,18 @@ if(!$_POST)
 
 
 
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Your Shopping Cart">
-  <meta property="og:url" content="https://one-page-checkout.com/cart">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="iMac">
+  <meta property="og:url" content="https://one-page-checkout.com/products/one-page-checkout-shopify">
   
+  <meta property="og:image" content="http://cdn.shopify.com/s/files/1/1194/5066/products/imac_grande.jpeg?v=1457347442">
+  <meta property="og:image:secure_url" content="https://cdn.shopify.com/s/files/1/1194/5066/products/imac_grande.jpeg?v=1457347442">
+  
+  <meta property="og:price:amount" content="1,000.00">
+  <meta property="og:price:currency" content="EUR">
 
+
+  <meta property="og:description" content="The best one-page checkout for your Shopify store!">
 
 <meta property="og:site_name" content="One Page Checkout for Shopify">
 
@@ -59,8 +63,14 @@ if(!$_POST)
 <meta name="twitter:card" content="summary">
 
 
+  <meta name="twitter:title" content="iMac">
+  <meta name="twitter:description" content=" ">
+  <meta name="twitter:image" content="https://cdn.shopify.com/s/files/1/1194/5066/products/imac_medium.jpeg?v=1457347442">
+  <meta name="twitter:image:width" content="240">
+  <meta name="twitter:image:height" content="240">
 
-  <link rel="canonical" href="https://one-page-checkout.com/cart">
+
+  <link rel="canonical" href="https://one-page-checkout.com/products/one-page-checkout-shopify">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#99ffcc">
 
@@ -82,6 +92,7 @@ if(!$_POST)
 
   <!-- Header hook for plugins ================================================== -->
   <meta id="shopify-digital-wallet" name="shopify-digital-wallet" content="/11945066/digital_wallets/dialog">
+<link rel="alternate" type="application/json+oembed" href="https://one-page-checkout.com/products/one-page-checkout-shopify.oembed">
 <script id="shopify-features" type="application/json">{"accessToken":"1982d7ac3399bca5f73cb43ef11b3291","betas":[],"domain":"one-page-checkout.com","shopId":11945066,"smart_payment_buttons_url":"https:\/\/cdn.shopifycloud.com\/payment-sheet\/assets\/latest\/spb.js"}</script>
 <script>var Shopify = Shopify || {};
 Shopify.shop = "exclusive-checkout-demo.myshopify.com";
@@ -89,7 +100,7 @@ Shopify.currency = {"active":"EUR","rate":"1.0"};
 Shopify.theme = {"name":"Exclusive Checkout theme","id":111663495,"theme_store_id":null,"role":"main"};
 Shopify.theme.handle = "null";
 Shopify.theme.style = {"id":null,"handle":null};</script>
-<script id="__st">var __st={"a":11945066,"offset":-18000,"reqid":"cc34e36f-b280-4268-b6fd-4e0d452f8f9d","pageurl":"one-page-checkout.com\/cart?view=terms","t":"prospect","u":"0fcc7e8a2abe"};</script>
+<script id="__st">var __st={"a":11945066,"offset":-18000,"reqid":"f96674df-ac12-40ea-a4d3-debe7c9f3428","pageurl":"one-page-checkout.com\/products\/one-page-checkout-shopify","u":"2cf949a0a90c","p":"product","rtyp":"product","rid":5498381319};</script>
 <script>window.ShopifyPaypalV4VisibilityTracking = true;</script>
 <script>window.Shopify = window.Shopify || {};
 window.Shopify.Checkout = window.Shopify.Checkout || {};
@@ -97,7 +108,6 @@ window.Shopify.Checkout.apiHost = "exclusive-checkout-demo.myshopify.com";</scri
 <script>window.ShopifyAnalytics = window.ShopifyAnalytics || {};
 window.ShopifyAnalytics.meta = window.ShopifyAnalytics.meta || {};
 window.ShopifyAnalytics.meta.currency = 'EUR';
-var meta = {"page":{}};
 for (var attr in meta) {
   window.ShopifyAnalytics.meta[attr] = meta[attr];
 }</script>
@@ -176,21 +186,23 @@ for (var attr in meta) {
     
         window.ShopifyAnalytics.lib.page(
           null,
-          {}
+          {"pageType":"product","resourceType":"product","resourceId":5498381319}
         );
       
     
+        window.ShopifyAnalytics.lib.track(
+          "Viewed Product",
+        );
+      
   });
 
   
       var eventsListenerScript = document.createElement('script');
       eventsListenerScript.async = true;
-      eventsListenerScript.src = "//cdn.shopify.com/s/assets/shop_events_listener-76ce6d7f3e50d4b8c05874c34d2ea1340c45e5babba61276dadcaeed488ca16a.js";
+      eventsListenerScript.src = "http://cdn.shopify.com/s/assets/shop_events_listener-76ce6d7f3e50d4b8c05874c34d2ea1340c45e5babba61276dadcaeed488ca16a.js";
       document.getElementsByTagName('head')[0].appendChild(eventsListenerScript);
     
 })();</script>
-<script integrity="sha256-0xEZ/rW+4SEKTFurork0jfwbI2U45wPxBFoNkttkWrA=" defer="defer" src="//cdn.shopify.com/s/assets/storefront/express_buttons-d31119feb5bee1210a4c5baba2b9348dfc1b236538e703f1045a0d92db645ab0.js" crossorigin="anonymous"></script>
-<script integrity="sha256-wVO039M3uMymMFjKDcSW90f3TAT7vRyPziQZqsSnEpc=" defer="defer" src="//cdn.shopify.com/s/assets/storefront/features-c153b4dfd337b8cca63058ca0dc496f747f74c04fbbd1c8fce2419aac4a71297.js" crossorigin="anonymous"></script>
 
 
   <!-- /snippets/oldIE-js.liquid -->
@@ -217,7 +229,7 @@ for (var attr in meta) {
 </head>
 
 
-<body id="your-shopping-cart" class="template-cart">
+<body id="one-page-checkout-shopify-imac" class="template-product">
 
   <div id="NavDrawer" class="drawer drawer--left">
     <div class="drawer__fixed-header">
@@ -250,7 +262,7 @@ for (var attr in meta) {
           
           
           
-            <li class="mobile-nav__item">
+            <li class="mobile-nav__item mobile-nav__item--active">
               <a href="/products/one-page-checkout-shopify" class="mobile-nav__link">Catalog</a>
             </li>
           
@@ -356,7 +368,7 @@ for (var attr in meta) {
                   
                     
                     
-                      <li class="site-nav__item site-nav__expanded-item">
+                      <li class="site-nav__item site-nav__expanded-item site-nav--active">
                         <a href="/products/one-page-checkout-shopify" class="site-nav__link">Catalog</a>
                       </li>
                     
@@ -414,10 +426,10 @@ for (var attr in meta) {
                     <span class="icon-fallback-text">
                       <span class="icon icon-cart" aria-hidden="true"></span>
                       <span class="fallback-text">Cart</span>
-                      <span id="numero" style="font-size: 0.8em;color:black;    position: relative;left: -7px;">5</span>
+                      
                     </span>
                       
-              <!--      <span class="cart-link__bubble cart-link__bubble--visible"></span> -->
+              <!--      <span class="cart-link__bubble"></span> -->
                   </a>
                 </li>
                  
@@ -432,7 +444,7 @@ for (var attr in meta) {
                     <span class="icon icon-cart" aria-hidden="true"></span>
                     <span class="fallback-text">Cart</span>
                   </span>
-                  <span class="cart-link__bubble cart-link__bubble--visible"></span>
+                  <span class="cart-link__bubble"></span>
                 </a>
               </div>
             </div>
@@ -443,7 +455,7 @@ for (var attr in meta) {
                     <span class="icon icon-cart" aria-hidden="true"></span>
                     <span class="fallback-text">Cart</span>
                   </span>
-                  <span class="cart-link__bubble cart-link__bubble--visible"></span>
+                  <span class="cart-link__bubble"></span>
                 </a>
               </div>
             </div>
@@ -461,605 +473,190 @@ for (var attr in meta) {
 
     <main class="main-content" role="main">
       <div class="wrapper">
-        <!-- /templates/cart.liquid -->
-<script src="//cdn.shopify.com/s/files/1/1194/5066/t/3/assets/underscore.js?10711349972873934541" type="text/javascript"></script>
-<script src="//cdn.shopify.com/s/assets/themes_support/option_selection-ea4f4a242e299f2227b2b8038152223f741e90780c0c766883939e8902542bda.js" type="text/javascript"></script>
-      
-         
-<style>
-  .label_disabled{
-  
-      opacity:.3;
-      text-decoration: line-through;
-  
-  }
-</style>
+        
 
-<div id="load-screen">
-  <span id='processing_text'>
-   Processing order...
-  </span>
+<!-- /templates/product.liquid -->
+
+<div itemscope itemtype="http://schema.org/Product">
+
+  <meta itemprop="url" content="https://one-page-checkout.com/products/one-page-checkout-shopify">
+  <meta itemprop="image" content="//cdn.shopify.com/s/files/1/1194/5066/products/imac_grande.jpeg?v=1457347442">
+  
+   
+  
+   <div style="margin-top: 10px;" class="grid product-single">
+     <h1 style='font-size:4em'>First, add a product to cart </h1>
+  </div>
+  
+  <div style="margin-top: 10px;" class="grid product-single">
+    <div class="grid__item large--seven-twelfths medium--seven-twelfths">
+      <div class="product-single__photos">
+        <h1 id="titulocomida" class="product-single__title mobile_version" itemprop="name">iMac</h1>
+        
+
+        
+        <div class="product-single__photo-wrapper">
+          <img class="product-single__photo" id="ProductPhotoImg" src="//cdn.shopify.com/s/files/1/1194/5066/products/imac_grande.jpeg?v=1457347442" data-mfp-src="//cdn.shopify.com/s/files/1/1194/5066/products/imac_1024x1024.jpeg?v=1457347442" alt="iMac" data-image-id="10130533191">
+        </div>
+
+        
+        
+          
+        
+      </div>
+      <br>
+      
+    
+       
+    </div>
+    
+    
+    <div class="grid__item product-single__meta--wrapper medium--five-twelfths large--five-twelfths">
+      <div class="product-single__meta">
+        
+
+        <h1 class="product-single__title desktop_version" itemprop="name">iMac</h1>
+
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+          
+
+          
+
+          <span id="ProductPrice" class="product-single__price" itemprop="price">
+          </span>
+
+          <meta itemprop="priceCurrency" content="EUR">
+          <link itemprop="availability" href="http://schema.org/InStock">
+
+          <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-single__form" id="AddToCartForm">
+            <select name="id" id="ProductSelect" class="product-single__variants">
+              
+                
+                  <option  selected="selected"  data-sku="MAC01" value="17209448583">Default Title - <span class=money>€1,000.00 EUR</span></option>
+                
+              
+            </select>
+
+            
+            <div class="product-single__quantity">
+              <label for="Quantity" class="product-single__quantity-label js-quantity-selector">Quantity</label>
+              <input type="number" hidden="hidden" id="Quantity" name="quantity" value="1" min="1" class="js-quantity-selector">
+            </div>
+           
+         
+            
+            
+            <div class="product-single__add-to-cart" style="margin-top:20px;">
+              <!-- <button type="submit" name="add" id="AddToCart" class="btn">
+                <span id="AddToCartText">Add to Cart</span>
+              </button> -->
+              <iframe target="parent" style="border: 0px;" id="CryptoSell" src="http://localhost/cryptosell/api?img=12&iconWidth=50&iconColor=black&btnWidth=300&btnClass=1&btnText=Buy Now&key=-EtWNleRmVr-VPPF22KVvW-ZG&itemID=1&itemName=iMac&itemPrice=1.15&itemCurrency=USD&referTo=http://localhost/CryptoSell/thanks.php&userParameters="></iframe>
+            </div>
+            
+          </form>
+        </div>
+        
+		<div class="product-single__description rte mobile_version" itemprop="description">
+          <p> </p>
+        </div>
+        
+      
+        
+      </div>
+      </div>
+  </div>
+
+  <div style="margin-top: 10px; text-align:right" class="grid product-single">
+  </div>
+
+</div>
+
+
+<script src="//cdn.shopify.com/s/files/1/1194/5066/t/3/assets/variant_selection.js?10711349972873934541" type="text/javascript"></script>
+<script>
+  var cookies = document.cookie.split(';');
+  var cookieCodigoPostal = undefined;
+  var validPostCodes = ["08014", "08028"];
+  var postCodeInput = $('#postCode');
+  var addToCartButton = $('#AddToCart');
+  var notAvailableNote = $('#notAvailableYet');
+  
+  for(var i=0; i<cookies.length; i++){
+    if (cookies[i].indexOf('fudbyCP=') > -1){
+      cookieCodigoPostal = cookies[i].split('=')[1];
+      postCodeInput.val(cookieCodigoPostal);
+    }
+  }
+  
+  console.log('CP: ', cookieCodigoPostal);
+  if(cookieCodigoPostal){
+	postCodeInput.val(cookieCodigoPostal);
+  } else {
+    postCodeInput.val('');
+  }
+
+  
+  postCodeInput.blur(validatePostCode);
+  
+  function validatePostCode(){
+    var postCode = postCodeInput.val();
+    var lockAddToCartButton = false;
+    
+    if (postCode.length > 0 && validPostCodes.indexOf(postCode) < 0){
+      lockAddToCartButton = true;
+    }
+    
+    if (lockAddToCartButton){
+      addToCartButton.prop('disabled', true);
+      notAvailableNote.css('display', 'inline-block');
+    } else {
+      addToCartButton.prop('disabled', false);
+      notAvailableNote.css('display', 'none');
+  	}
+  }
+ 
+  
+  
+  var selectCallback = function(variant, selector) {
+    timber.productPage({
+      money_format: "<span class=money>€{{amount}}</span>",
+      variant: variant,
+      selector: selector
+    });
+  };
+
+  jQuery(function($) {
+    new Shopify.OptionSelectors('ProductSelect', {
+      product: {"id":5498381319,"title":"iMac","handle":"one-page-checkout-shopify","description":"\u003cp\u003e \u003c\/p\u003e","published_at":"2016-03-07T05:43:00-05:00","created_at":"2016-03-07T05:43:25-05:00","vendor":"Apple","type":"Computers","tags":["ws-min:2"],"price":1,"price_min":100000,"price_max":100000,"available":true,"price_varies":false,"compare_at_price":null,"compare_at_price_min":0,"compare_at_price_max":0,"compare_at_price_varies":false,"variants":[{"id":17209448583,"title":"Default Title","option1":"Default Title","option2":null,"option3":null,"sku":"MAC01","requires_shipping":true,"taxable":true,"featured_image":null,"available":true,"name":"iMac","public_title":null,"options":["Default Title"],"price":100,"weight":15000,"compare_at_price":null,"inventory_quantity":92,"inventory_management":"shopify","inventory_policy":"deny","barcode":""}],"images":["\/\/cdn.shopify.com\/s\/files\/1\/1194\/5066\/products\/imac.jpeg?v=1457347442"],"featured_image":"\/\/cdn.shopify.com\/s\/files\/1\/1194\/5066\/products\/imac.jpeg?v=1457347442","options":["Title"],"content":"\u003cp\u003e \u003c\/p\u003e"},
+      onVariantSelected: selectCallback,
+      enableHistoryState: true
+    });
+
+    // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+    
+
+    // Hide drop-down selectors if we only have 1 variant and its title contains 'Default'.
+    
+      $('.selector-wrapper').hide();
+    
+  });
+  
+</script>
+<div class="yotpo yotpo-main-widget"
+    data-product-id="5498381319"
+    data-name="iMac"
+    data-url="https://one-page-checkout.com/products/one-page-checkout-shopify"
+    data-image-url="//cdn.shopify.com/s/files/1/1194/5066/products/imac_large.jpeg%3Fv=1457347442"
+    data-description="&lt;p&gt; &lt;/p&gt;">
 </div>
 
 <style>
-    
-  
-  .single-option-radio input[type='radio']:checked+label {
-  border:none;
-  background: RGB(147, 230, 180);
-    color: #fff;
-    opacity: 1;
-  
-  }
-  
-  #processing_text{
-  
-  margin: 0 auto;
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    margin-top: -9px;
-    text-align: center;
-  }
-#load-screen {
-    width: 100%;
-    height: 100%;
-    background:  #000;
-      position: fixed;
-    opacity: 0.7;
- 	 top: 0;
-    left: 0;
- 	 z-index:10000;
-  color:#fff;
-  font-size:20px;
-  font-weight:bold;
-  display:none;
+#titulocomida {
+    margin-top: 30px;
 }
 </style>
-
-<div class="grid">
-  <div class="grid__item large--five-sixths push--large--one-twelfth">
-    
-    <h1 >Thank you for purchasing!</h1>
-    <p>Hurray! This a small cheer that you purchase went through!</p>
-       <p>You can view your orders in "My Orders" page.</p>
-
-    <p> Thank you for using CryptoSell LTD services as a payment gateway!
-      <br> <br /><p>Below are returned transaction details from your recent purchase:
-      <br /><br />
-      <pre>
-      <?php
-      print_r($_POST);
-      ?>
-      </pre>
-      
-    </p>
-        <div class="cart__row medium-down--hide cart__header-labels">
-          <div class="grid--full">
-            <div class="grid__item large--two-fifths push--large--three-fifths">
-              <div class="grid--full">
-                <div class="grid__item one-third medium-down--half text-center">
-                  Quantity
-                </div>
-                <div class="grid__item two-thirds medium-down--half text-right">
-                  Total
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-       
-        
-          <div class="cart__row">
-            <div class="grid--full cart__row--table-large">
-
-              <div class="grid__item large--three-fifths">
-                <div class="grid">
-
-                  <div class="grid__item one-third">
-                    <a href="/products/one-page-checkout-shopify?variant=17209448583" class="cart__image">
-
-                      
-                      <img src="//cdn.shopify.com/s/files/1/1194/5066/products/imac_medium.jpeg?v=1457347442" alt="iMac">
-                    </a>
-                  </div>
-
-                  <div class="grid__item two-thirds">
-                    <a href="/products/one-page-checkout-shopify?variant=17209448583" class="h4 cart__product-name">
-                      iMac
-                    </a>
-                   
-                    
-
-                    
-                    
-
-                    <p class="cart__product-meta">
-                      <a href="/cart/change?line=1&amp;quantity=0">
-                      </a>
-                    </p>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="grid__item large--two-fifths">
-                <div class="grid--full cart__row--table">
-                  <div class="grid__item one-third text-center">
-                    <input type="number" name="updates[]" id="updates_17209448583" class="cart__product-qty" value="5" min="0">
-                  </div>
-                  <div class="grid__item two-thirds text-right">
-                    <span class="cart__price"><span class=money>$<?=$_POST['itemPrice'];?></span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        
-
-        <div class="cart__row">
-         
-          <div class="grid--full cart__row--table-large">
-            <div class="grid__item large--two-fifths text-center large--text-right push--large--three-fifths">
-              <div class="grid--full cart__row--table">
-                <div class="grid__item one-half large--two-fifths large--text-center">
-                  <p class="cart__subtotal">Cart</p>
-                  
-                  <p class="cart__subtotal">Total</p>
-                   
-                </div>
-                <div class="grid__item one-half large--two-thirds">
-                  <p class="cart__subtotal"><span class=money>$<?=$_POST['itemPrice'];?></span></p>
-                   
-                  
-                  <p class="cart__subtotal"><b>$<?=$_POST['itemPrice'];?></b></p>
-                </div>
-               </div>
-			   <small style="opacity: .6; font-size: .7em">Shipping + Handling fees included</small>
-
-
-              
-          </div>
-
-        </div>
-        
-
-    
-   
-      
-<hr class="hr--large">
-       <div style='text-align:center'>
-         <h2> Want to buy again?</h2>
-
-         
-         <p><a class="btn--secondary" href="./order.php" target="_blank" title="Exclusive Wholesaler Checkout">
-         Click here to buy it now
-           </a></p>
-         
-     
-    
-    
-    <script type="text/javascript">
-      
-      var update_cart = function(){
-              var id = $('.js-qty__num').attr('id').split('_')[1]
-
-                			console.log( $('.js-qty__num').val(),id,line )
-                			$('.js-qty__num').disabled(true);
-
-              jQuery.post('/cart/change.js', line,
-                          function(d){ document.location = '/cart';	} ,
-                          'json'
-                         )
-
-      
-      
-      }
-       
-      
-</script>
-    
-   
-    
-<script>
-  
-    var line_items = []
-  
-  var my_line =  { "variant_id": 17209448583,
-                  	"quantity": 1,
-                  "name": 'q',
-                  "title": 'iMac',
-                  "price": 100000/100
-                 }
-  line_items.push(my_line)    
-  
-  
- var getNextHighestIndex = function (arr, value) {
-    var i = arr.length;
-    while (arr[--i].time > value);
-    return ++i; 
-}
-
-
-function getUrlParameter(sParam)  {
-          var sPageURL = window.location.search.substring(1);
-          var sURLVariables = sPageURL.split('&');
-          for (var i = 0; i < sURLVariables.length; i++) 
-          {
-              var sParameterName = sURLVariables[i].split('=');
-              if (sParameterName[0] == sParam) 
-              {
-                  return sParameterName[1];
-              }
-          }
-      }    
-  
-  
-  $(document).on('click','.single-option-selector__radio',function(){
-    console.log(":",$(this).data('time'),my_hour_tab)
-    
-    if (1* $(this).data('time') < 1* my_hour_tab){
-    
-    console.log("NOR")
-    $(this).prop('checked', false);
-     $('.single-option-selector__radio[data-time="'+my_hour_tab+'"]')
-          .prop('checked', true) ;
-    } else {
-      
-    console.log("YES")
-   
-    
-    }
-    
- 
-  
-  })
-
-  
-  function go_order(order, callback){
- 
-  
-  
- var  url = "https://wholesaler2.herokuapp.com/proxy/exclusive-checkout-demo/admin/orders.json" 
- 
-  
-    $.ajax({type: "POST",
-            url: url,
-                   dataType: "json",
-                     contentType: "application/json",
-                    data:  JSON.stringify(order)
-                    })
-			.done(function(data){
-     							// alert('Wholesaler response:\n'+JSON.stringify(data))
-                        		// alert(" recibido:"+JSON.stringify(data));
-                            callback() 
-      
-      		console.log('error ok:'+ JSON.stringify(data)) 
             
-             var misdatos = JSON.parse(JSON.stringify(data.responseJSON).replace(/\\/g, ''))
-               
-                         if(misdatos.errors){
-                            $('#txt_error_message').html('One or more errors have been found in the address we have:<br>')
-									$.each(datos.errors,function(key,value){
- 									  console.log(" error->:"+key+"||"+value);
- 									  $('#txt_error_message').append(value)
 
-                                  	})
- 									$('#txt_error_message').show()
-                                    $('#load-screen').hide()
-                              
-                                }  else {
- 									  callback()
- 								}
-      
-      
-      
-                              
-                          }
-                  ) 
-    		.error(function(data){
-    			  console.log('error ER:'+ JSON.stringify(data)) 
-             $('#txt_error_message')
-             	.html('One or more errors have been found in your address:')
-             	//.append('Please contact <a href="/pages/contact-us">customer support.</a><br>')       
-                  
-            
-              
-               var misdatos = JSON.stringify(data.responseJSON)
-              
-            
-              
-              var misdatos2= misdatos.replace(/\\/g, '')
-                                            
-                console.log('misdatos2 ER:',misdatos2) 
-                                           
-              var misdatos3 = JSON.parse(misdatos2)
-              
-                            $('#txt_error_message')
-									$.each(misdatos3.errors,function(key,value){
- 									  console.log(" error->:"+key+"||"+value);
- 									  $('#txt_error_message').append('<br>'+value)
-
-                                  	})
-                                  
-                                    
-                     $('#txt_error_message').show()
-                     $('#load-screen').hide()
-                     $('#checkout')
-                     	.removeClass('btn--loading')  
-                     	.text('Pay')
-                               
-              
-
-                                      
-              			 
-                          }
-                  )  
-      
-}
-  
-$(document).ready(function(){
-   
-    
-   var order_ready = false 
-    
-   var check_order_ready = function(){
-     
-      $('#txt_error_message').html('')
-       
-       if ( validateForm() ){
-				$('#checkout').prop('disabled',false)
-			return true
-			
-       } else {
-      		 $('#checkout').prop('disabled',true)
-       	    return false
-       }
-
-   
-   }
-   
-    
-  check_order_ready()  
-    
-    
-    $('.input-group-field,.single-option-selector__radio')
-    	.on('change',check_order_ready);
-  
-    
-   $('form').on('submit', function(e){
-                        e.preventDefault();
-                         $('#go_order').trigger('click')
-             });
-  
-  
-  $('#form_order').submit(function(e){
- 		e.preventDefault()
- 		$('#checkout').trigger('click')
-	})
-  
-  
-  $('#checkout').click(function(e){
-  
-  		 
-  })
-  
-  
-  $('#years_select,#months_select').change(function(){
-  
-  var d = new Date();
-  
-    console.log('year:', $(this).val(),d.getFullYear(),d.getMonth())
-    
-    if(1*$(this).val() == 1* d.getFullYear()){
-    
-     	var n = d.getMonth();
-      
-    
-            
-      var options = $('#months_select').find('option')
-      
-      options.each(function(){
-        if(1*$(this).val() <= 1*n){
-        	$(this) .attr("disabled", "disabled")
-            
-             var next_valid_month = 1*n+1
-             
-              
-             if(next_valid_month <10){
-              	$('#months_select').val('0'+next_valid_month) 
-             } else if(next_valid_month == 10 || next_valid_month == 11 ){
-             	$('#months_select').val(next_valid_month) 
-             } else if(next_valid_month == 12 ){
-            		$('#months_select').val('01') 
-                    
-                    $('#years_select').val(1* d.getFullYear()+1)
-             }
-             
-            
-        } else {
-        
-        	$(this).removeAttr("disabled"); 
-        }
-      
-      })
-      
-       
-      
-    } else {
-    
-      var options = $('#months_select').find('option')
-      options.each(function(){
-     	 $(this).removeAttr("disabled"); 
-      
-      })
-    }
-    
-    
-     
-  
-  })
-  
-  
- $(document).on('.js-qty__adjust','click',function(e){
-        //console.log( $('.js-qty__num').val())
- 		 console.log( '+')
-  });
-  
-  
-   
-   
-   
-   
-}); </script>
-
-
-    <script>
-   
-  var validateForm = function(){
-    
-    var cart_valid = true
-    
-        function isEmail(email) {
-            var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            return regex.test(email);
-          }
-    
-        function campos_rellenos(){
-              if($('#nombre').val() =='' 
-                // || $('#apellidos').val()==''
-                 || $('#direccion').val()==''
-                         
-                  ){
-                 return false;
-              } else {
-               return true;
-              }
-        }
-        function isPhone(Phone) {
-         var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
-        if (filter.test(Phone)) {
-            return true;
-        }
-        else {
-            return false;
-        }
-        }
-    
-    
-     
-    console.log( isEmail( $('#email').val() ),
-                //isPhone( $('#phone').val() ),
-                campos_rellenos() 
-                 )
-
-          if( isEmail( $('#email').val() )
-            // && isPhone( $('#phone').val() )
-             && campos_rellenos() 
-
-            ){
-            return true
-
-          } else {
-            return false
-          }
-
-  }
- 
-  
-  
-</script>
-   <script>
-    // jquery.jsonp 2.2.1 (c)2012 Julian Aubourg | MIT License
-    // http://code.google.com/p/jquery-jsonp/
-    (function(a){function b(){}function c(a){A=[a]}function d(a,b,c,d){try{d=a&&a.apply(b.context||b,c)}catch(e){d=!1}return d}function e(a){return/\?/.test(a)?"&":"?"}function D(l){function V(a){O++||(P(),I&&(y[K]={s:[a]}),E&&(a=E.apply(l,[a])),d(l.success,l,[a,t]),d(D,l,[l,t]))}function W(a){O++||(P(),I&&a!=u&&(y[K]=a),d(l.error,l,[l,a]),d(D,l,[l,a]))}l=a.extend({},B,l);var D=l.complete,E=l.dataFilter,F=l.callbackParameter,G=l.callback,H=l.cache,I=l.pageCache,J=l.charset,K=l.url,L=l.data,M=l.timeout,N,O=0,P=b,Q,R,S,T,U;return l.abort=function(){!(O++)&&P()},d(l.beforeSend,l,[l])===!1||O?l:(K=K||h,L=L?typeof L=="string"?L:a.param(L,l.traditional):h,K+=L?e(K)+L:h,F&&(K+=e(K)+encodeURIComponent(F)+"=?"),!H&&!I&&(K+=e(K)+"_"+(new Date).getTime()+"="),K=K.replace(/=\?(&|$)/,"="+G+"$1"),I&&(N=y[K])?N.s?V(N.s[0]):W(N):(v[G]=c,S=a(s)[0],S.id=k+z++,J&&(S[g]=J),C&&C.version()<11.6?(T=a(s)[0]).text="document.getElementById('"+S.id+"')."+n+"()":S[f]=f,p in S&&(S.htmlFor=S.id,S.event=m),S[o]=S[n]=S[p]=function(a){if(!S[q]||!/i/.test(S[q])){try{S[m]&&S[m]()}catch(b){}a=A,A=0,a?V(a[0]):W(i)}},S.src=K,P=function(a){U&&clearTimeout(U),S[p]=S[o]=S[n]=null,w[r](S),T&&w[r](T)},w[j](S,x),T&&w[j](T,x),U=M>0&&setTimeout(function(){W(u)},M)),l)}var f="async",g="charset",h="",i="error",j="insertBefore",k="_jqjsp",l="on",m=l+"click",n=l+i,o=l+"load",p=l+"readystatechange",q="readyState",r="removeChild",s="<script>",t="success",u="timeout",v=window,w=a("head")[0]||document.documentElement,x=w.firstChild,y={},z=0,A,B={callback:k,url:location.href},C=v.opera;D.setup=function(b){a.extend(B,b)},a.jsonp=D})(jQuery)
-</script>
-
-<script>
-    
-  console.log('note:'+window.localStorage.getItem('note'))
-     
-  if( window.localStorage.getItem('note')){
-         $('#cart_note_label').show()
-  		 $('#cart_note_text').text(window.localStorage.getItem('note')).show()
-  }
-  
-
-  
-      
-$('#checkout').click(function(e){
-      e.preventDefault()
-         
-        
-        var shipping_address =   { "address1" : $('#direccion').val(),
-          "address2" : '' ,
-            "city" : $('#city').val(),
-              "company" : "null" ,
-              "country" : $('#country').val(),
-             "first_name" : $('#nombre').val().split(' ')[0] ,
-              "last_name" :$('#nombre').val().split(' ')[0] || 'Doe' ,
-              "phone" : $('#phone').val() ,
-              "province" : $('#province').val(),
-              "zip" : $('#postal_code').val() ,
-              "name" : $('#nombre-apellidos').val() ,
-             //"country_code" : "ES" ,
-             // "province_code" : "B" 
-                                 }
-        
-        
-     var order =  {
-            "order": {
-                    "email": $('#email').val(),
-                    "fulfillment_status": "unfulfilled",
-                    "line_items":  line_items,
-                    "financial_status": "pending",
-              		"send_receipt": "true",
-                    "shipping_lines": [
-                                 { "code" : "Envío"  ,
-                                   "price" : window.shipping_cost/100 ,
-                                   "source" : "Web" ,
-                                   "title" : "Envío" } 
-                              ] ,
-                     "total_price" : total_order ,
-                    "taxes_included" : true,
-       				"shipping_address": shipping_address,
-                    "note":window.localStorage.getItem('note'),
-             		 "tags":'microapps_exclusive_wholesaler_checkout',
-                             
-                  } 
-      		 
-          }
-     
-                     
-    console.log('order:'+JSON.stringify(order))                
-    
-		 $('#load-screen').show()
-       go_order(order, function(){ 
-        document.location = "https://one-page-checkout.com/pages/order-success"
-       
-       })
-         
-    
-       
- })
-       
-    $('#update-cart').click(function(e){
-        e.preventDefault()
-        document.location = '/cart'
-
-    })  
-   
-
-
-   
-  
-</script>
-
-  
- 
       </div>
     </main>
 
@@ -1166,6 +763,9 @@ $('#checkout').click(function(e){
   </script>
 
   
+    <script src="//cdn.shopify.com/s/files/1/1194/5066/t/3/assets/slick.min.js?10711349972873934541" type="text/javascript"></script>
+    <script src="//cdn.shopify.com/s/files/1/1194/5066/t/3/assets/scrolltofixed.min.js?10711349972873934541" type="text/javascript"></script>
+  
 
   
   
@@ -1208,7 +808,7 @@ $('#checkout').click(function(e){
                         <span class="icon icon-minus" aria-hidden="true"></span>
                         <span class="fallback-text">&minus;</span>
                       </button>
-                      <input type="text" name="updates[]" class="ajaxcart__qty-num" value="1" min="0" data-id="1" data-line="1" aria-label="quantity" pattern="[0-9]*">
+                      <input type="text" name="updates[]" class="ajaxcart__qty-num" value="{{itemQty}}" min="0" data-id="{{id}}" data-line="{{line}}" aria-label="quantity" pattern="[0-9]*">
                       <button type="button" class="ajaxcart__qty-adjust ajaxcart__qty--plus icon-fallback-text" data-id="{{id}}" data-line="{{line}}" data-qty="{{itemAdd}}">
                         <span class="icon icon-plus" aria-hidden="true"></span>
                         <span class="fallback-text">+</span>
@@ -1287,8 +887,8 @@ $('#checkout').click(function(e){
         <span class="icon icon-minus" aria-hidden="true"></span>
         <span class="fallback-text">&minus;</span>
       </button>
-      <input type="text" class="js-qty__num" value="1" min="1" data-id="1" data-min="1" data-max="1" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}" disabled>
-      <button type="button" class="js-qty__adjust js-qty__adjust--plus icon-fallback-text" data-id="1" data-qty="1" disabled>
+      <input type="text" class="js-qty__num" value="{{itemQty}}" min="1" data-id="{{id}}" aria-label="quantity" pattern="[0-9]*" name="{{inputName}}" id="{{inputId}}">
+      <button type="button" class="js-qty__adjust js-qty__adjust--plus icon-fallback-text" data-id="{{id}}" data-qty="{{itemAdd}}">
         <span class="icon icon-plus" aria-hidden="true"></span>
         <span class="fallback-text">+</span>
       </button>
@@ -1311,6 +911,8 @@ $('#checkout').click(function(e){
     
   
 
+  
+    <script src="//cdn.shopify.com/s/files/1/1194/5066/t/3/assets/magnific-popup.min.js?10711349972873934541" type="text/javascript"></script>
   
 
    
@@ -1410,4 +1012,3 @@ jQuery('.selected-currency').text(Currency.currentCurrency);
   
 </body>
 </html>
- 
