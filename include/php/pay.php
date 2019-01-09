@@ -252,10 +252,12 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                 data: $(this).serialize(),
                 success: function( data, textStatus, jQxhr ){
 //                     $("#nextbtn").val("Wallet generated!");
-                	$('#captain').html("Address generated successfully!");
                 	
+                	
+                 	console.log("Transaction generated successfully!");
+                	$('#captain').html("Address generated successfully!");
+                	console.log(data);
                     
-                    console.log("Transaction generated successfully!");
                 	$('#displayLoading').hide();
                 	if(data.status == 0)
                 	{
@@ -264,10 +266,10 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                 		$('#response').html( data.body );
                 		console.log("Error Details below");
                 		console.log(data);
+                		$('#captain').html(data);
                 		return;
                 	}
-
-                	console.log(data);
+               
                     $('#captain').html("<big>Please transfer to wallet address:<br /><br /><center><strong>" + data.body + "</center></strong></big><br /><br /><br /><div valign='middle' align='center' id='distatus'></div>");
                     startWaiting(data.body);
                     
