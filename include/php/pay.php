@@ -268,7 +268,7 @@ TrustLogo("https://cryptosell.ltd/ssl.png", "CL1", "none");
                 	}
 
                 	console.log(data);
-                    $('#captain').html("<big>Please transfer " + data.itemPrice + " " + data.currency + " to <strong>" + data.body + "</strong></big><br /><br /><br /><div valign='middle' align='center' id='distatus'></div>");
+                    $('#captain').html("<big>Please transfer to wallet address:<br /><br /><center><strong>" + data.body + "</center></strong></big><br /><br /><br /><div valign='middle' align='center' id='distatus'></div>");
                     startWaiting(data.body);
                     
                 },
